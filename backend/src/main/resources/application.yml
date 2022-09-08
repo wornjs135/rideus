@@ -1,0 +1,91 @@
+server:
+  servlet:
+    context-path: /api
+
+spring:
+  cache:
+    type: redis
+  redis:
+    # 로컬 환경
+    host: localhost
+    # 도커 환경
+    #    host: ex)172.17.0.3
+
+    port: 6379
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 100MB
+
+  # swagger 설정
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # 로컬 환경
+    url: jdbc:mysql://localhost:3306/rideus?useSSL=false&useUnicode=true&autoReconnect=true&characterEncoding=utf8&allowMultiQueries=true&serverTimezone=UTC
+    username: ssafy
+    password: ssafy
+
+    # ec2 DB에 연결
+#    url: jdbc:mysql://i7a603.p.ssafy.io:3306/rideus?useSSL=false&useUnicode=true&autoReconnect=true&characterEncoding=utf8&allowMultiQueries=true&serverTimezone=UTC
+#    username: ssafy
+#    password: yfass1234
+
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        default_batch_fetch_size: 500
+        #        show_sql: false
+        format_sql: true
+        show_sql: true
+
+    open-in-view: false
+
+  data:
+    mongodb:
+      #username:
+      #password:
+      #authentication-database:
+      auto-index-creation:
+#      uri: mongodb://localhost:27017/test
+      host: localhost
+      port: 27017
+      database: test
+
+    web:
+      pageable:
+        default-per-size: 20
+        max-page-size: 2000
+
+token:
+  # 일단 하루
+  expiration_time: 86400000
+  secret: secretcode
+
+cloud:
+  aws:
+    credentials:
+      accessKey:
+      secretKey:
+    s3:
+      bucket:
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+
+kakao:
+  restapikey:
