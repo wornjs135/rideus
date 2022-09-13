@@ -1,6 +1,7 @@
 package com.ssafy.rideus.domain;
 
 import com.ssafy.rideus.domain.base.BaseEntity;
+import com.ssafy.rideus.domain.type.AuthProvider;
 import com.ssafy.rideus.domain.type.MemberRole;
 import lombok.*;
 
@@ -9,6 +10,7 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Builder
 @Getter
 public class Member extends BaseEntity {
 
@@ -35,4 +37,9 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
     private MemberRole role;
+
+    @Enumerated(EnumType.STRING)
+    private AuthProvider authProvider;
+
+    private String refreshToken;
 }
