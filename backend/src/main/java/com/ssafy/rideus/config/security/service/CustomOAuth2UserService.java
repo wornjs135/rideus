@@ -39,7 +39,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         if (userInfo.getEmail().isEmpty()) {
             throw new OAuthProcessingException("Email not found from OAuth2 provider");
         }
-        Optional<Member> userOptional = memberRepository.findById(Long.valueOf(userInfo.getId()));
+        Optional<Member> userOptional = memberRepository.findByKakaoId(Long.valueOf(userInfo.getId()));
         Member member;
 
         if (userOptional.isPresent()) {		// 이미 가입된 경우
@@ -56,6 +56,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private Member createMember(OAuth2UserInfo userInfo, AuthProvider authProvider) {
         Member member = Member.builder()
+                .kakaoId(Long.valueOf(userInfo.getId()))
                 .profileImageUrl(userInfo.getImageUrl())
                 .role(MemberRole.ROLE_MEMBER)
                 .authProvider(authProvider)
