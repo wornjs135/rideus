@@ -3,6 +3,7 @@ package com.ssafy.rideus.domain;
 import com.ssafy.rideus.domain.base.BaseEntity;
 import com.ssafy.rideus.domain.type.AuthProvider;
 import com.ssafy.rideus.domain.type.MemberRole;
+import com.ssafy.rideus.dto.member.request.MemberMoreInfoReq;
 import lombok.*;
 
 import javax.persistence.*;
@@ -25,6 +26,9 @@ public class Member extends BaseEntity {
     @Column(length = 50)
     private String name;
 
+    @Column(unique = true)
+    private String nickname;
+
     @Column(length = 13)
     private String phone;
 
@@ -42,4 +46,10 @@ public class Member extends BaseEntity {
     private AuthProvider authProvider;
 
     private String refreshToken;
+
+    public void addMoreInfo(MemberMoreInfoReq memberMoreInfoReq) {
+        this.name = memberMoreInfoReq.getName();
+        this.phone = memberMoreInfoReq.getPhone();
+        this.nickname = memberMoreInfoReq.getNickname();
+    }
 }
