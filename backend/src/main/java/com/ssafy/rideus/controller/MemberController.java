@@ -2,6 +2,7 @@ package com.ssafy.rideus.controller;
 
 import com.ssafy.rideus.config.security.auth.CustomUserDetails;
 import com.ssafy.rideus.dto.member.request.MemberMoreInfoReq;
+import com.ssafy.rideus.dto.member.response.MemberMeRes;
 import com.ssafy.rideus.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping("/me")
-    public ResponseEntity<Object> loginMemberInformation(@ApiIgnore @AuthenticationPrincipal CustomUserDetails user) {
+    public ResponseEntity<MemberMeRes> loginMemberInformation(@ApiIgnore @AuthenticationPrincipal CustomUserDetails user) {
         return ResponseEntity.ok(memberService.findByLoginMember(user.getId()));
     }
 
