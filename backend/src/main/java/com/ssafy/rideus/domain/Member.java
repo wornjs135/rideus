@@ -2,6 +2,7 @@ package com.ssafy.rideus.domain;
 
 import com.ssafy.rideus.domain.base.BaseEntity;
 import com.ssafy.rideus.domain.type.MemberRole;
+import com.ssafy.rideus.dto.member.request.MemberUpdateRequest;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,7 +23,8 @@ public class Member extends BaseEntity {
 
     @Column(length = 50)
     private String name;
-
+    @Column(length = 50)
+    private String nickName;
     @Column(length = 13)
     private String phone;
 
@@ -35,4 +37,11 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
     private MemberRole role;
+
+    public void updateMember(MemberUpdateRequest request) {
+        this.nickName = request.getNickname();
+        this.phone = request.getTel();
+        this.email = request.getEmail();
+
+    }
 }
