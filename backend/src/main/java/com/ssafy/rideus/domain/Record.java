@@ -19,11 +19,11 @@ public class Record extends BaseEntity {
     @Column(name = "record_id")
     private Long id;
 
-    @Column(length = 30)
-    private String recordDistance;
+    @Column(name = "record_distance")
+    private Long recordDistance;
 
-    @Column(length = 30)
-    private String recordTime;
+    @Column(name = "record_time")
+    private Long recordTime;
 
     @Column(length = 30)
     private String recordSpeedAvg;
