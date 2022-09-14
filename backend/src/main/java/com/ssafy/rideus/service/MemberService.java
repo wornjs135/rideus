@@ -35,9 +35,13 @@ public class MemberService {
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
     }
 
+    @Transactional(readOnly = true)
     public MemberMeRes findByLoginMember(Long memberId) {
         Member findMember = findById(memberId);
         return MemberMeRes.of(findMember);
     }
 
+    public void deleteMember(Long memberId) {
+        memberRepository.deleteById(memberId);
+    }
 }

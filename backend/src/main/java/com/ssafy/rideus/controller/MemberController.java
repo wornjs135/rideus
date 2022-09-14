@@ -20,7 +20,13 @@ public class MemberController {
 
     @GetMapping("/me")
     public ResponseEntity<Object> loginMemberInformation(@ApiIgnore @AuthenticationPrincipal CustomUserDetails user) {
-        return ResponseEntity.ok(memberService.findById(user.getId()));
+        return ResponseEntity.ok(memberService.findByLoginMember(user.getId()));
+    }
+
+    @DeleteMapping("/me")
+    public ResponseEntity<Void> deleteMemberMyself(@ApiIgnore @AuthenticationPrincipal CustomUserDetails user) {
+        memberService.deleteMember(user.getId());
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/check/{nickname}")
@@ -33,4 +39,5 @@ public class MemberController {
         memberService.updateMoreInformation(memberMoreInfoReq, member.getId());
         return ResponseEntity.ok().build();
     }
+
 }
