@@ -1,8 +1,6 @@
 package com.ssafy.rideus.config.security.util;
 
 import com.ssafy.rideus.config.security.auth.CustomUserDetails;
-import com.ssafy.rideus.config.security.service.AuthService;
-import com.ssafy.rideus.config.security.service.LoginUserDetails;
 import com.ssafy.rideus.repository.jpa.MemberRepository;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
@@ -13,16 +11,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.Collection;
-import java.util.Date;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.ssafy.rideus.common.exception.NotFoundException.USER_NOT_FOUND;
 
 @Component
 @Slf4j
@@ -39,13 +34,10 @@ public class JwtTokenProvider {
 
     private final MemberRepository memberRepository;
 
-    private final AuthService authService;
-
     @Autowired
-    public JwtTokenProvider(@Value("${token.secret}") String secretKey, @Value("${token.refresh-cookie-key}") String cookieKey, AuthService authService, MemberRepository memberRepository) {
+    public JwtTokenProvider(@Value("${token.secret}") String secretKey, @Value("${token.refresh-cookie-key}") String cookieKey, MemberRepository memberRepository) {
         this.SECRET_KEY = Base64.getEncoder().encodeToString(secretKey.getBytes());
         this.COOKIE_REFRESH_TOKEN_KEY = cookieKey;
-        this.authService = authService;
         this.memberRepository = memberRepository;
     }
 
@@ -105,16 +97,13 @@ public class JwtTokenProvider {
     public Authentication getAuthentication(String accessToken) {
         Claims claims = parseClaims(accessToken);
 
+        Collection<? extends GrantedAuthority> authorities =
+                Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
+                        .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
 
-        UserDetails userDetails = authService.loadUserByUsername(claims.getId());
-//        Collection<? extends GrantedAuthority> authorities =
-//                Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
-//                        .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+        CustomUserDetails principal = new CustomUserDetails(Long.valueOf(claims.getSubject()), "", authorities);
 
-        LoginUserDetails loginUserDetails = (LoginUserDetails) userDetails;
-
-
-        return new UsernamePasswordAuthenticationToken(loginUserDetails.getMember(), null, userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(principal, "", authorities);
 
     }
 
