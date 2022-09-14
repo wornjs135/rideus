@@ -14,6 +14,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 //    Optional<Member> findByEmail(String email);
 //
     boolean existsByEmail(String email);
+
+    boolean existsByNickname(String nickname);
 //
     @Query("SELECT m.refreshToken FROM Member m WHERE m.id=:id")
     String getRefreshTokenById(@Param("id") Long id);
@@ -23,5 +25,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("UPDATE Member m SET m.refreshToken=:token WHERE m.id=:id")
     void updateRefreshToken(@Param("id") Long id, @Param("token") String token);
 
+    Optional<Member> findByKakaoId(Long kakaoId);
 
 }
