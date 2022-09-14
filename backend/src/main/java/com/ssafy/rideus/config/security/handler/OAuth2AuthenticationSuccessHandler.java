@@ -1,6 +1,6 @@
 package com.ssafy.rideus.config.security.handler;
 
-import com.ssafy.rideus.config.security.exception.BadRequestException;
+import com.ssafy.rideus.common.exception.BadRequestException;
 import com.ssafy.rideus.config.security.repository.CookieAuthorizationRequestRepository;
 import com.ssafy.rideus.config.security.util.CookieUtil;
 import com.ssafy.rideus.config.security.util.JwtTokenProvider;

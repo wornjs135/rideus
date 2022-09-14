@@ -3,7 +3,7 @@ package com.ssafy.rideus.config.security.service;
 import com.ssafy.rideus.config.security.auth.CustomUserDetails;
 import com.ssafy.rideus.config.security.auth.OAuth2UserInfo;
 import com.ssafy.rideus.config.security.auth.OAuth2UserInfoFactory;
-import com.ssafy.rideus.config.security.exception.OAuthProcessingException;
+import com.ssafy.rideus.common.exception.OAuthProcessingException;
 import com.ssafy.rideus.domain.Member;
 import com.ssafy.rideus.domain.type.AuthProvider;
 import com.ssafy.rideus.domain.type.MemberRole;
