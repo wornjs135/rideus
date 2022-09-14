@@ -17,10 +17,21 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
 
+
+/**
+ * 날씨 API의 base_time을 지정할 때 현재 시간기준으로 입력을 하면 안된다.
+ * 제공되는 API는 3시간 단위로(ex. 0, 3, 6, 9 ...) base-time을 지정할 수 있음
+ * 따라서 04:12에 API요청을 하면 03:00로 요청을 보내야함.
+ * 현재 시간대 부터 정보를 보여줘야 하기 때문에 item의 fcstTime을 확인해서 현재 시간 이후부터 데이터 저장
+ * 이 과정에서 자정을 넘어가는 부분 체크
+ *
+ */
 @RequestMapping("/weather")
 @RequiredArgsConstructor
 @RestController
 public class WeatherController {
+
+
 
     private static final String API_KEY = "fwh2SqF7jcv3y1DAhK0KT7CBDuM5stvTsyb58Ro%2Fnbce3gHu2%2BWQlNcLnty7XiHJRzcWvdN57%2FmU3baP3O%2FZVA%3D%3D";
     private static final int PAGE_NO = 1; // 한페이지 마다 1시간 단위로 잘라서 확인
