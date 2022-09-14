@@ -17,10 +17,14 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
-    public void moreInformation(MemberMoreInfoReq memberMoreInfoReq, long memberId) {
+    public void updateMoreInformation(MemberMoreInfoReq memberMoreInfoReq, long memberId) {
         Member findMember = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
-        findMember.addMoreInfo(memberMoreInfoReq);
+        findMember.updateMoreInfo(memberMoreInfoReq);
         memberRepository.save(findMember);
+    }
+
+    public boolean checkNicknameDuplicate(String nickname) {
+        return memberRepository.existsByNickname(nickname);
     }
 }
