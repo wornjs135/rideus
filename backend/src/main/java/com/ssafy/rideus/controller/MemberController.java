@@ -18,11 +18,15 @@ public class MemberController {
 
     private final MemberService memberService;
 
+    @GetMapping("/me")
+    public ResponseEntity<Object> loginMemberInformation(@ApiIgnore @AuthenticationPrincipal CustomUserDetails user) {
+        return ResponseEntity.ok(memberService.findById(user.getId()));
+    }
+
     @GetMapping("/check/{nickname}")
     public ResponseEntity<Boolean> checkNicknameDuplicate(@PathVariable String nickname) {
         return ResponseEntity.ok(memberService.checkNicknameDuplicate(nickname));
     }
-
 
     @PutMapping("/info")
     public ResponseEntity<Void> moreInformation(@Valid @RequestBody MemberMoreInfoReq memberMoreInfoReq, @ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
