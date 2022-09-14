@@ -27,7 +27,7 @@ import static com.ssafy.rideus.config.security.repository.CookieAuthorizationReq
 @RequiredArgsConstructor
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    @Value("${app.oauth2.authorizedRedirectUri}")
+    @Value("${oauth2.authorizedRedirectUri}")
     private String redirectUri;
     private final JwtTokenProvider tokenProvider;
     private final CookieAuthorizationRequestRepository authorizationRequestRepository;
@@ -72,7 +72,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private boolean isAuthorizedRedirectUri(String uri) {
         URI clientRedirectUri = URI.create(uri);
         URI authorizedUri = URI.create(redirectUri);
-
+        log.info(authorizedUri.toString());
         return authorizedUri.getHost().equalsIgnoreCase(clientRedirectUri.getHost())
                 && authorizedUri.getPort() == clientRedirectUri.getPort();
     }
