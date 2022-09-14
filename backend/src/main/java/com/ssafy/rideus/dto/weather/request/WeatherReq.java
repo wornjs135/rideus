@@ -1,4 +1,4 @@
-package com.ssafy.rideus.dto.weather;
+package com.ssafy.rideus.dto.weather.request;
 
 public class WeatherReq {
     String x;
