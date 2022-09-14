@@ -1,4 +1,4 @@
-package com.ssafy.rideus.config.security.exception;
+package com.ssafy.rideus.common.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

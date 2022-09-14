@@ -1,4 +1,4 @@
-package com.ssafy.rideus.config.security.exception;
+package com.ssafy.rideus.common.exception;
 
 public class OAuthProcessingException extends RuntimeException {
 
