@@ -23,10 +23,10 @@ public class Member extends BaseEntity {
     @Column(name = "kakao_id")
     private Long kakaoId;
 
-    @Column(length = 50)
+    @Column(length = 20)
     private String name;
 
-    @Column(unique = true)
+    @Column(unique = true, length = 10)
     private String nickname;
 
     @Column(length = 13)
@@ -47,7 +47,7 @@ public class Member extends BaseEntity {
 
     private String refreshToken;
 
-    public void addMoreInfo(MemberMoreInfoReq memberMoreInfoReq) {
+    public void updateMoreInfo(MemberMoreInfoReq memberMoreInfoReq) {
         this.name = memberMoreInfoReq.getName();
         this.phone = memberMoreInfoReq.getPhone();
         this.nickname = memberMoreInfoReq.getNickname();
