@@ -1,7 +1,7 @@
 package com.ssafy.rideus.controller;
 
-import com.ssafy.rideus.domain.base.Point;
-import com.ssafy.rideus.domain.collection.TestCollection;
+import com.ssafy.rideus.repository.jpa.domain.base.Point;
+import com.ssafy.rideus.repository.jpa.domain.collection.TestCollection;
 import com.ssafy.rideus.repository.jpa.MemberRepository;
 import com.ssafy.rideus.repository.mongo.TestCollectionRepository;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,6 @@
-package com.ssafy.rideus.domain;
+package com.ssafy.rideus.repository.jpa.domain;
 
-import com.ssafy.rideus.domain.base.BaseEntity;
+import com.ssafy.rideus.repository.jpa.domain.base.BaseEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

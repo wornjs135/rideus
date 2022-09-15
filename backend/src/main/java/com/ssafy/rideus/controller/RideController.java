@@ -2,10 +2,9 @@ package com.ssafy.rideus.controller;
 
 import com.ssafy.rideus.common.dto.rideroom.request.GroupRiddingRequest;
 import com.ssafy.rideus.common.dto.rideroom.response.GroupRiddingResponse;
-import com.ssafy.rideus.common.dto.rideroom.type.SocketMessageType;
 import com.ssafy.rideus.config.security.util.JwtUtil;
 import com.ssafy.rideus.config.web.LoginMember;
-import com.ssafy.rideus.domain.Member;
+import com.ssafy.rideus.repository.jpa.domain.Member;
 import com.ssafy.rideus.service.RideService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,8 +47,8 @@ public class RideController {
         log.debug(bearerToken);
 
         GroupRiddingResponse groupRiddingResponse = new GroupRiddingResponse();
-        if (ENTER.equals(request.getMessageType())) {
-
+        if (ENTER.equals(request.getMessageType())) { // 그룹 방에 입장
+            rideService.enterRideRoom(memberId, request);
         } else if (CURRENT_POSITION.equals(request.getMessageType())) { // 현재 내 위치 뿌리기
             groupRiddingResponse = rideService.searchMemberInfo(memberId);
             groupRiddingResponse.setLat(request.getLat());

@@ -1,6 +1,6 @@
-package com.ssafy.rideus.domain.collection;
+package com.ssafy.rideus.repository.jpa.domain.collection;
 
-import com.ssafy.rideus.domain.base.Point;
+import com.ssafy.rideus.repository.jpa.domain.base.Point;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
