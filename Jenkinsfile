@@ -26,15 +26,15 @@ pipeline{
         stage('Build') {
             steps {
                 script{
-                    sh "docker build -t ${BACK_NAME} ./Back_end/reniors/."
-                    sh "docker build -t ${FRONT_NAME} ./Front_end/reniors/."
+                    sh "docker build -t ${BACK_NAME} ./backend/."
+                    sh "docker build -t ${FRONT_NAME} ./frontend/."
                 }
             }
         }
         stage('Deploy'){
             steps {
                 sh "docker run -d --name=${BACK_CONTAINER_NAME} -p 8080:8080 ${BACK_NAME}"
-                sh "docker run -d --name=${FRONT_CONTAINER_NAME} -p 8081:80 ${FRONT_NAME}"
+                sh "docker run -d --name=${FRONT_CONTAINER_NAME} -p 443:443 ${FRONT_NAME}"
 
                 sh "docker image prune"
             }
