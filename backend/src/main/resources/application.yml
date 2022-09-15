@@ -27,14 +27,14 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     # 로컬 환경
-    url: jdbc:mysql://localhost:3306/rideus?useSSL=false&useUnicode=true&autoReconnect=true&characterEncoding=utf8&allowMultiQueries=true&serverTimezone=UTC
-    username: ssafy
-    password: ssafy
-
-    # ec2 DB에 연결
-#    url: jdbc:mysql://i7a603.p.ssafy.io:3306/rideus?useSSL=false&useUnicode=true&autoReconnect=true&characterEncoding=utf8&allowMultiQueries=true&serverTimezone=UTC
+#    url: jdbc:mysql://localhost:3306/rideus?useSSL=false&useUnicode=true&autoReconnect=true&characterEncoding=utf8&allowMultiQueries=true&serverTimezone=UTC
 #    username: ssafy
 #    password: yfass1234
+
+    # ec2 DB에 연결
+    url: jdbc:mysql://j7a603.p.ssafy.io:3306/rideus?useSSL=false&useUnicode=true&autoReconnect=true&characterEncoding=utf8&allowMultiQueries=true&serverTimezone=UTC
+    username: ssafy
+    password: yfass1234
 
 
   jpa:
@@ -52,14 +52,14 @@ spring:
 
   data:
     mongodb:
-      #username:
-      #password:
+      username: ssafy
+      password: yfass1234
       #authentication-database:
       auto-index-creation:
 #      uri: mongodb://localhost:27017/test
-      host: localhost
+      host: j7a603.p.ssafy.io
       port: 27017
-      database: test
+      database: rideus
 
     web:
       pageable:
