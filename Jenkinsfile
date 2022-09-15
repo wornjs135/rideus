@@ -4,7 +4,6 @@ pipeline {
        FRONT_CONTAINER_NAME="rideus_front_container"
        FRONT_NAME = "rideus_front"
     }
-    options { skipDefaultCheckout(true) }
     stages {
         stage('Clean'){
             steps{
@@ -20,7 +19,6 @@ pipeline {
             }
         }
         stage('Build') {
-            options { skipDefaultCheckout(false) }
             steps {
                 script{
                     sh "docker build -t ${FRONT_NAME} ./frontend/."
