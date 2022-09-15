@@ -1,7 +1,7 @@
 import React from "react";
 import { Outlet, Route, Routes, useNavigate } from "react-router-dom";
-import { GpsTest } from "./pages/GpsTest";
-import MapTest from "./pages/MapTest";
+import { GpsTest } from "./pages/test/GpsTest";
+import MapTest from "./pages/test/MapTest";
 
 const Layout = () => {
   return (
