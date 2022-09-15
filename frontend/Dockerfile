@@ -1,13 +1,16 @@
 # Dockerfile
 
-# nginx 이미지를 사용합니다. 뒤에 tag가 없으면 latest 를 사용합니다.
-FROM nginx
-
+FROM node:16.16.0 as builder
 # root 에 app 폴더를 생성
 RUN mkdir /app
-
-# work dir 고정
 WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN CI=false npm run build
+
+# nginx 이미지를 사용합니다. 뒤에 tag가 없으면 latest 를 사용합니다.
+FROM nginx
 
 # work dir 에 build 폴더 생성 /app/build
 RUN mkdir ./build
