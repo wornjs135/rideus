@@ -64,7 +64,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(PERMIT_URL_ARRAY).permitAll()
                 .antMatchers("/api/ws-stomp/**", "/api/port", "/actuator/health").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/users", "/api/users/login").permitAll()
+                .antMatchers("/api/auth/**", "/api/oauth2/**").permitAll()
                 .anyRequest().permitAll()
                 //.anyRequest().hasAnyRole("USER", "ADMIN")
                 .and()
@@ -75,11 +75,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .oauth2Login()  // oauth2Login 설정을 시작
                 .authorizationEndpoint()
-                .baseUri("/api/oauth2/authorize")
+                .baseUri("/oauth2/authorize")
                 .authorizationRequestRepository(cookieAuthorizationRequestRepository)
                 .and()
                 .redirectionEndpoint()
-                .baseUri("/api/oauth2/callback/*")
+                .baseUri("/oauth2/callback/*")
                 .and()
                 .userInfoEndpoint() // oauth2 로그인 성공 후 설정
                 .userService(customOAuth2UserService)

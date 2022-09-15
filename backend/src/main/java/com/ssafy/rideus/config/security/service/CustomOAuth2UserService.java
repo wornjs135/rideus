@@ -56,6 +56,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private Member createMember(OAuth2UserInfo userInfo, AuthProvider authProvider) {
         Member member = Member.builder()
+//                .nickname(userInfo.getName())
+                .email(userInfo.getEmail())
                 .kakaoId(Long.valueOf(userInfo.getId()))
                 .profileImageUrl(userInfo.getImageUrl())
                 .role(MemberRole.ROLE_MEMBER)
