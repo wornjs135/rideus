@@ -26,7 +26,9 @@ export const GpsTest = () => {
   const { coords, isGeolocationAvailable, isGeolocationEnabled } =
     useGeolocated({
       positionOptions: {
-        enableHighAccuracy: false,
+        enableHighAccuracy: true,
+        maximumAge: 0,
+        timeout: Infinity,
       },
     });
   // const [i, setI] = useState(0.0001);
