@@ -14,15 +14,17 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 
 /**
+ * API Request BaseDate, BaseTime 세팅 정보 수정
+ * 단기 예보의 경우 특정 시간대만 검색 가능 (2,5,8,11,14,17,20,23)
  * 날씨 API의 base_time을 지정할 때 현재 시간기준으로 입력을 하면 안된다.
- * 제공되는 API는 3시간 단위로(ex. 0, 3, 6, 9 ...) base-time을 지정할 수 있음
- * 따라서 04:12에 API요청을 하면 03:00로 요청을 보내야함.
- * 현재 시간대 부터 정보를 보여줘야 하기 때문에 item의 fcstTime을 확인해서 현재 시간 이후부터 데이터 저장
  * 이 과정에서 자정을 넘어가는 부분 체크
  *
  */
@@ -31,31 +33,20 @@ import java.util.*;
 @RestController
 public class WeatherController {
 
-
-
     private static final String API_KEY = "fwh2SqF7jcv3y1DAhK0KT7CBDuM5stvTsyb58Ro%2Fnbce3gHu2%2BWQlNcLnty7XiHJRzcWvdN57%2FmU3baP3O%2FZVA%3D%3D";
     private static final int PAGE_NO = 1; // 한페이지 마다 1시간 단위로 잘라서 확인
     private static final int HOURS = 12;
     private static final int UNIT_HOUR = 12;
     private static final int NUM_OF_ROW = UNIT_HOUR * HOURS; // 예보 타입 개수에 따라 12개
-
+//    private static final int NUM_OF_ROW = 1000; // 예보 타입 개수에 따라 12개
+    private static String baseDate, baseTime;
     // 최근 1일간의 자료만 보여줌
     @GetMapping("/today")
     public ResponseEntity<?> weatherAPI(@RequestParam String x, @RequestParam String y) throws Exception {
 
 
-        /*
-        API를 사용할 때 base time 으로 현재시간을 입력하면 데이터 획득 불가.
-        현재 시각이 14:23이면
 
-
-         */
-        String date = LocalDate.now().toString().replaceAll("-", ""); /* 현재 날짜 파싱*/
-        String time = offsetTime(LocalTime.now().toString().replaceAll(":", "").substring(0, 4)); /* 현재 시각 파싱, 시,분 데이터만 존재 */
-
-        System.out.println("date = " + date);
-        System.out.println("time = " + time);
-        time = "1400";
+        settingDate(); /* 날씨 데이터 세팅*/
 
         /* Open API URL 생성 */
         StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst"); /*URL*/
@@ -63,10 +54,11 @@ public class WeatherController {
         urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode(PAGE_NO+"", "UTF-8")); /*페이지번호*/
         urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode(NUM_OF_ROW+"", "UTF-8")); /*한 페이지 결과 수*/
         urlBuilder.append("&" + URLEncoder.encode("dataType","UTF-8") + "=" + URLEncoder.encode("JSON", "UTF-8")); /*요청자료형식(XML/JSON) Default: XML*/
-        urlBuilder.append("&" + URLEncoder.encode("base_date","UTF-8") + "=" + URLEncoder.encode(date, "UTF-8")); /* 현재 날짜 */
-        urlBuilder.append("&" + URLEncoder.encode("base_time","UTF-8") + "=" + URLEncoder.encode(time, "UTF-8")); /* 현재 시각 */
+        urlBuilder.append("&" + URLEncoder.encode("base_date","UTF-8") + "=" + URLEncoder.encode(baseDate, "UTF-8")); /* 현재 날짜 */
+        urlBuilder.append("&" + URLEncoder.encode("base_time","UTF-8") + "=" + URLEncoder.encode(baseTime, "UTF-8")); /* 현재 시각 */
         urlBuilder.append("&" + URLEncoder.encode("nx","UTF-8") + "=" + URLEncoder.encode(x, "UTF-8")); /*예보지점의 X 좌표값*/
         urlBuilder.append("&" + URLEncoder.encode("ny","UTF-8") + "=" + URLEncoder.encode(y, "UTF-8")); /*예보지점의 Y 좌표값*/
+
         URL url = new URL(urlBuilder.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
@@ -89,9 +81,8 @@ public class WeatherController {
 
         rd.close();
         conn.disconnect();
-        System.out.println(sb.toString());
+//        System.out.println(sb.toString());
         String result = sb.toString();
-
 
         //=======이 밑에 부터는 json에서 데이터 파싱해 오는 부분이다=====//
 
@@ -113,6 +104,7 @@ public class WeatherController {
 
 
         List<WeatherDto> weatherDtoList = new ArrayList<>();
+        // 시간대별 저장 데이터
         String temperature="", weather="", rain="", announce="";
 
         for(int i=0;i<jsonArray.length();i++){
@@ -149,17 +141,39 @@ public class WeatherController {
                 weatherDtoList.add(new WeatherDto(temperature, weather, rain, announce));
                 System.out.println(weatherDtoList.get(weatherDtoList.size()-1).toString());
             }
-//            System.out.println(announce);
         }
         WeatherRes weatherRes = new WeatherRes(weatherDtoList);
 
         return new ResponseEntity<>(weatherRes, HttpStatus.OK);
     }
 
-    private String offsetTime(String time) {
-        time = time.substring(0,2) + "00";
-        int t = Integer.parseInt(time);
-        return (t + 2300 ) % 2400+"";
+    private void settingDate() {
+
+        LocalDateTime today = LocalDateTime.now(); /* format : 2022-09-15T13:30:05.127 */
+        String todayString = today.toString().replaceAll("-|:|T", "");
+
+
+        baseDate = todayString.substring(0,8);
+
+        int hour =  Integer.parseInt(todayString.substring(8,10));
+        if(hour < 2) {
+            String yesterday = yesterday(today);
+            baseDate = yesterday.replaceAll("-", "");
+            baseTime = "2300";
+        } else {
+            hour = ( ( hour+1 ) / 3 ) * 3 - 1 ;
+            if( hour < 10 ) baseTime = "0"+hour+"00";
+            else baseTime = hour+"00";
+        }
+        System.out.println("baseDate = " + baseDate);
+        System.out.println("baseTime = " + baseTime);
     }
+
+    public static String yesterday(LocalDateTime now) {
+        DateTimeFormatter formatter = DateTimeFormatter
+                .ofPattern("yyyy-MM-dd");
+        return now.minus(1, ChronoUnit.DAYS).withHour(0).withMinute(0)
+                .withSecond(0).format(formatter);
+    }/*from  w ww  .ja v a 2 s  .c  om*/
 
 }
