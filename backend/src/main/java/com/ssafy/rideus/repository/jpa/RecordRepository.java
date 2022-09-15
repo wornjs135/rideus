@@ -7,5 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface RecordRepository extends JpaRepository<Record, Long> {
-    public List<Record> findRecordsByMemberId(Long memberId);
+    public List<Record> findTop5RecordsByMemberIdOOrderByIdDesc(Long id);
+
 }
