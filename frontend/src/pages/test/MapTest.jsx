@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Map, MapMarker, Polyline } from "react-kakao-maps-sdk";
-import { s, s2 } from "../utils/data";
+import { s, s2 } from "../../utils/data";
 
 function MapTest() {
   // const latlng = [];
