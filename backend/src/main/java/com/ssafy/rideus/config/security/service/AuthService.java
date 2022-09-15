@@ -1,7 +1,7 @@
 package com.ssafy.rideus.config.security.service;
 
 import com.ssafy.rideus.common.exception.NotFoundException;
-import com.ssafy.rideus.repository.jpa.domain.Member;
+import com.ssafy.rideus.domain.Member;
 import com.ssafy.rideus.repository.jpa.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
