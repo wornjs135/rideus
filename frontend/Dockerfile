@@ -3,12 +3,7 @@
 FROM node:16.16.0 as builder
 # root 에 app 폴더를 생성
 
-
-COPY package*.json ./
-
 RUN npm install
-
-COPY . .
 
 RUN CI=false npm run build
 
@@ -22,7 +17,7 @@ WORKDIR /app
 RUN mkdir ./build
 
 # host pc의 현재경로의 build 폴더를 workdir 의 build 폴더로 복사
-ADD ./build ./build
+COPY ./build ./build
 
 # nginx 의 default.conf 를 삭제
 RUN rm /etc/nginx/conf.d/default.conf
