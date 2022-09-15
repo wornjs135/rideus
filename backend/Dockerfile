@@ -10,9 +10,26 @@
 # docker push wornjs135/beedly_spring
 # docker run -d -p 8080:8080 --name beedly wornjs135/beedly_spring:latest
 
+#FROM openjdk:8
+#
+#EXPOSE 8080
+#ADD ./build/libs/rideus-0.0.1-SNAPSHOT.jar rideus.jar
+#
+#CMD ["java","-jar","beedly.jar"]
+
+
+FROM openjdk:8 AS builder
+COPY gradlew .
+COPY gradle gradle
+COPY build.gradle .
+COPY settings.gradle .
+COPY src src
+RUN chmod =x ./gradlew
+RUN ./gradlew bootJar
+#RUN ./gradlew clean build --exclude-task test
+
 FROM openjdk:8
+COPY --from=builder build/libs/rideus-0.0.1-SNAPSHOT.jar rideus.jar
 
 EXPOSE 8080
-ADD ./build/libs/rideus-0.0.1-SNAPSHOT.jar rideus.jar
-
-CMD ["java","-jar","beedly.jar"]
+CMD ["java","-jar","rideus.jar"]

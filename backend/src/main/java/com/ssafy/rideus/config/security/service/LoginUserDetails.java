@@ -1,6 +1,6 @@
 package com.ssafy.rideus.config.security.service;
 
-import com.ssafy.rideus.domain.Member;
+import com.ssafy.rideus.repository.jpa.domain.Member;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
