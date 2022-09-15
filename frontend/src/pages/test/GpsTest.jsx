@@ -30,6 +30,7 @@ export const GpsTest = () => {
         maximumAge: 0,
         timeout: Infinity,
       },
+      watchPosition: true,
     });
   // const [i, setI] = useState(0.0001);
   useEffect(() => {
