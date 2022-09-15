@@ -52,6 +52,6 @@ public class TestMongoController {
     public ResponseEntity testJenkins() {
         System.out.println("젠킨스 빌드 됐나요");
 
-        return ResponseEntity.ok("젠킨스 빌드 완료?");
+        return ResponseEntity.ok("젠킨스 back 브랜치에서 빌드 완료?");
     }
 }
