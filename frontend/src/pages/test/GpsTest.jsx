@@ -29,15 +29,15 @@ export const GpsTest = () => {
         enableHighAccuracy: false,
       },
     });
-  const [i, setI] = useState(0.0001);
+  // const [i, setI] = useState(0.0001);
   useEffect(() => {
     // let i = 0.000001;
     const timerId = setInterval(() => {
       if (isGeolocationAvailable && isGeolocationEnabled) {
         console.log(coords);
         const gps = {
-          lat: coords.latitude + i,
-          lng: coords.longitude + i,
+          lat: coords.latitude,
+          lng: coords.longitude,
         };
         console.log(gps);
         setData((prev) => {
@@ -46,9 +46,9 @@ export const GpsTest = () => {
             center: gps,
           };
         });
-        setI((prev) => {
-          return prev + 0.0001;
-        });
+        // setI((prev) => {
+        //   return prev + 0.0001;
+        // });
       }
     }, 1000);
     return () => clearInterval(timerId);
