@@ -1,33 +1,36 @@
 pipeline {
-    agent none
+    agent any
+    environment {
+       FRONT_CONTAINER_NAME="rideus_front_container"
+       FRONT_NAME = "rideus_front"
+    }
     options { skipDefaultCheckout(true) }
     stages {
-        stage('Build') {
-            agent {
-                docker {
-                    image 'node:16'
+        stage('Clean'){
+            steps{
+                script {
+                    try{
+                        sh "docker stop ${FRONT_CONTAINER_NAME}"
+                        sleep 1
+                        sh "docker rm ${FRONT_CONTAINER_NAME}"
+                    }catch(e){
+                        sh 'exit 0'
+                    }
                 }
             }
+        }
+        stage('Build') {
             options { skipDefaultCheckout(false) }
             steps {
-              sh 'cd frontend'
-                sh 'npm install'
-                sh 'CI=false npm run build'
-            }
-        }
-        stage('Docker build') {
-            agent any
-            steps {
-                sh 'docker build -t nginx-react-image:latest .'
+                script{
+                    sh "docker build -t ${FRONT_NAME} ./frontend/."
+                }
             }
         }
         stage('Docker run') {
-            agent any
             steps {
-                // sh 'docker ps -f name=nginx-react-container -q | xargs --no-run-if-empty docker container stop'
-                // sh 'docker container ls -a -fname=nginx-react-container -q | xargs -r docker container rm'
-                // sh 'docker rmi $(docker images -f "dangling=true" -q)'
-                sh 'docker run --name nginx_react -d -p 3000:80 nginx-react:0.1'
+                sh "docker run -d --name=${FRONT_CONTAINER_NAME} -p 3000:80 ${FRONT_NAME}"
+                sh "docker image prune"
             }
         }
     }
