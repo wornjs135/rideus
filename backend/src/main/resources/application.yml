@@ -29,7 +29,7 @@ spring:
     # 로컬 환경
     url: jdbc:mysql://localhost:3306/rideus?useSSL=false&useUnicode=true&autoReconnect=true&characterEncoding=utf8&allowMultiQueries=true&serverTimezone=UTC
     username: ssafy
-    password: ssafy
+    password: yfass1234
 
     # ec2 DB에 연결
 #    url: jdbc:mysql://i7a603.p.ssafy.io:3306/rideus?useSSL=false&useUnicode=true&autoReconnect=true&characterEncoding=utf8&allowMultiQueries=true&serverTimezone=UTC
@@ -59,7 +59,7 @@ spring:
 #      uri: mongodb://localhost:27017/test
       host: localhost
       port: 27017
-      database: test
+      database: rideus
 
     web:
       pageable:
