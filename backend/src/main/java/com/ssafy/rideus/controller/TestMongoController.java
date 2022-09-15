@@ -47,4 +47,11 @@ public class TestMongoController {
 
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/test/jenkins")
+    public ResponseEntity testJenkins() {
+        System.out.println("젠킨스 빌드 됐나요");
+
+        return ResponseEntity.ok("젠킨스 빌드 완료?");
+    }
 }
