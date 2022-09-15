@@ -52,8 +52,8 @@ spring:
 
   data:
     mongodb:
-      #username:
-      #password:
+      username: ssafy
+      password: yfass1234
       #authentication-database:
       auto-index-creation:
 #      uri: mongodb://localhost:27017/test
