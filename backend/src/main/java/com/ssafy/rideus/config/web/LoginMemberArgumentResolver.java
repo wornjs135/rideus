@@ -1,7 +1,7 @@
 package com.ssafy.rideus.config.web;
 
 import com.ssafy.rideus.common.exception.NotMatchException;
-import com.ssafy.rideus.repository.jpa.domain.Member;
+import com.ssafy.rideus.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.Authentication;

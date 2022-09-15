@@ -1,4 +1,4 @@
-package com.ssafy.rideus.repository.jpa.domain.base;
+package com.ssafy.rideus.domain.base;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;

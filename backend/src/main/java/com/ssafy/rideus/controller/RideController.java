@@ -4,7 +4,7 @@ import com.ssafy.rideus.common.dto.rideroom.request.GroupRiddingRequest;
 import com.ssafy.rideus.common.dto.rideroom.response.GroupRiddingResponse;
 import com.ssafy.rideus.config.security.util.JwtUtil;
 import com.ssafy.rideus.config.web.LoginMember;
-import com.ssafy.rideus.repository.jpa.domain.Member;
+import com.ssafy.rideus.domain.Member;
 import com.ssafy.rideus.service.RideService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

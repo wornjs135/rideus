@@ -3,8 +3,8 @@ package com.ssafy.rideus.service;
 import com.ssafy.rideus.common.dto.rideroom.request.GroupRiddingRequest;
 import com.ssafy.rideus.common.dto.rideroom.response.GroupRiddingResponse;
 import com.ssafy.rideus.common.exception.NotFoundException;
-import com.ssafy.rideus.repository.jpa.domain.Member;
-import com.ssafy.rideus.repository.jpa.domain.RideRoom;
+import com.ssafy.rideus.domain.Member;
+import com.ssafy.rideus.domain.RideRoom;
 import com.ssafy.rideus.repository.jpa.MemberRepository;
 import com.ssafy.rideus.repository.jpa.RideRoomRepository;
 import com.ssafy.rideus.repository.redis.RedisRideRoomRepository;
@@ -42,5 +42,6 @@ public class RideService {
     }
 
     public void enterRideRoom(Long memberId, GroupRiddingRequest request) {
+
     }
 }

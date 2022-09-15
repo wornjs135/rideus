@@ -1,4 +1,4 @@
-package com.ssafy.rideus.repository.jpa.domain.redish;
+package com.ssafy.rideus.domain.redish;
 
 import com.ssafy.rideus.common.dto.rideroom.RedisParticipantDto;
 import lombok.Getter;

@@ -1,6 +1,6 @@
-package com.ssafy.rideus.repository.jpa.domain;
+package com.ssafy.rideus.domain;
 
-import com.ssafy.rideus.repository.jpa.domain.base.BaseEntity;
+import com.ssafy.rideus.domain.base.BaseEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,24 +12,12 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
-public class Record extends BaseEntity {
+public class CourseLike extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "record_id")
+    @Column(name = "cousre_like_id")
     private Long id;
-
-    @Column(length = 30)
-    private String recordDistance;
-
-    @Column(length = 30)
-    private String recordTime;
-
-    @Column(length = 30)
-    private String recordSpeedAvg;
-
-    @Column(length = 30)
-    private String recordSpeedBest;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
