@@ -1,6 +1,6 @@
-package com.ssafy.rideus.common.dto.rideroom.request;
+package com.ssafy.rideus.dto.rideroom.request;
 
-import com.ssafy.rideus.common.dto.rideroom.type.SocketMessageType;
+import com.ssafy.rideus.dto.rideroom.type.SocketMessageType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

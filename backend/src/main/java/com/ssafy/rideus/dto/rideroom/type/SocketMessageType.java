@@ -1,4 +1,4 @@
-package com.ssafy.rideus.common.dto.rideroom.type;
+package com.ssafy.rideus.dto.rideroom.type;
 
 public enum SocketMessageType {
     CURRENT_POSITION,

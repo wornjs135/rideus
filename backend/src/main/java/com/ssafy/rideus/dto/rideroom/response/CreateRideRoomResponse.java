@@ -1,4 +1,4 @@
-package com.ssafy.rideus.common.dto.rideroom.response;
+package com.ssafy.rideus.dto.rideroom.response;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -12,4 +12,11 @@ public class CreateRideRoomResponse {
 
     @ApiModelProperty(notes = "그룹 라이딩 방 식별자")
     private Long rideRoomId;
+
+    public static CreateRideRoomResponse from(Long rideRoomId) {
+        CreateRideRoomResponse response = new CreateRideRoomResponse();
+        response.rideRoomId = rideRoomId;
+
+        return response;
+    }
 }

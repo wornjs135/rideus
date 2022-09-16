@@ -1,10 +1,9 @@
 package com.ssafy.rideus.websocket;
 
-import com.ssafy.rideus.common.dto.rideroom.request.GroupRiddingRequest;
-import com.ssafy.rideus.common.dto.rideroom.response.GroupRiddingResponse;
-import com.ssafy.rideus.common.dto.rideroom.type.SocketMessageType;
+import com.ssafy.rideus.dto.rideroom.request.GroupRiddingRequest;
+import com.ssafy.rideus.dto.rideroom.response.GroupRiddingResponse;
 
-import static com.ssafy.rideus.common.dto.rideroom.type.SocketMessageType.CURRENT_POSITION;
+import static com.ssafy.rideus.dto.rideroom.type.SocketMessageType.CURRENT_POSITION;
 
 public class TestInfo {
 

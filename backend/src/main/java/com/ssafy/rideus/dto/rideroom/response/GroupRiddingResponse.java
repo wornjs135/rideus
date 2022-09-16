@@ -1,14 +1,16 @@
-package com.ssafy.rideus.common.dto.rideroom;
+package com.ssafy.rideus.dto.rideroom.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class RedisParticipantDto {
+@NoArgsConstructor
+public class GroupRiddingResponse {
 
     private Long memberId;
     private String nickname;
+    private String lat;
+    private String lng;
 }
