@@ -4,6 +4,7 @@ import com.ssafy.rideus.domain.base.BaseEntity;
 import com.ssafy.rideus.domain.type.AuthProvider;
 import com.ssafy.rideus.domain.type.MemberRole;
 import com.ssafy.rideus.dto.member.request.MemberMoreInfoReq;
+import com.ssafy.rideus.dto.member.request.MemberUpdateRequest;
 import lombok.*;
 
 import javax.persistence.*;
@@ -51,5 +52,12 @@ public class Member extends BaseEntity {
         this.name = memberMoreInfoReq.getName();
         this.phone = memberMoreInfoReq.getPhone();
         this.nickname = memberMoreInfoReq.getNickname();
+    }
+
+    public void updateMember(MemberUpdateRequest request) {
+        this.nickName = request.getNickname();
+        this.phone = request.getTel();
+        this.email = request.getEmail();
+
     }
 }
