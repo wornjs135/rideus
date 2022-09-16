@@ -6,6 +6,10 @@ import com.ssafy.rideus.dto.member.request.MemberMoreInfoReq;
 import com.ssafy.rideus.dto.member.response.MemberMeRes;
 import com.ssafy.rideus.repository.jpa.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import com.ssafy.rideus.dto.member.request.MemberUpdateRequest;
+import com.ssafy.rideus.repository.jpa.MemberRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +18,7 @@ import static com.ssafy.rideus.common.exception.NotFoundException.USER_NOT_FOUND
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class MemberService {
 
     private final MemberRepository memberRepository;
@@ -43,5 +48,16 @@ public class MemberService {
 
     public void deleteMember(Long memberId) {
         memberRepository.deleteById(memberId);
+
+    @Transactional
+    public void updateMember(MemberUpdateRequest request, Member member) {
+        Member findMember = validateMember(member);
+        findMember.updateMember(request);
+    }
+
+    public Member validateMember(Member member) {
+        Member findMember = memberRepository.findById(member.getId())
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
+        return findMember;
     }
 }
