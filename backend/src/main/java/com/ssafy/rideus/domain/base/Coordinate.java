@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Point {
+public class Coordinate {
 
-    int x;
-    int y;
+    String lat;
+    String lng;
 }

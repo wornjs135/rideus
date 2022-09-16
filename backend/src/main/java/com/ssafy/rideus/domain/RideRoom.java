@@ -16,6 +16,7 @@ public class RideRoom extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ride_room_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
