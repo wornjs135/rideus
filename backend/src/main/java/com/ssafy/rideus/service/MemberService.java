@@ -48,16 +48,18 @@ public class MemberService {
 
     public void deleteMember(Long memberId) {
         memberRepository.deleteById(memberId);
-
+    }
     @Transactional
-    public void updateMember(MemberUpdateRequest request, Member member) {
-        Member findMember = validateMember(member);
+    public void updateMember(MemberUpdateRequest request, Long memberId) {
+        Member findMember = validateMember(memberId);
         findMember.updateMember(request);
     }
 
-    public Member validateMember(Member member) {
-        Member findMember = memberRepository.findById(member.getId())
+    @Transactional(readOnly = true)
+    public Member validateMember(Long memberId) {
+        Member findMember = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
         return findMember;
     }
+
 }

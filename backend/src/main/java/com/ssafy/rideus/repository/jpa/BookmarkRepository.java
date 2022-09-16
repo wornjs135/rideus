@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
-    public List<Bookmark> findTop5ByMemberIdOOrderByIdDesc(Long id);
+    public List<Bookmark> findTop5ByMemberIdOrderByIdDesc(Long id);
 }
