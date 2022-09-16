@@ -55,7 +55,7 @@ public class Member extends BaseEntity {
     }
 
     public void updateMember(MemberUpdateRequest request) {
-        this.nickName = request.getNickname();
+        this.nickname = request.getNickname();
         this.phone = request.getTel();
         this.email = request.getEmail();
 
