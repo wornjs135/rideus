@@ -1,21 +1,31 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import Logo from "../assets/images/logo192.png";
-import { Link } from "react-router-dom";
+import Logo from "../assets/images/logo.png";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import CourseIcon from "../assets/images/course.png";
+import ActiveCourseIcon from "../assets/images/course_active.png";
+import HomeIcon from "../assets/images/home.png";
+import ActiveHomeIcon from "../assets/images/home_active.png";
+import RankIcon from "../assets/images/rank.png";
+import ActiveRankIcon from "../assets/images/rank_active.png";
+import MypageIcon from "../assets/images/mypage.png";
+import ActiveMypageIcon from "../assets/images/mypage_active.png";
 // 공통 컴포넌트들을 정의하는 클래스
 // ex) 버튼, 레이아웃, 틀
 
 // Header
 const Header = styled.img`
-  background-color: #1f1d1d;
+  /* background-color: #1f1d1d; */
   max-width: 32vw;
   min-width: 32vw;
   padding: 0vw 34vw;
   max-height: 10vh;
+  margin-top: 10px;
 `;
-export const LogoHeader = () => {
-  return <Header alt="logo" src={Logo}></Header>;
-};
+export function LogoHeader() {
+  const navigate = useNavigate();
+  return <Header alt="logo" src={Logo} onClick={() => navigate("/")}></Header>;
+}
 
 //Footer
 const FooterContainer = styled.div`
@@ -88,7 +98,7 @@ export function NavBar() {
         <Link to="/course">
           <img
             alt="코스"
-            src={pathname === "/course" ? ActiveSearchIcon : SearchIcon}
+            src={pathname === "/course" ? ActiveCourseIcon : CourseIcon}
           />
         </Link>
       </div>
@@ -96,7 +106,7 @@ export function NavBar() {
         <Link to="/rank">
           <img
             alt="랭킹"
-            src={pathname === "/rank" ? ActiveListIcon : ListIcon}
+            src={pathname === "/rank" ? ActiveRankIcon : RankIcon}
           />
         </Link>
       </div>
@@ -109,5 +119,24 @@ export function NavBar() {
         </Link>
       </div>
     </NavBarDiv>
+  );
+}
+
+//텍스트 폼
+const TextForm = styled.div`
+  color: ${(props) => props.color || "black"};
+  font-size: ${(props) => props.size || "14px"};
+  font-weight: ${(props) => props.weight || "normal"};
+  font-family: "Noto Sans KR", sans-serif;
+  align-items: center;
+  display: flex;
+`;
+
+//텍스트 사이즈, 컬러, 웨이트, 글자를 설정할 수 있는 컴포넌트
+export function StyledText({ size, color, weight, text, style }) {
+  return (
+    <TextForm size={size} color={color} weight={weight} style={style}>
+      {text}
+    </TextForm>
   );
 }
