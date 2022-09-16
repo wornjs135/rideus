@@ -2,9 +2,15 @@ package com.ssafy.rideus.service;
 
 import com.ssafy.rideus.common.exception.NotFoundException;
 import com.ssafy.rideus.domain.Member;
+import com.ssafy.rideus.domain.Record;
 import com.ssafy.rideus.dto.member.request.MemberMoreInfoReq;
 import com.ssafy.rideus.dto.member.response.MemberMeRes;
+import com.ssafy.rideus.dto.record.response.RecordTotalResponse;
+import com.ssafy.rideus.dto.tag.response.MemberTagResponse;
 import com.ssafy.rideus.repository.jpa.MemberRepository;
+import com.ssafy.rideus.repository.jpa.RecordRepository;
+import com.ssafy.rideus.repository.query.MemberQueryRepository;
+import com.ssafy.rideus.repository.query.TagQueryRepository;
 import lombok.RequiredArgsConstructor;
 import com.ssafy.rideus.dto.member.request.MemberUpdateRequest;
 import com.ssafy.rideus.repository.jpa.MemberRepository;
@@ -12,6 +18,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static com.ssafy.rideus.common.exception.NotFoundException.USER_NOT_FOUND;
 
@@ -22,7 +30,10 @@ import static com.ssafy.rideus.common.exception.NotFoundException.USER_NOT_FOUND
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final MemberQueryRepository memberQueryRepository;
+    private  final TagQueryRepository tagQueryRepository;
 
+    private final RecordRepository recordRepository;
     public void updateMoreInformation(MemberMoreInfoReq memberMoreInfoReq, long memberId) {
         Member findMember = findById(memberId);
         findMember.updateMoreInfo(memberMoreInfoReq);
@@ -61,5 +72,18 @@ public class MemberService {
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
         return findMember;
     }
+    @Transactional(readOnly = true)
+    public RecordTotalResponse getTotalRecord(Long memberId) {
+        return memberQueryRepository.searchTotalRecord(memberId);
+    }
 
+    @Transactional(readOnly = true)
+    public List<MemberTagResponse> getMyTag(Long memberId) {
+        return tagQueryRepository.searchMemberTag(memberId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Record> getRecentRecord(Long memberId) {
+        return recordRepository.findTop5RecordsByMemberIdOrderByIdDesc(memberId);
+    }
 }
