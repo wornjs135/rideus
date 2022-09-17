@@ -28,6 +28,7 @@ export const Router = () => {
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/course" element={<Course />} />
         <Route path="/rank" element={<Rank />} />
+        <Route path="/gpsTest" element={<GpsTest />} />
       </Route>
     </Routes>
   );
