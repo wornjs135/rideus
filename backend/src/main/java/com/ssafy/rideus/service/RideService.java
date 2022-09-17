@@ -1,7 +1,9 @@
 package com.ssafy.rideus.service;
 
 import com.ssafy.rideus.domain.collection.MongoRecord;
+import com.ssafy.rideus.dto.record.request.FinishRiddingRequest;
 import com.ssafy.rideus.dto.record.response.CreateRecordResponse;
+import com.ssafy.rideus.dto.record.type.RiddingType;
 import com.ssafy.rideus.dto.rideroom.common.ParticipantDto;
 import com.ssafy.rideus.dto.rideroom.request.GroupRiddingRequest;
 import com.ssafy.rideus.dto.rideroom.response.CreateRideRoomResponse;
@@ -26,6 +28,8 @@ import java.util.Optional;
 import static com.ssafy.rideus.common.exception.DuplicateException.GROUP_PARTICIPATE_DUPLICATE;
 import static com.ssafy.rideus.common.exception.NotFoundException.RIDEROOM_NOT_FOUND;
 import static com.ssafy.rideus.common.exception.NotFoundException.USER_NOT_FOUND;
+import static com.ssafy.rideus.dto.record.type.RiddingType.group;
+import static com.ssafy.rideus.dto.record.type.RiddingType.single;
 
 @Service
 @RequiredArgsConstructor
@@ -89,5 +93,14 @@ public class RideService {
         MongoRecord saveRecord = mongoRecordRepository.save(MongoRecord.create(member.getId()));
 
         return CreateRecordResponse.from(saveRecord.getId());
+    }
+
+    @Transactional
+    public void finishRidding(Member member, RiddingType riddingType, FinishRiddingRequest request) {
+        if (riddingType.equals(single)) {
+            
+        } else if (riddingType.equals(group)) {
+            
+        }
     }
 }
