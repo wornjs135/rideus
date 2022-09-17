@@ -1,6 +1,8 @@
 package com.ssafy.rideus.controller;
 
+import com.ssafy.rideus.dto.record.request.FinishRiddingRequest;
 import com.ssafy.rideus.dto.record.response.CreateRecordResponse;
+import com.ssafy.rideus.dto.record.type.RiddingType;
 import com.ssafy.rideus.dto.rideroom.request.GroupRiddingRequest;
 import com.ssafy.rideus.dto.rideroom.response.CreateRideRoomResponse;
 import com.ssafy.rideus.dto.rideroom.response.GroupRiddingResponse;
@@ -16,10 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import static com.ssafy.rideus.dto.rideroom.type.SocketMessageType.CURRENT_POSITION;
@@ -66,6 +65,14 @@ public class RideController {
     @PostMapping("/start")
     public ResponseEntity<CreateRecordResponse> startRidding(@ApiIgnore @LoginMember Member member) {
         return ResponseEntity.status(HttpStatus.CREATED).body(rideService.startGroupRidding(member));
+    }
+
+    // 주행 종료
+    @PostMapping("/finish/{riddingType}")
+    public ResponseEntity finishRidding(@ApiIgnore @LoginMember Member member, @PathVariable RiddingType riddingType, @RequestBody FinishRiddingRequest request) {
+        rideService.finishRidding(member, riddingType, request);
+
+        return null;
     }
 
 }
