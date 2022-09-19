@@ -13,5 +13,9 @@ public class CacheKey {
 //    public static final String SPECIAL_AUCTION_BOARD = "special_auction_board";
 //    public static final int SPECIAL_AUCTION_BOARD_EXPIRE_SEC = 300;
 
+    public static final int RANK_TOTAL_EXPIRE_SEC = 60 * 60 * 24 * 7;   // 일주일
+
+    public static final String RANK_TOTAL_TIME = "rank_total_time";
+    public static final String RANK_TOTAL_DISTANCE = "rank_total_distance";
 
 }

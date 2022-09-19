@@ -15,6 +15,8 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.ssafy.rideus.config.data.CacheKey.*;
+
 @Configuration
 @EnableCaching
 public class RedisCacheConfig {
@@ -25,18 +27,18 @@ public class RedisCacheConfig {
         // 기본 expireTime 180초로 설정
         RedisCacheConfiguration configuration = RedisCacheConfiguration.defaultCacheConfig(Thread.currentThread().getContextClassLoader())
                 .disableCachingNullValues()
-                .entryTtl(Duration.ofSeconds(CacheKey.DEFAULT_EXPIRE_SEC))
+                .entryTtl(Duration.ofSeconds(DEFAULT_EXPIRE_SEC))
                 .computePrefixWith(CacheKeyPrefix.simple())
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new Jackson2JsonRedisSerializer<>(Object.class)));
         Map<String,RedisCacheConfiguration> cacheConfigurations = new HashMap<>();
 
-//        // personal_auction_board의 경우 300초로 설정
-//        cacheConfigurations.put(CacheKey.PERSONAL_AUCTION_BOARD,RedisCacheConfiguration.defaultCacheConfig()
-//                .entryTtl(Duration.ofSeconds(CacheKey.PERSONAL_AUCTION_EXPIRE_SEC)));
-//        // special_auction_board의 경우 300초로 설정
-//        cacheConfigurations.put(CacheKey.SPECIAL_AUCTION_BOARD,RedisCacheConfiguration.defaultCacheConfig()
-//                .entryTtl(Duration.ofSeconds(CacheKey.SPECIAL_AUCTION_BOARD_EXPIRE_SEC)));
+        // 전체 랭킹 - 생명시간 일주일
+        cacheConfigurations.put(RANK_TOTAL_TIME,RedisCacheConfiguration.defaultCacheConfig()
+                .entryTtl(Duration.ofSeconds(RANK_TOTAL_EXPIRE_SEC)));
+
+        cacheConfigurations.put(RANK_TOTAL_DISTANCE,RedisCacheConfiguration.defaultCacheConfig()
+                .entryTtl(Duration.ofSeconds(RANK_TOTAL_EXPIRE_SEC)));
 
         return RedisCacheManager.RedisCacheManagerBuilder.fromConnectionFactory(connectionFactory)
                 .cacheDefaults(configuration).withInitialCacheConfigurations(cacheConfigurations).build();
