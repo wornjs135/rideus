@@ -3,7 +3,7 @@ import { Box } from "grommet";
 import bike1 from "../assets/images/bicycle.png";
 import bike2 from "../assets/images/bicycle2.png";
 import Button from "../components/Button";
-import { StyledText } from "../components/Common.jsx";
+import { StyledText } from "../components/Common";
 import styled from "styled-components";
 import { StyledHorizonTable } from "../components/HorizontalScrollBox";
 import { BestCourse } from "../components/CourseComponent";

@@ -152,15 +152,6 @@ const FooterContent = ({ title, desc, openUserTerm, openServiceTerm }) => {
         <p
           key={d}
           onClick={
-            // d === "공지사항"
-            //   ? () => {
-            //       setOpen(true);
-            //     }
-            //   : d === "이용정책"
-            //   ? () => {
-            //       openGuid(true);
-            //     }
-            // :
             d === "이용약관"
               ? () => {
                   openServiceTerm(true);
@@ -179,7 +170,7 @@ const FooterContent = ({ title, desc, openUserTerm, openServiceTerm }) => {
   );
 };
 
-export const Footer = () => {
+export function Footer() {
   // const [open, setOpen] = useState(false);
   // const [FAQ, setFAQ] = useState(false);
   // const [guide, openGuid] = useState(false);
@@ -231,10 +222,7 @@ export const Footer = () => {
             ]}
           />
         </Box>
-        {/* <Notice boardType="NOTICE" open={open} onDismiss={onDismiss} />
-          <Notice boardType="FAQ" open={FAQ} onDismiss={onDismiss} />
-          <UserGuide open={guide} onDismiss={onDismiss} /> */}
       </FooterContainer>
     </Box>
   );
-};
+}
