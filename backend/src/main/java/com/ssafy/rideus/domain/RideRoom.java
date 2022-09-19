@@ -12,30 +12,22 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
-public class Course extends BaseEntity {
+public class RideRoom extends BaseEntity {
 
     @Id
-    @Column(name = "course_id")
-    private String id;
-
-    @Column(length = 100)
-    private String courseName;
-
-    @Column(length = 100)
-    private String distance;
-
-    @Column(length = 100)
-    private String start;
-
-    @Column(length = 100)
-    private String finish;
-
-    @Column(length = 100)
-    private String expectedTime;
-
-    private Integer likeCount;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ride_room_id")
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+
+    public static RideRoom create(Member member) {
+        RideRoom rideRoom = new RideRoom();
+        rideRoom.member = member;
+
+        return rideRoom;
+    }
 }
