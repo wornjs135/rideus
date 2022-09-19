@@ -31,4 +31,8 @@ public class MongoRecord {
 
         return record;
     }
+
+    public void updateParticipants(List<ParticipantDto> participants) {
+        this.participants = participants;
+    }
 }

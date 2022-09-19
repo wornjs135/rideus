@@ -1,6 +1,7 @@
 package com.ssafy.rideus.controller;
 
 import com.ssafy.rideus.dto.record.request.FinishRiddingRequest;
+import com.ssafy.rideus.dto.record.request.SaveCoordinatesRequest;
 import com.ssafy.rideus.dto.record.response.CreateRecordResponse;
 import com.ssafy.rideus.dto.record.type.RiddingType;
 import com.ssafy.rideus.dto.rideroom.request.GroupRiddingRequest;
@@ -20,6 +21,8 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+
+import java.util.List;
 
 import static com.ssafy.rideus.dto.rideroom.type.SocketMessageType.CURRENT_POSITION;
 import static com.ssafy.rideus.dto.rideroom.type.SocketMessageType.ENTER;
@@ -69,10 +72,20 @@ public class RideController {
 
     // 주행 종료
     @PostMapping("/finish/{riddingType}")
-    public ResponseEntity finishRidding(@ApiIgnore @LoginMember Member member, @PathVariable RiddingType riddingType, @RequestBody FinishRiddingRequest request) {
+    public ResponseEntity finishRidding(@ApiIgnore @LoginMember Member member, @PathVariable RiddingType riddingType,
+                                        @RequestBody FinishRiddingRequest request) {
         rideService.finishRidding(member, riddingType, request);
 
-        return null;
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    // 중간 주행 좌표 리스트들 저장
+    @PostMapping("/save/{recordId}")
+    public ResponseEntity saveCoordinatesPerPeriod(@ApiIgnore @LoginMember Member member, @PathVariable String recordId,
+                                                   @RequestBody SaveCoordinatesRequest saveCoordinatesRequest) {
+        rideService.saveCoordinatesPerPeriod(member, recordId, saveCoordinatesRequest);
+
+        return ResponseEntity.ok().build();
     }
 
 }
