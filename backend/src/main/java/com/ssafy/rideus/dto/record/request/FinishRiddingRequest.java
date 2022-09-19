@@ -9,10 +9,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class FinishRiddingRequest {
 
-    private  Long courseId;
-    private String distance;
-    private String time;
-    private String speedAvg;
-    private String speedBest;
+    private String courseId;
+    private String recordId;
+    private Double distance;
+    private Double time;
+    private Long timeMinute;
+    private Double speedAvg;
+    private Double speedBest;
+    private Long rideRoomId;
 
 }

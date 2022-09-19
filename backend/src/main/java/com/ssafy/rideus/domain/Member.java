@@ -38,4 +38,12 @@ public class Member extends BaseEntity {
 
     @Column(length = 100)
     private String nickname;
+
+    private Double totalDistance;
+    private String totalTime;
+
+    public void updateRecord(Double distance, Double time) {
+        this.totalDistance += distance;
+        this.totalTime = String.valueOf(Double.parseDouble(this.totalTime) + time);
+    }
 }
