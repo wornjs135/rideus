@@ -20,7 +20,14 @@ export const Main = () => {
           <img src={bike2} />
         </Box>
         <Box>즐거운 자전거 여행, 달려볼까요?</Box>
-        <Button BigGreen>RIDE!</Button>
+        <Button
+          onClick={() => {
+            naviagate("/ride");
+          }}
+          BigGreen
+        >
+          RIDE!
+        </Button>
         <Button
           BigGreen
           onClick={() => {
