@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface NearInfoService {
 
-    List<NearInfo> findAllNearInfo(long courseId);
+    List<NearInfo> findAllNearInfo(String courseId);
 }

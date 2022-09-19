@@ -24,10 +24,8 @@ public class NearInfoController {
 
     @GetMapping("/{courseid}")
     public ResponseEntity<List<NearInfo>> findAllNearInfo(@PathVariable String courseId) {
-        // 주행 코스 id
-        long course = Long.parseLong(courseId);
         // 코스 주변 정보 리스트
-        List<NearInfo> nearInfos = nearInfoService.findAllNearInfo(course);
+        List<NearInfo> nearInfos = nearInfoService.findAllNearInfo(courseId);
 
         return new ResponseEntity<>(nearInfos, HttpStatus.OK);
     }
