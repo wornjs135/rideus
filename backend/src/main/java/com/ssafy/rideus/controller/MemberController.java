@@ -46,7 +46,7 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/modify")
+    @PatchMapping("/modify")
     public ResponseEntity<Void> modifyMemberInformation(@Valid @RequestBody MemberUpdateRequest request, @ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
         memberService.updateMember(request, member.getId());
         return ResponseEntity.ok().build();
