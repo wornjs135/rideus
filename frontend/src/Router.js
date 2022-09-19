@@ -5,6 +5,7 @@ import { Course } from "./pages/Course";
 import { Main } from "./pages/Main";
 import { MyPage } from "./pages/MyPage";
 import { Rank } from "./pages/Rank";
+import { Ride } from "./pages/Ride.jsx";
 import { GpsTest } from "./pages/test/GpsTest";
 import MapTest from "./pages/test/MapTest";
 
@@ -15,6 +16,14 @@ const Layout = () => {
       <Outlet />
       <Footer />
       <NavBar />
+    </div>
+  );
+};
+
+const FullLayout = () => {
+  return (
+    <div>
+      <Outlet />
     </div>
   );
 };
@@ -30,6 +39,9 @@ export const Router = () => {
         <Route path="/course" element={<Course />} />
         <Route path="/rank" element={<Rank />} />
         <Route path="/gpsTest" element={<GpsTest />} />
+      </Route>
+      <Route path="/" element={<FullLayout />}>
+        <Route path="/ride" element={<Ride />} />
       </Route>
     </Routes>
   );

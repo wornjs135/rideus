@@ -19,6 +19,14 @@ const StyledButton = styled.button`
     `}
 
   ${(props) =>
+    props.BigPink &&
+    css`
+      color: white;
+      background: #f29393;
+      width: 70vw;
+    `}
+
+  ${(props) =>
     props.MediumGreen &&
     css`
       color: white;
@@ -37,9 +45,12 @@ const StyledButton = styled.button`
     ${(props) =>
     props.Custom &&
     css`
-      color: props.textColor;
-      background: props.color;
-      width: props.bWidth;
+      color: ${props.textColor};
+      background: ${props.color};
+      width: ${props.bWidth};
+      height: ${props.bHeight};
+      font-size: ${props.fontSize};
+      font-weight: ${props.fontWeight};
     `}
 `;
 
