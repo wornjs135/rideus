@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { StyledText } from "./common";
+import { StyledText } from "./Common.jsx";
 import Star from "../assets/images/star.png";
 import StarBlank from "../assets/images/star_blank.png";
 import { Box } from "grommet";
