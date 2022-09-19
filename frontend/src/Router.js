@@ -1,6 +1,6 @@
 import React from "react";
 import { Outlet, Route, Routes, useNavigate } from "react-router-dom";
-import { LogoHeader, NavBar } from "./components/common";
+import { Footer, LogoHeader, NavBar } from "./components/Common.jsx";
 import { Course } from "./pages/Course";
 import { Main } from "./pages/Main";
 import { MyPage } from "./pages/MyPage";
@@ -13,6 +13,7 @@ const Layout = () => {
     <div>
       <LogoHeader />
       <Outlet />
+      <Footer />
       <NavBar />
     </div>
   );
