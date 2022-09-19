@@ -48,6 +48,10 @@ public class Member extends BaseEntity {
 
     private String refreshToken;
 
+    private Double totalDistance;
+    
+    private String totalTime;
+
     public void updateMoreInfo(MemberMoreInfoReq memberMoreInfoReq) {
         this.name = memberMoreInfoReq.getName();
         this.phone = memberMoreInfoReq.getPhone();
@@ -58,6 +62,10 @@ public class Member extends BaseEntity {
         this.nickname = request.getNickname();
         this.phone = request.getTel();
         this.email = request.getEmail();
+    }
 
+    public void updateRecord(Double distance, Double time) {
+        this.totalDistance += distance;
+        this.totalTime = String.valueOf(Double.parseDouble(this.totalTime) + time);
     }
 }

@@ -1,6 +1,7 @@
 package com.ssafy.rideus.domain;
 
 import com.ssafy.rideus.domain.base.BaseEntity;
+import com.ssafy.rideus.dto.record.request.FinishRiddingRequest;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,21 +16,18 @@ import javax.persistence.*;
 public class Record extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "record_id")
-    private Long id;
+    private String id;
 
-    @Column(name = "record_distance")
-    private Long recordDistance;
+    private Double recordDistance;
 
-    @Column(name = "record_time")
-    private Long recordTime;
+    private Double recordTime;
 
-    @Column(length = 30)
-    private String recordSpeedAvg;
+    private Double recordSpeedAvg;
 
-    @Column(length = 30)
-    private String recordSpeedBest;
+    private Double recordSpeedBest;
+
+    private Long recordTimeMinute;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -38,4 +36,18 @@ public class Record extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
     private Course course;
+
+    public static Record from(Member findMember, Course findCourse, FinishRiddingRequest request) {
+        Record record = new Record();
+        record.id = request.getRecordId();
+        record.recordDistance = request.getDistance();
+        record.recordTime = request.getTime();
+        record.recordTimeMinute = request.getTimeMinute();
+        record.recordSpeedAvg = request.getSpeedAvg();
+        record.recordSpeedBest = request.getSpeedBest();
+        record.member = findMember;
+        record.course = findCourse;
+
+        return record;
+    }
 }
