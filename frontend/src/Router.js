@@ -6,7 +6,8 @@ import {Main} from "./pages/Main";
 import {MyPage} from "./pages/MyPage";
 import {Rank} from "./pages/Rank";
 import {GpsTest} from "./pages/test/GpsTest";
-import {Login} from "./pages/Login"
+import {Login} from "./pages/Login/Login"
+import {OAuth2RedirectHandler} from "./pages/Login/OAuth2RedirectHandler"
 import MapTest from "./pages/test/MapTest";
 
 const Layout = () => {
@@ -43,6 +44,7 @@ export const Router = () => {
             {/* 헤더, 내브바 없는 곳*/}
             <Route element={<WithOutHeaderNav/>}>
                 <Route path="/login" element={<Login/>}/>
+                <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler/>}/>
             </Route>
         </Routes>
     );
