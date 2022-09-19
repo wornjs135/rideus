@@ -28,7 +28,7 @@ public class NearInfoServiceImpl implements NearInfoService {
 
     // 코스 주변 전체 정보 조회
     @Override
-    public List<NearInfo> findAllNearInfo(long courseId) {
+    public List<NearInfo> findAllNearInfo(String courseId) {
 
         Course course = courseRepository.findById(courseId).orElse(null);
         List<CheckPoint> checkPoints = checkPointRepository.findByCourse(course);
