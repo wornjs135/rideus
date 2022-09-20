@@ -6,9 +6,10 @@ import {Main} from "./pages/Main";
 import {MyPage} from "./pages/MyPage";
 import {Rank} from "./pages/Rank";
 import {GpsTest} from "./pages/test/GpsTest";
-import {Login} from "./pages/Login/Login"
-import {OAuth2RedirectHandler} from "./pages/Login/OAuth2RedirectHandler"
+import {Login} from "./pages/login/Login"
+import {OAuth2RedirectHandler} from "./pages/login/OAuth2RedirectHandler"
 import MapTest from "./pages/test/MapTest";
+import {MoreInfo} from "./pages/login/MoreInfo";
 
 const Layout = () => {
     return (
@@ -45,6 +46,7 @@ export const Router = () => {
             <Route element={<WithOutHeaderNav/>}>
                 <Route path="/login" element={<Login/>}/>
                 <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler/>}/>
+                <Route path="/moreinfo" element={<MoreInfo/>}/>
             </Route>
         </Routes>
     );
