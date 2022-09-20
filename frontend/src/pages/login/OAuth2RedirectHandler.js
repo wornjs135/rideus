@@ -6,14 +6,14 @@ export const OAuth2RedirectHandler = (props) => {
     const params = new URLSearchParams(window.location.search);
 
     const accessToken = params.get("accessToken");
-    const refreshToken = params.get("refreshToken");
+    // const refreshToken = params.get("refreshToken");
     const register = params.get("register");
 
 
     let isRegister = Boolean(register);
 
     localStorage.setItem("accessToken", accessToken);
-    localStorage.setItem("refreshToken", refreshToken);
+    // localStorage.setItem("refreshToken", refreshToken);
 
     // 회원가입후 추가 입력 안했으면
     if (isRegister === true) {
