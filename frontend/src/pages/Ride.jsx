@@ -5,13 +5,28 @@ import { StyledText } from "../components/Common";
 import Button from "../components/Button";
 import { useGeolocated } from "react-geolocated";
 import PlayBtn from "../assets/images/play.png";
+import PauseBtn from "../assets/images/pause.png";
 import TotalBike from "../assets/images/totalRideBike.png";
 import { Map, MapMarker, Polyline } from "react-kakao-maps-sdk";
+import { AlertDialog, MapDialog } from "../components/AlertDialog";
+import { useLocation, useNavigate } from "react-router-dom";
 export const Ride = () => {
-  const [data, setData] = useState({
+  const location = useLocation();
+  const [mapData, setMapData] = useState({
     latlng: [],
     center: { lng: 127.002158, lat: 37.512847 },
   });
+  const [data, setData] = useState({
+    topSpeed: 35.12,
+    avgSpeed: 21.05,
+    nowTime: "12:51",
+    totalDistance: 21.3,
+  });
+  const { courseName } = location.state;
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const [openMap, setOpenMap] = useState(false);
+  const [riding, setRiding] = useState(true);
   const { coords, isGeolocationAvailable, isGeolocationEnabled } =
     useGeolocated({
       positionOptions: {
@@ -21,17 +36,24 @@ export const Ride = () => {
       },
       watchPosition: true,
     });
+
+  const preventClose = (e) => {
+    e.preventDefault();
+    e.returnValue = "";
+  };
+
   useEffect(() => {
     // let i = 0.000001;
+    window.addEventListener("beforeunload", preventClose);
     const timerId = setInterval(() => {
-      if (isGeolocationAvailable && isGeolocationEnabled) {
+      if (riding && isGeolocationAvailable && isGeolocationEnabled) {
         console.log(coords);
         const gps = {
           lat: coords.latitude,
           lng: coords.longitude,
         };
         console.log(gps);
-        setData((prev) => {
+        setMapData((prev) => {
           return {
             center: gps,
           };
@@ -41,14 +63,23 @@ export const Ride = () => {
         // });
       }
     }, 1000);
-    return () => clearInterval(timerId);
+
+    return () => {
+      clearInterval(timerId);
+      window.removeEventListener("beforeunload", preventClose);
+    };
   });
+
+  const handleClose = () => {
+    setOpen(false);
+    setOpenMap(false);
+  };
 
   return (
     <Box background="#439652">
       {/* 나만의 길 */}
       <Box align="center" margin={{ top: "30px", bottom: "12px" }}>
-        <StyledText text="나만의 길" color="white" weight="bold" size="24px" />
+        <StyledText text={courseName} color="white" weight="bold" size="24px" />
       </Box>
       {/* 바디 부분 */}
       <Box
@@ -64,11 +95,11 @@ export const Ride = () => {
         <Box
           style={{ width: "85%", height: "500px" }}
           onClick={() => {
-            console.log("map clicked!!!");
+            setOpenMap(true);
           }}
         >
           <Map
-            center={data.center}
+            center={mapData.center}
             isPanto={true}
             style={{ borderRadius: "25px", width: "100%", height: "100%" }}
           ></Map>
@@ -84,7 +115,7 @@ export const Ride = () => {
               align="center"
               style={{ marginLeft: "10px", marginRight: "5px" }}
             >
-              <StyledText text="21.3" size="40px" weight="bold" />
+              <StyledText text={data.totalDistance} size="40px" weight="bold" />
               <StyledText text="총 이동거리" color="#979797" size="10px" />
             </Box>
             <StyledText text="km" color="#979797" />
@@ -94,17 +125,17 @@ export const Ride = () => {
           <Box direction="row" align="center" gap="medium">
             {/* 주행시간 */}
             <Box align="center">
-              <StyledText text="12:51" weight="bold" size="18px" />
+              <StyledText text={data.nowTime} weight="bold" size="18px" />
               <StyledText text="주행 시간" size="10px" />
             </Box>
             {/* 평균 속도 */}
             <Box align="center">
-              <StyledText text="21:05" weight="bold" size="18px" />
+              <StyledText text={data.avgSpeed} weight="bold" size="18px" />
               <StyledText text="평균 속도" size="10px" />
             </Box>
             {/* 최고 속도 */}
             <Box align="center">
-              <StyledText text="35:12" weight="bold" size="18px" />
+              <StyledText text={data.topSpeed} weight="bold" size="18px" />
               <StyledText text="최고 속도" size="10px" />
             </Box>
           </Box>
@@ -116,12 +147,16 @@ export const Ride = () => {
           <Box direction="row">
             {/* 일시정지 버튼 */}
             <Button
-              children={<img src={PlayBtn} />}
+              children={<img src={riding ? PlayBtn : PauseBtn} />}
               Custom
               color="#439652"
               textColor="white"
               bWidth="20%"
               bHeight="57px"
+              onClick={() => {
+                if (riding === true) setRiding(false);
+                else setRiding(true);
+              }}
             />
             {/* 체크 포인트 저장 버튼 */}
             <Button
@@ -146,10 +181,45 @@ export const Ride = () => {
               fontSize="16px"
               fontWeight="bold"
               children="주행 종료"
+              onClick={() => {
+                setOpen(true);
+              }}
             />
           </Box>
         </Box>
       </Box>
+      <MapDialog
+        open={openMap}
+        handleClose={() => {
+          setOpen(true);
+        }}
+        handleAction={() => {
+          setOpenMap(false);
+        }}
+        map={
+          <Map
+            center={mapData.center}
+            isPanto={true}
+            style={{ width: "100%", height: "100%" }}
+          ></Map>
+        }
+        cancel="주행종료"
+        accept="뒤로가기"
+        title={courseName}
+      />
+      <AlertDialog
+        open={open}
+        handleClose={() => {
+          setOpen(false);
+        }}
+        handleAction={() => {
+          navigate("/rideEnd");
+        }}
+        title="주행 종료"
+        desc="주행을 종료하시겠습니까?"
+        cancel="취소"
+        accept="종료"
+      />
     </Box>
   );
 };

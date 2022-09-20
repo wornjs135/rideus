@@ -8,9 +8,15 @@ import styled from "styled-components";
 import { StyledHorizonTable } from "../components/HorizontalScrollBox";
 import { BestCourse } from "../components/CourseComponent";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { ChooseRideTypeBar } from "../components/ChooseRideTypeBar";
 
 export const Main = () => {
-  const naviagate = useNavigate();
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const onDismiss = () => {
+    setOpen(false);
+  };
   return (
     <Box width="100vw" justify="center" margin="0 auto" gap="small">
       {/* 자전거사진, 멘트, 버튼 */}
@@ -19,10 +25,16 @@ export const Main = () => {
           <img src={bike1} />
           <img src={bike2} />
         </Box>
-        <Box>즐거운 자전거 여행, 달려볼까요?</Box>
+        <StyledText
+          color="#4B4B4B"
+          text="즐거운 자전거 여행, 달려볼까요?"
+          weight="bold"
+          size="18px"
+        />
         <Button
           onClick={() => {
-            naviagate("/ride");
+            // naviagate("/ride", { state: { courseName: "나만의 길" } });
+            setOpen(true);
           }}
           BigGreen
         >
@@ -31,7 +43,7 @@ export const Main = () => {
         <Button
           BigGreen
           onClick={() => {
-            naviagate("/gpsTest");
+            navigate("/gpsTest");
           }}
         >
           GPS TEST
@@ -106,6 +118,7 @@ export const Main = () => {
           <Box direction="row" overflow="scroll"></Box>
         </Box>
       </Box>
+      <ChooseRideTypeBar open={open} onDismiss={onDismiss} />
     </Box>
   );
 };
