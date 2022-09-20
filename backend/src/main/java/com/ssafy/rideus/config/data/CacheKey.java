@@ -17,5 +17,10 @@ public class CacheKey {
 
     public static final String RANK_TOTAL_TIME = "rank_total_time";
     public static final String RANK_TOTAL_DISTANCE = "rank_total_distance";
+    public static final String RANK_TOTAL_BEST_SPEED = "rank_total_max_speed";
+    public static final String RANK_COURSE_TIME = "rank_course_time";
+    public static final String RANK_MEMBER_TIME = "rank_member_time";
+    public static final String RANK_MEMBER_DISTANCE = "rank_member_distance";
+    public static final String RANK_MEMBER_BEST_SPEED = "rank_member_max_speed";
 
 }
