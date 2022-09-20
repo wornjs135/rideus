@@ -1,13 +1,11 @@
 package com.ssafy.rideus.dto.rank.response;
 
-import java.io.Serializable;
-
-public interface RankTimeResponseDtoInterface {
+public interface RankCourseTimeResponseDtoInterface {
 
     Long getMemberId();
     String getNickname();
     String getProfileImageUrl();
-    String getTotalTime();
+    Double getTimeMinute();
     Long getRanking();
 
 }

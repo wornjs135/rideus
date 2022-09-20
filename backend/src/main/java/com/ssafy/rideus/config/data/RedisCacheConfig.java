@@ -40,6 +40,21 @@ public class RedisCacheConfig {
         cacheConfigurations.put(RANK_TOTAL_DISTANCE,RedisCacheConfiguration.defaultCacheConfig()
                 .entryTtl(Duration.ofSeconds(RANK_TOTAL_EXPIRE_SEC)));
 
+        cacheConfigurations.put(RANK_TOTAL_BEST_SPEED,RedisCacheConfiguration.defaultCacheConfig()
+                .entryTtl(Duration.ofSeconds(RANK_TOTAL_EXPIRE_SEC)));
+
+        cacheConfigurations.put(RANK_COURSE_TIME,RedisCacheConfiguration.defaultCacheConfig()
+                .entryTtl(Duration.ofSeconds(RANK_TOTAL_EXPIRE_SEC)));
+
+        cacheConfigurations.put(RANK_MEMBER_TIME,RedisCacheConfiguration.defaultCacheConfig()
+                .entryTtl(Duration.ofSeconds(RANK_TOTAL_EXPIRE_SEC)));
+
+        cacheConfigurations.put(RANK_MEMBER_DISTANCE,RedisCacheConfiguration.defaultCacheConfig()
+                .entryTtl(Duration.ofSeconds(RANK_TOTAL_EXPIRE_SEC)));
+
+        cacheConfigurations.put(RANK_MEMBER_BEST_SPEED,RedisCacheConfiguration.defaultCacheConfig()
+                .entryTtl(Duration.ofSeconds(RANK_TOTAL_EXPIRE_SEC)));
+
         return RedisCacheManager.RedisCacheManagerBuilder.fromConnectionFactory(connectionFactory)
                 .cacheDefaults(configuration).withInitialCacheConfigurations(cacheConfigurations).build();
     }
