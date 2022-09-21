@@ -34,7 +34,7 @@ public class ReviewController {
     }
     //코스 별 리뷰 목록
     @GetMapping("/{course_id}")
-    public ResponseEntity<?> reviewAll(@PathVariable(value = "course_id") Long cid) {
+    public ResponseEntity<?> reviewAll(@PathVariable(value = "course_id") String cid) {
         List<Review> result = reviewService.showAllReview(cid);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
