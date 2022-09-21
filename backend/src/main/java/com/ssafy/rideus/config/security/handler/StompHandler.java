@@ -1,5 +1,6 @@
 package com.ssafy.rideus.config.security.handler;
 
+import com.ssafy.rideus.config.security.util.JwtTokenProvider;
 import com.ssafy.rideus.config.security.util.JwtUtil;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ public class StompHandler implements ChannelInterceptor {
     @Value("${token.secret}")
     private String secretKey;
 
-//    private final JwtUtil jwtUtil;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
@@ -31,7 +32,7 @@ public class StompHandler implements ChannelInterceptor {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
 
         if (StompCommand.CONNECT == accessor.getCommand()) {
-            if (!isValidToken(extractToken(accessor))) {
+            if (!jwtTokenProvider.validateToken(extractToken(accessor))) {
                 throw new AccessDeniedException("연결 거부");
             }
         }
