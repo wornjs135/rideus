@@ -43,8 +43,8 @@ public class ReviewServiceImpl implements ReviewService{
 
     @Override
     @Transactional
-    public List<Review> showAllReview(Long cid) {
-        List<Review> reviews = reviewRepository.findAllReview(cid);
+    public List<Review> showAllReview(String cid) {
+        List<Review> reviews = reviewRepository.findAllByCourseId(cid);
         return reviews;
     }
 
