@@ -1,78 +1,104 @@
-import { createTheme, Tab, Tabs, ThemeProvider } from "@mui/material";
-import { Box } from "grommet";
-import React, { useState } from "react";
+import { Avatar, Box } from "grommet";
+import React, { useEffect, useState } from "react";
 import { BottomSheet } from "react-spring-bottom-sheet";
-import Typography from "@mui/material/Typography";
 import { StyledText } from "./Common";
-const theme = createTheme({
-  status: {
-    danger: "#e53e3e",
-  },
-  palette: {
-    primary: {
-      main: "#439652",
-    },
-    neutral: {
-      main: "#64748B",
-      contrastText: "#fff",
-    },
-  },
-});
-
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
-  };
-}
-
+import { RankProfile } from "./RankProfile";
+import Profile from "../assets/images/profile.png";
+import { RankBox } from "./RankBox";
+import { ReviewBox } from "./ReviewBox";
 export const CourseReviewRank = ({ open, onDismiss }) => {
   const [value, setValue] = useState(0);
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    setData([
+      { rank: 1, name: "김싸피", time: "2h 5m" },
+      { rank: 2, name: "박삼성", time: "2h 13m" },
+      { rank: 3, name: "이갤럭시", time: "2h 15m" },
+      { rank: 4, name: "김싸피", time: "2h 5m" },
+      { rank: 5, name: "박삼성", time: "2h 13m" },
+      { rank: 6, name: "이갤럭시", time: "2h 15m" },
+      { rank: 7, name: "김싸피", time: "2h 5m" },
+      { rank: 8, name: "박삼성", time: "2h 13m" },
+      { rank: 9, name: "이갤럭시", time: "2h 15m" },
+      { rank: 10, name: "김싸피", time: "2h 5m" },
+      { rank: 11, name: "박삼성", time: "2h 13m" },
+      { rank: 12, name: "이갤럭시", time: "2h 15m" },
+    ]);
+  }, []);
   return (
     <BottomSheet
       open={open}
       blocking={false}
       header={
-        <ThemeProvider theme={theme}>
-          <Tabs value={value} onChange={handleChange} centered>
-            <Tab {...a11yProps(0)} label="랭킹" />
-            <Tab {...a11yProps(1)} label="리뷰" />
-          </Tabs>
-        </ThemeProvider>
+        <Box direction="row" justify="center" width="100%" border={false}>
+          <Box
+            border={false}
+            justify="center"
+            align="center"
+            background={value === 0 ? "#439652" : "white"}
+            width="30vw"
+            height="4vh"
+            onClick={() => {
+              setValue(0);
+            }}
+          >
+            <StyledText text="랭킹" color={value === 0 ? "white" : "black"} />
+          </Box>
+          <Box
+            border={false}
+            justify="center"
+            align="center"
+            background={value === 1 ? "#439652" : "white"}
+            width="30vw"
+            height="4vh"
+            onClick={() => {
+              setValue(1);
+            }}
+          >
+            <StyledText text="리뷰" color={value === 1 ? "white" : "black"} />
+          </Box>
+        </Box>
       }
       snapPoints={({ maxHeight }) => [maxHeight / 8, maxHeight * 0.6]}
     >
-      <Box>
-        <TabPanel value={value} index={0}>
-          <Box>
-            <StyledText text="시간별 순위" />
+      <Box align="center" background="rgba(250, 250, 250, 0.93)">
+        <Box
+          width="90%"
+          align="center"
+          margin={{ top: "20px" }}
+          pad="small"
+          style={{ display: value === 0 ? "block" : "none" }}
+        >
+          <StyledText text="시간별 순위" weight="bold" size="16px" />
+          <Box direction="row" justify="center" align="end">
+            <RankProfile record={data[1]} />
+            <RankProfile record={data[0]} />
+            <RankProfile record={data[2]} />
           </Box>
-        </TabPanel>
-        <TabPanel value={value} index={1}>
-          배인수
-        </TabPanel>
+          <Box>
+            {data.map((d, idx) => {
+              return <RankBox record={d} key={idx} />;
+            })}
+          </Box>
+        </Box>
+        <Box
+          style={{ display: value === 1 ? "block" : "none" }}
+          width="90%"
+          align="center"
+          margin={{ top: "20px" }}
+          pad="small"
+        >
+          <ReviewBox />
+          <ReviewBox />
+          <ReviewBox />
+          <ReviewBox />
+          <ReviewBox />
+          <ReviewBox />
+          <ReviewBox />
+          <ReviewBox />
+          <ReviewBox />
+        </Box>
       </Box>
     </BottomSheet>
   );

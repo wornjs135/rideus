@@ -21,7 +21,7 @@ const BackButton = styled.button`
   width: 10vw;
 `;
 
-const HeaderBox = ({ goBack }) => {
+export const HeaderBox = ({ goBack }) => {
   return (
     <HeaderDiv>
       <div style={{ width: "10vw" }}></div>

@@ -10,8 +10,11 @@ import TotalBike from "../assets/images/totalRideBike.png";
 import { Map, MapMarker, Polyline } from "react-kakao-maps-sdk";
 import { AlertDialog, MapDialog } from "../components/AlertDialog";
 import { useLocation, useNavigate } from "react-router-dom";
+import history from "../utils/history.js";
+
 export const Ride = () => {
   const location = useLocation();
+
   const [mapData, setMapData] = useState({
     latlng: [],
     center: { lng: 127.002158, lat: 37.512847 },
@@ -43,8 +46,18 @@ export const Ride = () => {
   };
 
   useEffect(() => {
+    // console.log("hello");
     // let i = 0.000001;
     window.addEventListener("beforeunload", preventClose);
+    const unblock = history.block(({ action, location, retry }) => {
+      console.log(action);
+      if (action === "POP") {
+        if (window.confirm("그만")) {
+          return unblock();
+        }
+        // setOpen(true);
+      }
+    });
     const timerId = setInterval(() => {
       if (riding && isGeolocationAvailable && isGeolocationEnabled) {
         console.log(coords);
@@ -66,6 +79,7 @@ export const Ride = () => {
 
     return () => {
       clearInterval(timerId);
+      unblock();
       window.removeEventListener("beforeunload", preventClose);
     };
   });

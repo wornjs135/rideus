@@ -48,6 +48,82 @@ export const AlertDialog = ({
   );
 };
 
+export const RideDialog = ({
+  open,
+  handleClose,
+  handleAction,
+  title,
+  desc,
+  cancel,
+  accept,
+}) => {
+  return (
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+    >
+      <HeaderBox
+        goBack={() => {
+          onDismiss();
+        }}
+      />
+      <Box
+        direction="row"
+        justify="around"
+        width="100%"
+        pad="15px"
+        margin={{ top: "20px", bottom: "50px" }}
+      >
+        <Button
+          color="#439652"
+          onClick={() => {
+            navigate("/course");
+          }}
+          children={
+            <Box
+              width="145px"
+              align="center"
+              background="#439652"
+              style={{ borderRadius: "8px" }}
+            >
+              <img src={CourseButton} width="100px" />
+              <StyledText
+                text="추천 코스"
+                color="white"
+                weight="bold"
+                size="18px"
+              />
+            </Box>
+          }
+        />
+        <Button
+          onClick={() => {
+            navigate("/ride", { state: { courseName: "나만의 길" } });
+          }}
+          children={
+            <Box
+              width="145px"
+              align="center"
+              background="#439652"
+              style={{ borderRadius: "8px" }}
+            >
+              <img src={RideButton} width="100px" />
+              <StyledText
+                text="나만의 코스"
+                color="white"
+                weight="bold"
+                size="18px"
+              />
+            </Box>
+          }
+        />
+      </Box>
+    </Dialog>
+  );
+};
+
 const BottomBtn = styled.div`
   position: absolute;
   width: 100%;
