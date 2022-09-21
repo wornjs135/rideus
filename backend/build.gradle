@@ -43,6 +43,9 @@ dependencies {
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
     implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
 
+    // json
+    implementation group: 'org.json', name: 'json', version: '20090211'
+
     // aws s3
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-aws', version: '2.2.1.RELEASE'
 
@@ -61,6 +64,11 @@ dependencies {
 
     // mongodb
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+    
+    // jsop
+    implementation 'org.jsoup:jsoup:1.15.3'
+    // json
+    
 }
 
 tasks.named('test') {

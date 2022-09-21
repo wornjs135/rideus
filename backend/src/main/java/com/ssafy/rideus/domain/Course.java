@@ -15,9 +15,9 @@ import javax.persistence.*;
 public class Course extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "course_id")
-    private Long id;
+    private String id;
 
     @Column(length = 100)
     private String courseName;
@@ -35,6 +35,9 @@ public class Course extends BaseEntity {
     private String expectedTime;
 
     private Integer likeCount;
+    
+    @Column(length = 200)
+    private String imageUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
