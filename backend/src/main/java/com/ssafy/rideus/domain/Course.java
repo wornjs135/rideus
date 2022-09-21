@@ -15,9 +15,8 @@ import javax.persistence.*;
 public class Course extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "course_id")
-    private Long id;
+    private String id;
 
     @Column(length = 100)
     private String courseName;

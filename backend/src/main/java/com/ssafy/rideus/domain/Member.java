@@ -4,6 +4,7 @@ import com.ssafy.rideus.domain.base.BaseEntity;
 import com.ssafy.rideus.domain.type.AuthProvider;
 import com.ssafy.rideus.domain.type.MemberRole;
 import com.ssafy.rideus.dto.member.request.MemberMoreInfoReq;
+import com.ssafy.rideus.dto.member.request.MemberUpdateRequest;
 import lombok.*;
 
 import javax.persistence.*;
@@ -47,9 +48,24 @@ public class Member extends BaseEntity {
 
     private String refreshToken;
 
+    private Double totalDistance;
+    
+    private String totalTime;
+
     public void updateMoreInfo(MemberMoreInfoReq memberMoreInfoReq) {
         this.name = memberMoreInfoReq.getName();
         this.phone = memberMoreInfoReq.getPhone();
         this.nickname = memberMoreInfoReq.getNickname();
+    }
+
+    public void updateMember(MemberUpdateRequest request) {
+        this.nickname = request.getNickname();
+        this.phone = request.getTel();
+        this.email = request.getEmail();
+    }
+
+    public void updateRecord(Double distance, Double time) {
+        this.totalDistance += distance;
+        this.totalTime = String.valueOf(Double.parseDouble(this.totalTime) + time);
     }
 }
