@@ -11,5 +11,8 @@ public class Coordinate {
 
     String lat;
     String lng;
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/back
 }

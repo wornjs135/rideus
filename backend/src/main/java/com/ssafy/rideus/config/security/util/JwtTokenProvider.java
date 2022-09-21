@@ -62,7 +62,7 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public void createRefreshToken(Authentication authentication, HttpServletResponse response) {
+    public String createRefreshToken(Authentication authentication, HttpServletResponse response) {
         Date now = new Date();
         Date validity = new Date(now.getTime() + REFRESH_TOKEN_EXPIRE_LENGTH);
 
@@ -84,6 +84,8 @@ public class JwtTokenProvider {
                 .build();
 
         response.addHeader("Set-Cookie", cookie.toString());
+
+        return refreshToken;
     }
 
     private void saveRefreshToken(Authentication authentication, String refreshToken) {

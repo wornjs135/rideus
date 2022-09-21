@@ -1,8 +1,12 @@
 package com.ssafy.rideus.controller;
 
 import com.ssafy.rideus.config.security.auth.CustomUserDetails;
+import com.ssafy.rideus.domain.Record;
 import com.ssafy.rideus.dto.member.request.MemberMoreInfoReq;
+import com.ssafy.rideus.dto.member.request.MemberUpdateRequest;
 import com.ssafy.rideus.dto.member.response.MemberMeRes;
+import com.ssafy.rideus.dto.record.response.RecordTotalResponse;
+import com.ssafy.rideus.dto.tag.response.MemberTagResponse;
 import com.ssafy.rideus.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -41,4 +46,23 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
+    @PatchMapping("/modify")
+    public ResponseEntity<Void> modifyMemberInformation(@Valid @RequestBody MemberUpdateRequest request, @ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
+        memberService.updateMember(request, member.getId());
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/recent")
+    public ResponseEntity<List<Record>> getRecentRocrd(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
+        return ResponseEntity.ok(memberService.getRecentRecord(member.getId()));
+    }
+    @GetMapping("/totalRecord")
+    public ResponseEntity<RecordTotalResponse> getTotalRecord(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
+        return ResponseEntity.ok(memberService.getTotalRecord(member.getId()));
+    }
+
+    @GetMapping("/myTag")
+    public ResponseEntity<List<MemberTagResponse>> getMyTag(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
+        return ResponseEntity.ok(memberService.getMyTag(member.getId()));
+    }
 }
