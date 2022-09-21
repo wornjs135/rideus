@@ -1,16 +1,20 @@
 package com.ssafy.rideus.controller;
 
+import com.ssafy.rideus.config.security.auth.CustomUserDetails;
 import com.ssafy.rideus.domain.Review;
 import com.ssafy.rideus.dto.review.*;
 import com.ssafy.rideus.repository.jpa.ReviewLikeRepository;
 import com.ssafy.rideus.repository.jpa.ReviewRepository;
 import com.ssafy.rideus.repository.jpa.ReviewTagRepository;
+import com.ssafy.rideus.service.MemberService;
 import com.ssafy.rideus.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 
@@ -20,13 +24,12 @@ import java.util.List;
 @RequestMapping("/review")
 public class ReviewController {
     private final ReviewService reviewService;
-    //private final MemberService memberService;
+    private final MemberService memberService;
 
     //리뷰 작성
     @PostMapping("/write")
-    public ResponseEntity<?> writeReview(@RequestBody ReviewRequestDto reviewRequestDto) {
-        Long id = reviewRequestDto.getCid(); //memberService.getId(), mid로 수정 예정
-        reviewService.writeReview(reviewRequestDto, id);
+    public ResponseEntity<?> writeReview(@RequestBody ReviewRequestDto reviewRequestDto, @ApiIgnore @AuthenticationPrincipal CustomUserDetails user) {
+        reviewService.writeReview(reviewRequestDto, user.getId());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
     //코스 별 리뷰 목록
@@ -43,9 +46,8 @@ public class ReviewController {
     }
     //리뷰 좋아요
     @PostMapping("/click")
-    public ResponseEntity<?> likeClick(@RequestBody ReviewLikeRequestDto reviewLikeRequestDto) {
-        Long id = reviewLikeRequestDto.getRid(); //memberService.getId(), mid로 수정 예정
-        ReviewLikeCountDto result = reviewService.likeClick(reviewLikeRequestDto, id);
+    public ResponseEntity<?> likeClick(@RequestBody ReviewLikeRequestDto reviewLikeRequestDto, @ApiIgnore @AuthenticationPrincipal CustomUserDetails user) {
+        ReviewLikeCountDto result = reviewService.likeClick(reviewLikeRequestDto, user.getId());
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 }

@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class ReviewRequestDto {
-    private Long cid;
+    private String cid;
     private int score;
     private String content;
     private String imageUrl;
