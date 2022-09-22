@@ -16,10 +16,17 @@ import {
 } from "react-router-dom";
 import history from "../utils/history.js";
 import { latlng } from "../utils/data";
+import useWatchLocation from "../hooks/watchLocationHook";
+
+const geolocationOptions = {
+  enableHighAccuracy: true,
+  timeout: 500, // 1 min (1000 ms * 60 sec * 1 minute = 60 000ms)
+  maximumAge: 0, // 24 hour
+};
 
 export const Ride = () => {
-  const location = useLocation();
-
+  const locations = useLocation();
+  const [nowTime, setNowTime] = useState(0);
   const [mapData, setMapData] = useState({
     latlng: [],
     center: { lng: 127.002158, lat: 37.512847 },
@@ -28,28 +35,28 @@ export const Ride = () => {
   const [data, setData] = useState({
     topSpeed: 0,
     avgSpeed: 0,
-    nowTime: 0,
     totalDistance: 0,
   });
 
   // 코스 이름, 싱글 or 그룹, 추천코스 or 나만의 코스
-  const { courseName, rideType, courseType } = location.state;
+  const { courseName, rideType, courseType } = locations.state;
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [openMap, setOpenMap] = useState(false);
   const [riding, setRiding] = useState(true);
   const [when, setWhen] = useState(true);
   const [lastLocation, setLastLocation] = useState(null);
-  const { coords, isGeolocationAvailable, isGeolocationEnabled } =
-    useGeolocated({
-      positionOptions: {
-        enableHighAccuracy: true,
-        maximumAge: 0,
-        timeout: Infinity,
-      },
-      watchPosition: true,
-    });
-
+  // const { coords, isGeolocationAvailable, isGeolocationEnabled } =
+  //   useGeolocated({
+  //     positionOptions: {
+  //       enableHighAccuracy: true,
+  //       maximumAge: 0,
+  //       timeout: Infinity,
+  //     },
+  //     watchPosition: true,
+  //   });
+  const { location, cancelLocationWatch, error } =
+    useWatchLocation(geolocationOptions);
   const preventClose = (e) => {
     e.preventDefault();
     e.returnValue = "";
@@ -70,6 +77,7 @@ export const Ride = () => {
     dist = Math.acos(dist);
     dist = (dist * 180) / Math.PI;
     dist = dist * 60 * 1.1515 * 1.609344 * 1000;
+    // dist = dist * 6371;
     if (dist < 100) dist = Math.round(dist / 10) * 10;
     else dist = Math.round(dist / 100) * 100;
 
@@ -104,18 +112,18 @@ export const Ride = () => {
   }
   const [confirmedNavigation, setConfirmedNavigation] = useState(false);
 
-  const [i, setI] = useState(0.0001);
+  const [i, setI] = useState(0);
 
   const handleBlockedNavigation = useCallback(
     (tx) => {
-      if (!confirmedNavigation && tx.location.pathname !== location.pathname) {
+      if (!confirmedNavigation && tx.location.pathname !== locations.pathname) {
         setOpen(true);
         setLastLocation(tx);
         return false;
       }
       return true;
     },
-    [confirmedNavigation, location.pathname]
+    [confirmedNavigation, locations.pathname]
   );
   const confirmNavigation = useCallback(() => {
     setOpen(false);
@@ -128,15 +136,14 @@ export const Ride = () => {
     window.addEventListener("beforeunload", preventClose);
     // let i = 0;
     const timerId = setInterval(() => {
-      if (riding && isGeolocationAvailable && isGeolocationEnabled) {
-        console.log(coords);
+      if (riding && location) {
+        console.log(location);
+
         const gps = {
-          lat: coords.latitude,
-          lng: coords.longitude,
+          lat: location.latitude,
+          lng: location.longitude,
         };
-        setI((prev) => {
-          return prev + 0.0001;
-        });
+
         console.log(gps);
         setMapData((prev) => {
           return {
@@ -154,23 +161,17 @@ export const Ride = () => {
           );
           console.log("dis:", dis);
           if (dis > 0)
-            setData((prev) => {
-              return {
-                topSpeed: Math.max(prev.topSpeed, dis * 3.6),
-                nowTime: prev.nowTime + 1,
-                avgSpeed: dis * 3.6,
-                totalDistance: prev.totalDistance + dis,
-              };
-            });
+            setData((prev) => ({
+              topSpeed: Math.max(prev.topSpeed, dis * 3.6),
+              avgSpeed: dis * 3.6,
+              totalDistance: prev.totalDistance + dis,
+            }));
           else
-            setData((prev) => {
-              return {
-                topSpeed: prev.topSpeed,
-                avgSpeed: prev.avgSpeed,
-                nowTime: prev.nowTime + 1,
-                totalDistance: prev.totalDistance,
-              };
-            });
+            setData((prev) => ({
+              topSpeed: prev.topSpeed,
+              avgSpeed: prev.avgSpeed,
+              totalDistance: prev.totalDistance,
+            }));
         }
 
         // setI((prev) => {
@@ -181,14 +182,19 @@ export const Ride = () => {
           return {
             topSpeed: prev.topSpeed,
             avgSpeed: prev.avgSpeed,
-            nowTime: prev.nowTime + 1,
             totalDistance: prev.totalDistance,
           };
         });
+      // setI((prev) => {
+      //   return prev + 0.0001;
+      // });
+      setNowTime((prev) => prev + 1);
+      console.log(mapData.latlng);
     }, 1000);
 
     return () => {
       clearInterval(timerId);
+      cancelLocationWatch();
       window.removeEventListener("beforeunload", preventClose);
     };
   });
@@ -254,7 +260,7 @@ export const Ride = () => {
           <Box direction="row" align="center" gap="medium">
             {/* 주행시간 */}
             <Box align="center">
-              <StyledText text={data.nowTime} weight="bold" size="18px" />
+              <StyledText text={nowTime} weight="bold" size="18px" />
               <StyledText text="주행 시간" size="10px" />
             </Box>
             {/* 평균 속도 */}
@@ -353,7 +359,7 @@ export const Ride = () => {
                 latlng: mapData.latlng,
                 topSpeed: data.topSpeed,
                 avgSpeed: data.avgSpeed,
-                nowTime: data.nowTime,
+                nowTime: nowTime,
                 totalDistance: data.totalDistance,
               },
             },
