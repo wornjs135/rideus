@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useContext } from "react";
 import { useEffect, useState } from "react";
 import { Box } from "grommet";
 import { StyledText } from "../components/Common";
@@ -9,8 +9,13 @@ import PauseBtn from "../assets/images/pause.png";
 import TotalBike from "../assets/images/totalRideBike.png";
 import { Map, MapMarker, Polyline } from "react-kakao-maps-sdk";
 import { AlertDialog, MapDialog } from "../components/AlertDialog";
-import { useLocation, useNavigate } from "react-router-dom";
+import {
+  useLocation,
+  useNavigate,
+  UNSAFE_NavigationContext as NavigationContext,
+} from "react-router-dom";
 import history from "../utils/history.js";
+import { latlng } from "../utils/data";
 
 export const Ride = () => {
   const location = useLocation();
@@ -19,17 +24,22 @@ export const Ride = () => {
     latlng: [],
     center: { lng: 127.002158, lat: 37.512847 },
   });
+
   const [data, setData] = useState({
-    topSpeed: 35.12,
-    avgSpeed: 21.05,
-    nowTime: "12:51",
-    totalDistance: 21.3,
+    topSpeed: 0,
+    avgSpeed: 0,
+    nowTime: 0,
+    totalDistance: 0,
   });
-  const { courseName } = location.state;
+
+  // 코스 이름, 싱글 or 그룹, 추천코스 or 나만의 코스
+  const { courseName, rideType, courseType } = location.state;
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [openMap, setOpenMap] = useState(false);
   const [riding, setRiding] = useState(true);
+  const [when, setWhen] = useState(true);
+  const [lastLocation, setLastLocation] = useState(null);
   const { coords, isGeolocationAvailable, isGeolocationEnabled } =
     useGeolocated({
       positionOptions: {
@@ -45,49 +55,144 @@ export const Ride = () => {
     e.returnValue = "";
   };
 
+  function getDistance(lat1, lon1, lat2, lon2) {
+    if (lat1 == lat2 && lon1 == lon2) return 0;
+
+    var radLat1 = (Math.PI * lat1) / 180;
+    var radLat2 = (Math.PI * lat2) / 180;
+    var theta = lon1 - lon2;
+    var radTheta = (Math.PI * theta) / 180;
+    var dist =
+      Math.sin(radLat1) * Math.sin(radLat2) +
+      Math.cos(radLat1) * Math.cos(radLat2) * Math.cos(radTheta);
+    if (dist > 1) dist = 1;
+
+    dist = Math.acos(dist);
+    dist = (dist * 180) / Math.PI;
+    dist = dist * 60 * 1.1515 * 1.609344 * 1000;
+    if (dist < 100) dist = Math.round(dist / 10) * 10;
+    else dist = Math.round(dist / 100) * 100;
+
+    return dist;
+  }
+
+  function useBlocker(blocker, when = true) {
+    const { navigator } = useContext(NavigationContext);
+
+    useEffect(() => {
+      if (!when) {
+        return;
+      }
+      const unblock = navigator.block((tx) => {
+        const autoUnblockingTx = {
+          ...tx,
+          retry() {
+            // Automatically unblock the transition so it can play all the way
+            // through before retrying it. T O D O: Figure out how to re-enable
+            // this block if the transition is cancelled for some reason.
+            unblock();
+            tx.retry();
+          },
+        };
+
+        blocker(autoUnblockingTx);
+      });
+
+      // eslint-disable-next-line consistent-return
+      return unblock;
+    }, [navigator, blocker]);
+  }
+  const [confirmedNavigation, setConfirmedNavigation] = useState(false);
+
+  const [i, setI] = useState(0.0001);
+
+  const handleBlockedNavigation = useCallback(
+    (tx) => {
+      if (!confirmedNavigation && tx.location.pathname !== location.pathname) {
+        setOpen(true);
+        setLastLocation(tx);
+        return false;
+      }
+      return true;
+    },
+    [confirmedNavigation, location.pathname]
+  );
+  const confirmNavigation = useCallback(() => {
+    setOpen(false);
+    setWhen(false);
+    setConfirmedNavigation(true);
+  }, []);
   useEffect(() => {
     // console.log("hello");
     // let i = 0.000001;
     window.addEventListener("beforeunload", preventClose);
-    const unblock = history.block(({ action, location, retry }) => {
-      console.log(action);
-      if (action === "POP") {
-        if (window.confirm("그만")) {
-          return unblock();
-        }
-        // setOpen(true);
-      }
-    });
+    // let i = 0;
     const timerId = setInterval(() => {
       if (riding && isGeolocationAvailable && isGeolocationEnabled) {
         console.log(coords);
         const gps = {
-          lat: coords.latitude,
-          lng: coords.longitude,
+          lat: coords.latitude + i,
+          lng: coords.longitude + i,
         };
+        setI((prev) => {
+          return prev + 0.0001;
+        });
         console.log(gps);
         setMapData((prev) => {
           return {
             center: gps,
+            latlng: [...prev.latlng, gps],
           };
         });
+        if (mapData.latlng.length > 1) {
+          console.log(data);
+          let dis = getDistance(
+            mapData.latlng.at(-1).lat,
+            mapData.latlng.at(-1).lng,
+            gps.lat,
+            gps.lng
+          );
+          console.log("dis:", dis);
+          if (dis > 0)
+            setData((prev) => {
+              return {
+                topSpeed: Math.max(prev.topSpeed, dis * 3.6),
+                nowTime: prev.nowTime + 1,
+                avgSpeed: dis * 3.6,
+                totalDistance: prev.totalDistance + dis,
+              };
+            });
+          else
+            setData((prev) => {
+              return {
+                topSpeed: prev.topSpeed,
+                avgSpeed: prev.avgSpeed,
+                nowTime: prev.nowTime + 1,
+                totalDistance: prev.totalDistance,
+              };
+            });
+        }
+
         // setI((prev) => {
         //   return prev + 0.0001;
         // });
-      }
+      } else
+        setData((prev) => {
+          return {
+            topSpeed: prev.topSpeed,
+            avgSpeed: prev.avgSpeed,
+            nowTime: prev.nowTime + 1,
+            totalDistance: prev.totalDistance,
+          };
+        });
     }, 1000);
 
     return () => {
       clearInterval(timerId);
-      unblock();
       window.removeEventListener("beforeunload", preventClose);
     };
   });
-
-  const handleClose = () => {
-    setOpen(false);
-    setOpenMap(false);
-  };
+  useBlocker(handleBlockedNavigation, when);
 
   return (
     <Box background="#439652">
@@ -116,7 +221,17 @@ export const Ride = () => {
             center={mapData.center}
             isPanto={true}
             style={{ borderRadius: "25px", width: "100%", height: "100%" }}
-          ></Map>
+          >
+            {mapData.latlng && (
+              <Polyline
+                path={[mapData.latlng]}
+                strokeWeight={5} // 선의 두께 입니다
+                strokeColor={"#030ff1"} // 선의 색깔입니다
+                strokeOpacity={0.7} // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+                strokeStyle={"solid"} // 선의 스타일입니다
+              />
+            )}
+          </Map>
         </Box>
         {/* 데이터 부분 시작 */}
         <Box direction="row" justify="between" width="85%">
@@ -203,12 +318,13 @@ export const Ride = () => {
         </Box>
       </Box>
       <MapDialog
+        type="riding"
         open={openMap}
         handleClose={() => {
-          setOpen(true);
+          setOpenMap(false);
         }}
         handleAction={() => {
-          setOpenMap(false);
+          setOpen(true);
         }}
         map={
           <Map
@@ -217,8 +333,8 @@ export const Ride = () => {
             style={{ width: "100%", height: "100%" }}
           ></Map>
         }
-        cancel="주행종료"
-        accept="뒤로가기"
+        cancel="뒤로가기"
+        accept="주행종료"
         title={courseName}
       />
       <AlertDialog
@@ -227,7 +343,21 @@ export const Ride = () => {
           setOpen(false);
         }}
         handleAction={() => {
-          navigate("/rideEnd");
+          confirmNavigation();
+          // useBlocker(handleBlockedNavigation, false);
+          navigate("/rideEnd", {
+            state: {
+              courseName: courseName,
+              courseType: courseType,
+              courseData: {
+                latlng: mapData.latlng,
+                topSpeed: data.topSpeed,
+                avgSpeed: data.avgSpeed,
+                nowTime: data.nowTime,
+                totalDistance: data.totalDistance,
+              },
+            },
+          });
         }}
         title="주행 종료"
         desc="주행을 종료하시겠습니까?"

@@ -10,10 +10,11 @@ export const ReviewBox = () => {
       justify="between"
       align="center"
       background="white"
-      round={{ size: "medium", corner: "all" }}
+      round="medium"
       margin={{ top: "10px" }}
+      pad="small"
     >
-      <Box direction="row" justify="start" align="start">
+      <Box direction="row" justify="start" align="start" gap="small">
         <img src={Profile} width="30px" />
         <Box justify="center" align="start">
           <StyledText text="배인수" />

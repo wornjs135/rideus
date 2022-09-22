@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import ImInput from "../assets/icons/imageInput.svg";
 import { FlexBox, STextArea } from "../components/UserStyled";
 import Button from "../components/Button";
+import { tags as initTags } from "../utils/util";
 const HeaderDiv = styled.div`
   margin: 5px;
   display: flex;
@@ -59,18 +60,7 @@ export const ReviewRegister = () => {
   const [select, setSelect] = useState([]);
 
   useEffect(() => {
-    setTags([
-      { id: 1, searchTagName: "완만" },
-      { id: 2, searchTagName: "가파름" },
-      { id: 3, searchTagName: "한적함" },
-      { id: 4, searchTagName: "붐빔" },
-      { id: 5, searchTagName: "쾌적함" },
-      { id: 6, searchTagName: "벌레많음" },
-      { id: 7, searchTagName: "사람많음" },
-      { id: 8, searchTagName: "도로상태좋음" },
-      { id: 9, searchTagName: "최악" },
-      { id: 10, searchTagName: "실망함" },
-    ]);
+    setTags(initTags);
   }, []);
   return (
     <Box>

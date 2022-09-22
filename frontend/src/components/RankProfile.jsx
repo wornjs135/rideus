@@ -8,19 +8,19 @@ import Profile from "../assets/images/profile.png";
 import { StyledText } from "./Common";
 export const RankProfile = ({ record }) => {
   return (
-    <Box margin="small">
-      <Avatar
-        size={record.rank === 1 ? "large" : "medium"}
-        src={record.profile !== undefined ? record.profile : Profile}
-      />
+    <Box margin="small" style={{ position: "relative" }}>
       <img
         src={record.rank === 1 ? First : record.rank === 2 ? Second : Third}
         style={{
-          marginLeft: record.rank === 1 ? "45px" : "30px",
           position: "absolute",
+          marginLeft: record.rank === 1 ? "45px" : "30px",
           display: "flex",
           flexDirection: "column",
         }}
+      />
+      <Avatar
+        size={record.rank === 1 ? "large" : "medium"}
+        src={record.profile !== undefined ? record.profile : Profile}
       />
       <Box justify="center" align="center">
         <StyledText text={record.name} weight="bold" />

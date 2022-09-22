@@ -21,11 +21,11 @@ const BackButton = styled.button`
   width: 10vw;
 `;
 
-export const HeaderBox = ({ goBack }) => {
+export const HeaderBox = ({ goBack, title }) => {
   return (
     <HeaderDiv>
       <div style={{ width: "10vw" }}></div>
-      <StyledText size="20px" weight="bold" text="RIDE!" />
+      <StyledText size="20px" weight="bold" text={title} />
       <BackButton onClick={goBack}>
         <img src={CloseButton} />
       </BackButton>
@@ -43,6 +43,7 @@ export const ChooseRideTypeBar = ({ open, onDismiss }) => {
       }}
     >
       <HeaderBox
+        title="RIDE!"
         goBack={() => {
           onDismiss();
         }}
@@ -78,7 +79,13 @@ export const ChooseRideTypeBar = ({ open, onDismiss }) => {
         />
         <Button
           onClick={() => {
-            navigate("/ride", { state: { courseName: "나만의 길" } });
+            navigate("/ride", {
+              state: {
+                courseName: "나만의 길",
+                rideType: "solo",
+                courseType: "my",
+              },
+            });
           }}
           children={
             <Box
