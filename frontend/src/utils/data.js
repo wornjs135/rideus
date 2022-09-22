@@ -973,3 +973,15 @@ export const s2 =
   "127.001493,37.512292\r\n" +
   "127.001493,37.512292\r\n" +
   "127.00147,37.5123279";
+
+const latlng = [];
+const dataList = s.split("\r\n");
+for (let i = 0; i < dataList.length; i++) {
+  let data = {
+    lat: dataList[i].split(",")[1],
+    lng: dataList[i].split(",")[0],
+  };
+  latlng.push(data);
+}
+
+export { latlng };

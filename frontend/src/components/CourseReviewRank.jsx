@@ -28,16 +28,24 @@ export const CourseReviewRank = ({ open, onDismiss }) => {
   }, []);
   return (
     <BottomSheet
+      style={{ zIndex: 1000, overflowY: "hidden", overflow: "hidden" }}
       open={open}
       blocking={false}
+      scrollLocking={true}
       header={
-        <Box direction="row" justify="center" width="100%" border={false}>
+        <Box
+          direction="row"
+          justify="center"
+          width="100%"
+          border={false}
+          background="rgba(250, 250, 250, 0.93)"
+        >
           <Box
             border={false}
             justify="center"
             align="center"
             background={value === 0 ? "#439652" : "white"}
-            width="30vw"
+            width="50%"
             height="4vh"
             onClick={() => {
               setValue(0);
@@ -50,7 +58,7 @@ export const CourseReviewRank = ({ open, onDismiss }) => {
             justify="center"
             align="center"
             background={value === 1 ? "#439652" : "white"}
-            width="30vw"
+            width="50%"
             height="4vh"
             onClick={() => {
               setValue(1);
@@ -62,7 +70,15 @@ export const CourseReviewRank = ({ open, onDismiss }) => {
       }
       snapPoints={({ maxHeight }) => [maxHeight / 8, maxHeight * 0.6]}
     >
-      <Box align="center" background="rgba(250, 250, 250, 0.93)">
+      <Box
+        align="center"
+        background="rgba(250, 250, 250, 0.93)"
+        style={{
+          overflowY: "hidden",
+          overflow: "hidden",
+        }}
+        height="52vh"
+      >
         <Box
           width="90%"
           align="center"
@@ -76,11 +92,16 @@ export const CourseReviewRank = ({ open, onDismiss }) => {
             <RankProfile record={data[0]} />
             <RankProfile record={data[2]} />
           </Box>
-          <Box>
+          <div
+            style={{
+              height: "30vh",
+              overflow: "scroll",
+            }}
+          >
             {data.map((d, idx) => {
               return <RankBox record={d} key={idx} />;
             })}
-          </Box>
+          </div>
         </Box>
         <Box
           style={{ display: value === 1 ? "block" : "none" }}

@@ -2,19 +2,22 @@ import { Box } from "grommet";
 import React, { useState } from "react";
 import { StyledText } from "../components/Common";
 import TotalBike from "../assets/images/totalRideBike.png";
-import { Map } from "react-kakao-maps-sdk";
+import { Map, Polyline } from "react-kakao-maps-sdk";
 import Button from "../components/Button";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export const RideEnd = () => {
   const navigate = useNavigate();
-
-  const [data, setData] = useState({
-    topSpeed: 35.12,
-    avgSpeed: 21.05,
-    nowTime: "12:51",
-    totalDistance: 21.3,
-  });
+  const location = useLocation();
+  // courseData: {
+  //   latlng: mapData.latlng,
+  //   topSpeed: data.topSpeed,
+  //   avgSpeed: data.avgSpeed,
+  //   nowTime: data.nowTime,
+  //   totalDistance: data.totalDistance,
+  // },
+  const { courseName, courseType, courseData } = location.state;
+  const [data, setData] = useState(courseData);
   const [mapData, setMapData] = useState({
     latlng: [],
     center: { lng: 127.002158, lat: 37.512847 },
@@ -22,7 +25,7 @@ export const RideEnd = () => {
   return (
     <Box background="#439652" align="center">
       <StyledText
-        text="나만의 길"
+        text={courseName}
         color="white"
         size="20px"
         weight="bold"
@@ -31,10 +34,20 @@ export const RideEnd = () => {
       {/* 카카오맵 */}
       <Box width="70vw" height="50vh" margin={{ top: "20px", bottom: "20px" }}>
         <Map
-          center={mapData.center}
+          center={courseData.latlng[0]}
           isPanto={true}
           style={{ borderRadius: "25px", width: "100%", height: "100%" }}
-        ></Map>
+        >
+          {courseData.latlng && (
+            <Polyline
+              path={[courseData.latlng]}
+              strokeWeight={5} // 선의 두께 입니다
+              strokeColor={"#030ff1"} // 선의 색깔입니다
+              strokeOpacity={0.7} // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+              strokeStyle={"solid"} // 선의 스타일입니다
+            />
+          )}
+        </Map>
       </Box>
       {/* 하단 데이터 부분 */}
       <Box
@@ -113,7 +126,15 @@ export const RideEnd = () => {
             <Box align="start">
               <StyledText text="즐거운 시간 보내셨나요?" size="20px" />
             </Box>
-            <Button BigGreen children="나만의 길 공유하기" />
+            <Button
+              BigGreen
+              children={
+                courseType === "my" ? "나만의 길 공유하기" : "리뷰 쓰기"
+              }
+              onClick={() => {
+                navigate("/registerReview");
+              }}
+            />
             <Button
               BigWhite
               children="나중에 할께요 / 건너뛰기"
