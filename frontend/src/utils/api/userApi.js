@@ -1,5 +1,4 @@
-import {API_SERVER, axios, checkToken} from "./api";
-import {SERVER_URL} from "../data";
+import {API_SERVER, axios, SERVER_URL} from "./api";
 
 const API_SERVER_USER = SERVER_URL + "/member";
 
@@ -11,7 +10,7 @@ const instance = axios.create({
     },
 });
 
-instance.interceptors.request.use(checkToken);
+// instance.interceptors.request.use(checkToken);
 
 const updateMoreInfo = async (data) => {
     const {status} = await instance.put("/info", data);
