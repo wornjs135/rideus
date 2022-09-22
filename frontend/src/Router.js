@@ -10,7 +10,10 @@ import { ReviewRegister } from "./pages/ReviewRegister.jsx";
 import { Ride } from "./pages/Ride.jsx";
 import { RideEnd } from "./pages/RideEnd.jsx";
 import { GpsTest } from "./pages/test/GpsTest";
+import { Login } from "./pages/login/Login";
+import { OAuth2RedirectHandler } from "./pages/login/OAuth2RedirectHandler";
 import MapTest from "./pages/test/MapTest";
+import { MoreInfo } from "./pages/login/MoreInfo";
 
 const Layout = () => {
   return (
@@ -50,6 +53,14 @@ const FullLayout = () => {
   );
 };
 
+const WithOutHeaderNav = () => {
+  return (
+    <div>
+      <Outlet />
+    </div>
+  );
+};
+
 export const Router = () => {
   return (
     <Routes>
@@ -61,6 +72,12 @@ export const Router = () => {
         <Route path="/course" element={<Course />} />
         <Route path="/rank" element={<Rank />} />
         <Route path="/gpsTest" element={<GpsTest />} />
+      </Route>
+      {/* 헤더, 내브바 없는 곳*/}
+      <Route element={<WithOutHeaderNav />}>
+        <Route path="/login" element={<Login />} />
+        <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />
+        <Route path="/moreinfo" element={<MoreInfo />} />
       </Route>
       {/* 로고, 내브바 */}
       <Route path="/" element={<LayoutNoFooter />}></Route>
