@@ -1,9 +1,12 @@
 package com.ssafy.rideus.config.security.handler;
 
 import com.ssafy.rideus.common.exception.BadRequestException;
+import com.ssafy.rideus.common.exception.NotFoundException;
 import com.ssafy.rideus.config.security.repository.CookieAuthorizationRequestRepository;
 import com.ssafy.rideus.config.security.util.CookieUtil;
 import com.ssafy.rideus.config.security.util.JwtTokenProvider;
+import com.ssafy.rideus.domain.Member;
+import com.ssafy.rideus.repository.jpa.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +23,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Optional;
 
+import static com.ssafy.rideus.common.exception.NotFoundException.USER_NOT_FOUND;
 import static com.ssafy.rideus.config.security.repository.CookieAuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
 
 @Slf4j
@@ -31,6 +35,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private String redirectUri;
     private final JwtTokenProvider tokenProvider;
     private final CookieAuthorizationRequestRepository authorizationRequestRepository;
+    private final MemberRepository memberRepository;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -55,13 +60,19 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         // JWT 생성
         String accessToken = tokenProvider.createAccessToken(authentication);
-        String refreshToken = tokenProvider.createRefreshToken(authentication, response);
+        tokenProvider.createRefreshToken(authentication, response);
+
+        Member member = memberRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
+
+        boolean isRegister = member.getNickname() == null;
 
         log.info("access token: {} ", accessToken);
 
         return UriComponentsBuilder.fromUriString(targetUrl)
                 .queryParam("accessToken", accessToken)
-                .queryParam("refreshToken",refreshToken)
+//                .queryParam("refreshToken",refreshToken)
+                .queryParam("register", isRegister)
                 .build().toUriString();
     }
 
