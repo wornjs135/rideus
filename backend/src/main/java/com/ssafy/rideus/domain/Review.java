@@ -4,6 +4,7 @@ import com.ssafy.rideus.domain.base.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Optional;
 
 @Entity
@@ -39,6 +40,9 @@ public class Review extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "record_id")
     private Record record;
+
+    @OneToMany(mappedBy = "review")
+    private List<ReviewTag> reviewTags;
 
     public void decreaseLike() {
         this.likeCount--;
