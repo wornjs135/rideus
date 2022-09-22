@@ -1,6 +1,7 @@
 import {API_SERVER, axios, checkToken} from "./api";
+import {SERVER_URL} from "../data";
 
-const API_SERVER_USER = API_SERVER + "user/";
+const API_SERVER_USER = SERVER_URL + "/member";
 
 const instance = axios.create({
     baseURL: API_SERVER_USER,
@@ -13,7 +14,13 @@ const instance = axios.create({
 instance.interceptors.request.use(checkToken);
 
 const updateMoreInfo = async (data) => {
-    const res = await instance.put("/info", data);
+    const {status} = await instance.put("/info", data);
+    return status;
 }
 
-export {updateMoreInfo};
+const checkDuplicateNickname = async (data) => {
+    let {data: res} = await instance.get(`/check/${data}`);
+    return res;
+}
+
+export {updateMoreInfo,checkDuplicateNickname};
