@@ -1,11 +1,11 @@
 package com.ssafy.rideus.service;
 
-import com.ssafy.rideus.domain.CheckPoint;
-import com.ssafy.rideus.domain.Course;
-import com.ssafy.rideus.domain.NearInfo;
-import com.ssafy.rideus.repository.jpa.CheckPointRepository;
-import com.ssafy.rideus.repository.jpa.CourseRepository;
-import com.ssafy.rideus.repository.jpa.NearInfoRepository;
+import com.ssafy.rideus.common.exception.NotFoundException;
+import com.ssafy.rideus.domain.base.Coordinate;
+import com.ssafy.rideus.domain.collection.CourseCoordinate;
+import com.ssafy.rideus.domain.collection.NearInfo;
+import com.ssafy.rideus.repository.mongo.CourseCoordinateRepository;
+import com.ssafy.rideus.repository.mongo.NearInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,56 +15,78 @@ import java.util.*;
 @Service("nearInfoService")
 public class NearInfoServiceImpl implements NearInfoService {
 
+    ///////////////// mongoDB Repository ////////////////
+    @Autowired
+    CourseCoordinateRepository courseCoordinateRepository;
     @Autowired
     NearInfoRepository nearInfoRepository;
-    @Autowired
-    CheckPointRepository checkPointRepository;
-    @Autowired
-    CourseRepository courseRepository;
+    static final int DISTANCE_LIMIT = 4000; // 반경 4km 안에 있는 시설 정보 조회
 
 
-    static final int DISTANCE_LIMIT = 2000; // 반경 2km 안에 있는 시설 정보 조회
+    @Override
+    public List<NearInfo> findNearInfo(long courseId) {
 
+        // 코스 정보 mongoDB find
+        CourseCoordinate courseCoordinate =
+                courseCoordinateRepository
+                        .findById(String.valueOf(courseId))
+                        .orElseThrow(() -> new NotFoundException("코스 상세 조회 실패"));
+        return courseCoordinate.getNearInfos();
+    }
 
     // 코스 주변 전체 정보 조회
     @Override
-    public List<NearInfo> findAllNearInfo(String courseId) {
+    public List<NearInfo> saveNearInfo(long courseId) {
 
-        Course course = courseRepository.findById(courseId).orElse(null);
-        List<CheckPoint> checkPoints = checkPointRepository.findByCourse(course);
-        List<NearInfo> nearInfos = nearInfoRepository.findAll();
 
-        // 반경 안에 있는 주변 정보 map
-        // 각 체크포인트 지점에서 겹치는 시설이 있는 경우 고려해서 map 사용
-        Map<Long, NearInfo> resultInfos = new HashMap<>();
+        // 코스 정보 mongoDB find
+        CourseCoordinate courseCoordinate =
+                courseCoordinateRepository
+                .findById(String.valueOf(courseId))
+                .orElseThrow(() -> new NotFoundException("코스 상세 조회 실패"));
 
-        // 체크포인트 주변 정보 조회
-        for( CheckPoint checkPoint : checkPoints ) {
 
-            // 체크포인트 위,경도 좌표
-            double cpLat = Double.parseDouble(checkPoint.getCheckPointLat());
-            double cpLng = Double.parseDouble(checkPoint.getCheckPointLng());
+        // mongoDB에서 체크포인트 리스트 가져오기
+        List<Coordinate> checkpoints = courseCoordinate.getCheckpoints();
 
-            // 주변정보 리스트 조회
-            for( NearInfo info : nearInfos ) {
+        // 전체 주변 정보 리스트
+        List<NearInfo> allNearInfo = nearInfoRepository.findAll();
 
-                // 이미 찾은 주변 정보인 경우
-                if(resultInfos.containsKey(info.getId())) continue;
-                else {
-                    // 주변 정보 위,경도 좌표
-                    double infoLat = Double.parseDouble(info.getNearinfoLat());
-                    double infoLng = Double.parseDouble(info.getNearinfoLng());
+        // 주변 정보 중복 체크 map
+        Map<Long, NearInfo> checkedInfo = new HashMap<>();
 
-                    // 제한 거리 안에 존재하는 경우
-                    if(distance(infoLat, infoLng, cpLat, cpLng) < DISTANCE_LIMIT) {
-                        resultInfos.put(info.getId(), info);
-                    }
+
+        // 체크포인트 별로 주변정보 검색
+        for ( Coordinate checkPoint : checkpoints ) {
+
+            // 체크포인트 좌표
+            double cpLat = Double.parseDouble(checkPoint.getLat());
+            double cpLng = Double.parseDouble(checkPoint.getLng());
+
+            // 주변 정보 전체 조회
+            for ( NearInfo nearInfo : allNearInfo ) {
+
+                if(checkedInfo.containsKey(nearInfo.getId())) continue;
+
+                // 주변 정보 위,경도 좌표
+                double infoLat = Double.parseDouble(nearInfo.getNearinfoLat());
+                double infoLng = Double.parseDouble(nearInfo.getNearinfoLng());
+
+                // 제한 거리 안에 존재하는 경우
+                if(distance(infoLat, infoLng, cpLat, cpLng) < DISTANCE_LIMIT) {
+                    checkedInfo.put(nearInfo.getId(), nearInfo);
                 }
-            }
-        }
 
-        return (List<NearInfo>) resultInfos.values();
+            } // end of neainfo loop
+        } // end of checkpoint loop
 
+        courseCoordinateRepository.save( new CourseCoordinate(
+                courseCoordinate.getId(),
+                courseCoordinate.getCoordinates(),
+                courseCoordinate.getCheckpoints(),
+                (List<NearInfo>) checkedInfo.values()));
+
+        return (List<NearInfo>) checkedInfo.values();
     }
 
 
