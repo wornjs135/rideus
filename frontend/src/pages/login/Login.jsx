@@ -3,7 +3,7 @@ import {Box} from "grommet";
 import KakaoLogin from "../../assets/images/kakao_login_medium_wide.png"
 import Logo from "../../assets/images/logo.png"
 import Button from "../../components/Button";
-import {AUTH_URL, OAUTH2_REDIRECT_URI} from "../../utils/data";
+import {AUTH_URL, OAUTH2_REDIRECT_URI} from "../../utils/api/api";
 
 export const Login = () => {
     return <Box width="100vw" justify="evenly" margin="0 auto" gap="small" height={"100vh"} align={"center"}>
