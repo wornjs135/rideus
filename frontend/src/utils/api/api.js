@@ -30,4 +30,4 @@ export const OAUTH2_REDIRECT_URI = `?redirect_uri=${CLIENT_URL}/oauth2/redirect`
 //     return config;
 // }
 
-export { axios, API_SERVER };
+export { axios };
