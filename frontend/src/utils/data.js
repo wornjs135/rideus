@@ -974,11 +974,5 @@ export const s2 =
   "127.001493,37.512292\r\n" +
   "127.00147,37.5123279";
 
-export const SERVER_URL = "http://localhost:8080/api";
 
-export const CLIENT_URL = "http://localhost:3000";
-
-export const AUTH_URL = SERVER_URL + '/oauth2/authorize/kakao'
-
-export const OAUTH2_REDIRECT_URI = `?redirect_uri=${CLIENT_URL}/oauth2/redirect`
 
