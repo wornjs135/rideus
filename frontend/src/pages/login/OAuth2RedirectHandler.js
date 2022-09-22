@@ -10,7 +10,8 @@ export const OAuth2RedirectHandler = (props) => {
     const register = params.get("register");
 
 
-    let isRegister = Boolean(register);
+    let isRegister = JSON.parse(register);
+    console.log(isRegister);
 
     localStorage.setItem("accessToken", accessToken);
     // localStorage.setItem("refreshToken", refreshToken);
