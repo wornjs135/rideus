@@ -1,4 +1,4 @@
-import {API_SERVER, axios, SERVER_URL} from "./api";
+import {API_SERVER, axios} from "./api";
 
 const API_SERVER_USER = API_SERVER + "/member";
 
