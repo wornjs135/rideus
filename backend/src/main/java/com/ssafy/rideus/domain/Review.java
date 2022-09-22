@@ -1,17 +1,16 @@
 package com.ssafy.rideus.domain;
 
 import com.ssafy.rideus.domain.base.BaseEntity;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.Optional;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
+@Builder
 public class Review extends BaseEntity {
 
     @Id
@@ -40,4 +39,13 @@ public class Review extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "record_id")
     private Record record;
+
+    public void decreaseLike() {
+        this.likeCount--;
+    }
+
+    public void increaseLike() {
+        this.likeCount++;
+    }
+
 }
