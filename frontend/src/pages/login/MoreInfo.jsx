@@ -71,30 +71,44 @@ export const MoreInfo = () => {
 
     return <Box width="100vw" margin="0 auto" gap="small" height={"100vh"} align={"center"}>
         <Box align="center">
-            <Box>추가 정보 입력</Box>
+            <Box style={{
+                marginTop: "10vw"
+            }}>추가 정보 입력</Box>
         </Box>
 
-        <Box>
-            <Box>
+        <Box style={{
+            marginTop: "10vw"
+        }}>
+            <Box style={{
+                marginTop: "10vw"
+            }}>
                 <TextField id="filled-basic" name="nickname" label="닉네임" variant="standard"
                            error={nicknameDupError}
                            helperText={nicknameLengthError ? "닉네임은 2글자 이상 10글자 이하입니다." : nicknameDupError ? "닉네임 중복" : "사용 가능"}
                            onChange={onChange} value={nickname} onBlur={onBlur}/>
             </Box>
-            <Box>
+            <Box style={{
+                marginTop: "10vw"
+            }}>
                 <TextField id="filled-basic" name="name" label="이름" variant="standard" helperText="" onChange={onChange}
                            value={name}/>
             </Box>
-            <Box>
+            <Box style={{
+                marginTop: "10vw"
+            }}>
                 <TextField id="filled-basic" label="E-mail" variant="standard" helperText="" disabled/>
             </Box>
-            <Box>
+            <Box style={{
+                marginTop: "10vw"
+            }}>
                 <TextField id="filled-basic" name="phone" label="전화번호" variant="standard" helperText=""
                            onChange={onChange} value={phone}/>
             </Box>
         </Box>
 
-        <Box>
+        <Box style={{
+            marginTop: "10vw"
+        }}>
             <Button variant="contained" style={{width: "70vw", background: "#439652"}} onClick={onClick}>확인</Button>
         </Box>
     </Box>;
