@@ -131,8 +131,8 @@ export const Ride = () => {
       if (riding && isGeolocationAvailable && isGeolocationEnabled) {
         console.log(coords);
         const gps = {
-          lat: coords.latitude + i,
-          lng: coords.longitude + i,
+          lat: coords.latitude,
+          lng: coords.longitude,
         };
         setI((prev) => {
           return prev + 0.0001;
