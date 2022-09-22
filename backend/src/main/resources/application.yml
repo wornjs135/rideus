@@ -73,7 +73,7 @@ spring:
           kakao:
             client-id: b834a23c18a62707b7f97e56c265b1ea
             client-secret: U9tewPfeCxOmPfoFCySMQFCWZ4e3MRze
-            redirect-uri: http://localhost:8080/api/oauth2/callback/kakao
+            redirect-uri: https://j7a603.p.ssafy.io/api/oauth2/callback/kakao
             authorization-grant-type: authorization_code
             client-authentication-method: POST
             client-name: Kakao
@@ -96,7 +96,7 @@ token:
 
 oauth2:
   # 클라이언트 주소
-  authorizedRedirectUri: http://localhost:3000/oauth2/redirect
+  authorizedRedirectUri: https://j7a603.p.ssafy.io/oauth2/redirect
 cloud:
   aws:
     credentials:
