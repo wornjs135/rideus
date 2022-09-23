@@ -33,4 +33,5 @@ public interface CourseRepository extends JpaRepository<Course, String> {
             "group by a.course_id, a.tag_id\n" +
             "order by max desc", nativeQuery = true)
     List<RecommendationCourseDtoInterface> getRecommendationCourseByMemberId(@Param("memberId") Long memberId);
+
 }
