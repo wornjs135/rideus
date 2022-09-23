@@ -38,6 +38,7 @@ public class NearInfoServiceImpl implements NearInfoService {
     @Override
     public List<NearInfo> saveNearInfo(String courseId) {
 
+        //
 
         // 코스 정보 mongoDB find
         CourseCoordinate courseCoordinate =
