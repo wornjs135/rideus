@@ -109,6 +109,7 @@ export const CourseReviewRank = ({ open, onDismiss }) => {
           align="center"
           margin={{ top: "20px" }}
           pad="small"
+          overflow="scroll"
         >
           <ReviewBox />
           <ReviewBox />
