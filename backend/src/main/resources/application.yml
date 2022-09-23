@@ -54,7 +54,7 @@ spring:
     mongodb:
       username: ssafy
       password: yfass1234
-      #authentication-database:
+      authentication-database: admin
       auto-index-creation:
 #      uri: mongodb://localhost:27017/test
       host: j7a603.p.ssafy.io
