@@ -34,4 +34,6 @@ public interface CourseRepository extends JpaRepository<Course, String> {
             "order by max desc", nativeQuery = true)
     List<RecommendationCourseDtoInterface> getRecommendationCourseByMemberId(@Param("memberId") Long memberId);
 
+    // keyword 포함한 리스트
+//    List<Course> findAllBy
 }

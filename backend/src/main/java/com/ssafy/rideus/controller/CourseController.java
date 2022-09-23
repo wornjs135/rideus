@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
@@ -46,7 +47,7 @@ public class CourseController {
 //	@Autowired
 //	private CourseService courseService;
 
-/*	
+
 	// 추천 코스 리스트 조회
 	@GetMapping()
 	public ResponseEntity<List<Course>> findAllCourses() {
@@ -67,13 +68,32 @@ public class CourseController {
 		
 		return ResponseEntity.status(HttpStatus.OK).body(courseCoordinate);
 	}
-*/	
+
 	
-	// 명세서에 없는데 필요할 것 같은 api
 	// 코스 검색
+	@GetMapping("/search/{keyword}")
+	public ResponseEntity search(@PathVariable String keyword) {
+		
+		
+		
+		return ResponseEntity.ok().build();
+	}
 
 	
 	// 코스 추가 (사용자가 탄 코스 추가하는 경우)
+	@PutMapping("/add")
+//	public ResponseEntity add()
+	
+	
+	
+	// 현 위치 기반 코스 추천
+	@GetMapping("/{lat}/{lon}")
+	public ResponseEntity recommendByLoc(@PathVariable String keyword) {
+		
+		
+		
+		return ResponseEntity.ok().build();
+	}
 	
 	
 	

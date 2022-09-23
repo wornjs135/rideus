@@ -33,6 +33,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.ssafy.rideus.common.exception.NotFoundException;
+import com.ssafy.rideus.dto.course.common.CourseReviewTagTop5DtoInterface;
 import com.ssafy.rideus.dto.course.common.RecommendationCourseDto;
 import com.ssafy.rideus.dto.course.common.RecommendationCourseDtoInterface;
 import com.ssafy.rideus.domain.Course;
@@ -49,9 +50,9 @@ public class CourseService {
 	
 	@Autowired
 	private CourseCoordinateRepository courseCoordinateRepository;
-	@Autowired
-	private CourseRepository courseRepository;
-//    private final CourseRepository courseRepository;
+//	@Autowired
+//	private CourseRepository courseRepository;
+    private final CourseRepository courseRepository;
     private final MemberTagRepository memberTagRepository;
 	
 	
@@ -80,17 +81,14 @@ public class CourseService {
     }
 	
 	
-	
-	
-	
-	
-	
-	
-	
 	// 추천 코스 리스트 조회
 	public List<Course> findAllCourses() {
 		
+		List<RecommendationCourseDto> recommendationCourseDtos = new ArrayList<>();
+		
 		List<Course> courses = courseRepository.findAll();
+		List<CourseReviewTagTop5DtoInterface> tags = getCourseReviewTagTop5();
+		
 		
 		return courses;
 	}
@@ -108,7 +106,14 @@ public class CourseService {
 	
 	
 	// 코스 검색
-	
+	public List<Course> findAllByKeyword(String keyword) {
+		
+		List<Course> courses = courseRepository.findAll();
+		List<CourseReviewTagTop5DtoInterface> tags = getCourseReviewTagTop5();
+		
+		
+		return courses;
+	}
 	
 	
 	// 코스 추가
