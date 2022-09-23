@@ -23,7 +23,7 @@ public class HadoopController {
     public ResponseEntity<?> sshResponse() {
 
         System.out.println("ssh response controller");
-        hadoopService.saveCategoryToCourse("12");
+        hadoopService.saveCategoryToCourse("632d7434e0fd22694437bec9");
         System.out.println("end of cotroller");
         return new ResponseEntity<>(HttpStatus.OK);
     }
