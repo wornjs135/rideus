@@ -112,12 +112,16 @@ public class SSHUtils {
             InputStream inputStream = channelExec.getInputStream();
             channelExec.connect();
 
+            System.out.println("after channel connect");
+
             byte[] buffer = new byte[8192];
             int decodedLength;
             response = new StringBuilder();
             //when debugging, stop here
-            while ((decodedLength = inputStream.read(buffer, 0, buffer.length)) > 0)
+            while ((decodedLength = inputStream.read(buffer, 0, buffer.length)) > 0){
+                System.out.println("decodedLength = " + decodedLength);
                 response.append(new String(buffer, 0, decodedLength));
+            }
 
         } catch (JSchException e) {
 //            log.error("JSchException");
@@ -126,6 +130,7 @@ public class SSHUtils {
         } catch(Exception e) {
             e.printStackTrace();
         }
+        System.out.println("response = " + response.toString());
         return response.toString();
     }
 
