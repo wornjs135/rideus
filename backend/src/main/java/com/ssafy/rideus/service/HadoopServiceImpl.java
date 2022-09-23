@@ -81,6 +81,9 @@ public class HadoopServiceImpl implements HadoopService{
             String sshResponse = ssh.getSSHResponse("hdfs dfs -cat output/*");
             System.out.println("sshResponse = " + sshResponse);
 
+
+
+
             // 미
             // 쳤
             // 다
