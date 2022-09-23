@@ -1,5 +1,6 @@
 package com.ssafy.rideus.controller;
 
+import com.ssafy.rideus.dto.weather.GpsTransfer;
 import com.ssafy.rideus.dto.weather.WeatherDto;
 import com.ssafy.rideus.dto.weather.response.WeatherRes;
 import lombok.RequiredArgsConstructor;
@@ -42,8 +43,21 @@ public class WeatherController {
     private static String baseDate, baseTime;
     // 최근 1일간의 자료만 보여줌
     @GetMapping("/today")
-    public ResponseEntity<?> weatherAPI(@RequestParam String x, @RequestParam String y) throws Exception {
+    public ResponseEntity<?> weatherAPI(@RequestParam String lat, @RequestParam String lon) throws Exception {
 
+
+        double xlat = Double.parseDouble(lat);
+        double ylon = Double.parseDouble(lon);
+        GpsTransfer gpsTransfer = new GpsTransfer(xlat, ylon);
+        System.out.println("xlat = " + xlat);
+        System.out.println("ylon = " + ylon);
+
+        System.out.println("transfer ------ ");
+
+        gpsTransfer.transfer(gpsTransfer, 0);
+        System.out.println("xlat = " + gpsTransfer.getXLat());
+        System.out.println("ylon = " + gpsTransfer.getYLon());
+        System.out.println(gpsTransfer.toString());
 
 
         settingDate(); /* 날씨 데이터 세팅*/
@@ -56,8 +70,8 @@ public class WeatherController {
         urlBuilder.append("&" + URLEncoder.encode("dataType","UTF-8") + "=" + URLEncoder.encode("JSON", "UTF-8")); /*요청자료형식(XML/JSON) Default: XML*/
         urlBuilder.append("&" + URLEncoder.encode("base_date","UTF-8") + "=" + URLEncoder.encode(baseDate, "UTF-8")); /* 현재 날짜 */
         urlBuilder.append("&" + URLEncoder.encode("base_time","UTF-8") + "=" + URLEncoder.encode(baseTime, "UTF-8")); /* 현재 시각 */
-        urlBuilder.append("&" + URLEncoder.encode("nx","UTF-8") + "=" + URLEncoder.encode(x, "UTF-8")); /*예보지점의 X 좌표값*/
-        urlBuilder.append("&" + URLEncoder.encode("ny","UTF-8") + "=" + URLEncoder.encode(y, "UTF-8")); /*예보지점의 Y 좌표값*/
+        urlBuilder.append("&" + URLEncoder.encode("nx","UTF-8") + "=" + URLEncoder.encode(gpsTransfer.getXLat()+"", "UTF-8")); /*예보지점의 X 좌표값*/
+        urlBuilder.append("&" + URLEncoder.encode("ny","UTF-8") + "=" + URLEncoder.encode(gpsTransfer.getYLon()+"", "UTF-8")); /*예보지점의 Y 좌표값*/
 
         URL url = new URL(urlBuilder.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
