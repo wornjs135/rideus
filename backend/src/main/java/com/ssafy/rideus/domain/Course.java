@@ -16,14 +16,13 @@ public class Course extends BaseEntity {
 
     @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "course_id")
+    @Column(name = "course_id", length = 50)
     private String id;
 
     @Column(length = 100)
     private String courseName;
 
-    @Column(length = 100)
-    private String distance;
+    private Double distance;
 
     @Column(length = 100)
     private String start;
@@ -31,13 +30,15 @@ public class Course extends BaseEntity {
     @Column(length = 100)
     private String finish;
 
-    @Column(length = 100)
-    private String expectedTime;
+    private Integer expectedTime;
 
     private Integer likeCount;
     
     @Column(length = 200)
     private String imageUrl;
+    
+    @Column(length = 10)
+    private String category;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")

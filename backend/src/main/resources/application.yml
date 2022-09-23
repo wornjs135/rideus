@@ -30,14 +30,11 @@ spring:
 #    url: jdbc:mysql://localhost:3306/rideus?useSSL=false&useUnicode=true&autoReconnect=true&characterEncoding=utf8&allowMultiQueries=true&serverTimezone=UTC
 #    username: ssafy
 #    password: yfass1234
-    url: jdbc:mysql://localhost:3306/rideus?useSSL=false&useUnicode=true&autoReconnect=true&characterEncoding=utf8&allowMultiQueries=true&serverTimezone=UTC
-    username: root
-    password: ssafy0742185*SMJ
 
     # ec2 DB에 연결
-#    url: jdbc:mysql://j7a603.p.ssafy.io:3306/rideus?useSSL=false&useUnicode=true&autoReconnect=true&characterEncoding=utf8&allowMultiQueries=true&serverTimezone=UTC
-#    username: ssafy
-#    password: yfass1234
+    url: jdbc:mysql://j7a603.p.ssafy.io:3306/rideus?useSSL=false&useUnicode=true&autoReconnect=true&characterEncoding=utf8&allowMultiQueries=true&serverTimezone=UTC
+    username: ssafy
+    password: yfass1234
 
 
   jpa:
@@ -55,14 +52,14 @@ spring:
 
   data:
     mongodb:
-#      username: ssafy
-#      password: yfass1234
-      #authentication-database:
+      username: ssafy
+      password: yfass1234
+      authentication-database: admin
       auto-index-creation:
-      uri: mongodb://localhost:27017/test
-#      host: j7a603.p.ssafy.io
-#      port: 27017
-#      database: rideus
+#      uri: mongodb://localhost:27017/test
+      host: j7a603.p.ssafy.io
+      port: 27017
+      database: rideus
 
     web:
       pageable:

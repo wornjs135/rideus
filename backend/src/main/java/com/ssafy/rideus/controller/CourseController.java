@@ -8,6 +8,8 @@ import com.ssafy.rideus.repository.jpa.MemberRepository;
 import com.ssafy.rideus.repository.mongo.TestCollectionRepository;
 import com.ssafy.rideus.service.CourseService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 
 import org.json.JSONException;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 
+@Api("코스  API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/course")
@@ -32,6 +35,7 @@ public class CourseController {
 	@Autowired
 	private CourseService courseService;
 
+/*	
 	// 추천 코스 리스트 조회
 	@GetMapping()
 	public ResponseEntity<List<Course>> findAllCourses() {
@@ -52,7 +56,7 @@ public class CourseController {
 		
 		return ResponseEntity.status(HttpStatus.OK).body(courseCoordinate);
 	}
-	
+*/	
 	
 	// 명세서에 없는데 필요할 것 같은 api
 	// 코스 검색
@@ -62,63 +66,20 @@ public class CourseController {
 	
 	
 	
-	// 추천 코스 크롤링 데이터 넣기 (임의로 내가 만듬..)
+	// 추천 코스 크롤링 데이터 넣기
+	@ApiOperation(value = "크롤링한 코스 데이터 추가")
 	@PostMapping("/add/crawlingData")
 	public ResponseEntity<Void> addCrawlingData() {
-		
+
 		try {
 			courseService.addCrawlingData();
 			return ResponseEntity.ok().build();
-//	        return ResponseEntity.ok("코스 데이터 insert 완료");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.out.println(">>> addCrawlingData Exception: "+e.getMessage());
 			return ResponseEntity.badRequest().build();
 		}
-		
-//		return ResponseEntity<>();
-//		return ResponseEntity.ok().build();
 	}
 	
-	
-	/*
-    private final TestCollectionRepository testCollectionRepository;
-    private final MemberRepository memberRepository;
-
-    @GetMapping("/test")
-    public ResponseEntity test() {
-
-        System.out.println(testCollectionRepository.findAll());
-        System.out.println(memberRepository.findAll());
-
-
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/test")
-    public ResponseEntity test_create() {
-        List<String> favorite = new ArrayList<>();
-        favorite.add("ddd");
-        favorite.add("ccc");
-        favorite.add("eee");
-
-        List<Point> points = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            Point point = new Point(i, i);
-            points.add(point);
-        }
-
-        System.out.println(testCollectionRepository.save(TestCollection.create(10, "박재권", favorite, points)));
-
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/test/jenkins")
-    public ResponseEntity testJenkins() {
-        System.out.println("젠킨스 빌드 됐나요");
-
-        return ResponseEntity.ok("젠킨스 빌드 완료?");
-    }
-    */
 }
