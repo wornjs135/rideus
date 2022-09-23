@@ -24,25 +24,25 @@ public class NearInfoServiceImpl implements NearInfoService {
 
 
     @Override
-    public List<NearInfo> findNearInfo(long courseId) {
+    public List<NearInfo> findNearInfo(String courseId) {
 
         // 코스 정보 mongoDB find
         CourseCoordinate courseCoordinate =
                 courseCoordinateRepository
-                        .findById(String.valueOf(courseId))
+                        .findById(courseId)
                         .orElseThrow(() -> new NotFoundException("코스 상세 조회 실패"));
         return courseCoordinate.getNearInfos();
     }
 
     // 코스 주변 전체 정보 조회
     @Override
-    public List<NearInfo> saveNearInfo(long courseId) {
+    public List<NearInfo> saveNearInfo(String courseId) {
 
 
         // 코스 정보 mongoDB find
         CourseCoordinate courseCoordinate =
                 courseCoordinateRepository
-                .findById(String.valueOf(courseId))
+                .findById(courseId)
                 .orElseThrow(() -> new NotFoundException("코스 상세 조회 실패"));
 
 
@@ -51,13 +51,15 @@ public class NearInfoServiceImpl implements NearInfoService {
 
         // 전체 주변 정보 리스트
         List<NearInfo> allNearInfo = nearInfoRepository.findAll();
+        System.out.println("allNearInfo = " + allNearInfo.size());
 
         // 주변 정보 중복 체크 map
         Map<Long, NearInfo> checkedInfo = new HashMap<>();
 
-
+        System.out.println("checkpoints = " + checkpoints.size());
         // 체크포인트 별로 주변정보 검색
         for ( Coordinate checkPoint : checkpoints ) {
+
 
             // 체크포인트 좌표
             double cpLat = Double.parseDouble(checkPoint.getLat());
@@ -80,13 +82,18 @@ public class NearInfoServiceImpl implements NearInfoService {
             } // end of neainfo loop
         } // end of checkpoint loop
 
+        List<NearInfo> nearInfos = new ArrayList<>();
+        nearInfos.addAll(checkedInfo.values());
+
+
+
         courseCoordinateRepository.save( new CourseCoordinate(
                 courseCoordinate.getId(),
                 courseCoordinate.getCoordinates(),
                 courseCoordinate.getCheckpoints(),
-                (List<NearInfo>) checkedInfo.values()));
+                nearInfos));
 
-        return (List<NearInfo>) checkedInfo.values();
+        return nearInfos;
     }
 
 

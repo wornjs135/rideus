@@ -6,10 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,20 +18,19 @@ public class NearInfoController {
     @Autowired
     NearInfoService nearInfoService;
 
-    @GetMapping("/save/{courseid}")
-    public ResponseEntity<?> saveNearInfo(@PathVariable String courseId) {
+    @GetMapping("/save")
+    public ResponseEntity<?> saveNearInfo(@RequestParam("courseId") String courseId) {
         // 주행 코스 id
-        long course = Long.parseLong(courseId);
         // 코스 주변 정보 리스트
-        List<NearInfo> nearInfos = nearInfoService.saveNearInfo(course);
+        List<NearInfo> nearInfos = nearInfoService.saveNearInfo(courseId);
 
         return new ResponseEntity<List<NearInfo>>(nearInfos, HttpStatus.OK);
     }
 
-    @GetMapping("/find/{courseid}")
-    public ResponseEntity<?> findNearInfo(@PathVariable String courseId) {
+    @GetMapping("/find")
+    public ResponseEntity<?> findNearInfo(@RequestParam("courseId") String courseId) {
         // 주행 코스 id
-        List<NearInfo> nearInfos = nearInfoService.findNearInfo(Long.parseLong(courseId));
+        List<NearInfo> nearInfos = nearInfoService.findNearInfo(courseId);
 
         return new ResponseEntity<List<NearInfo>>(nearInfos, HttpStatus.OK);
     }
