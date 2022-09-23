@@ -30,23 +30,4 @@ public class CourseCoordinate {
         return courseCoordinate;
     }
 
-	/*
-    @Id
-    private String id;
-    private int age;
-    private String name;
-    private List<String> favorite;
-    private List<Point> points;
-
-    public static CoursePoint create(int age, String name, List<String> favorite, List<Point> points) {
-        CoursePoint testCollection = new CoursePoint();
-        testCollection.age = age;
-        testCollection.name = name;
-        testCollection.favorite = favorite;
-        testCollection.points = points;
-
-        return testCollection;
-    }
-    */
-
 }
