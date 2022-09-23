@@ -1,6 +1,7 @@
 package com.ssafy.rideus.repository.jpa;
 
 import com.ssafy.rideus.domain.Member;
+import com.ssafy.rideus.dto.member.common.MemberReviewTagTop5DtoInterface;
 import com.ssafy.rideus.dto.rank.response.RankDistanceResponseDto;
 import com.ssafy.rideus.dto.rank.response.RankDistanceResponseDtoInterface;
 import com.ssafy.rideus.dto.rank.response.RankTimeResponseDtoInterface;
@@ -77,4 +78,17 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             "BETWEEN :myDistanceRank -1 " +
             "AND :myDistanceRank +1", nativeQuery = true)
     List<RankDistanceResponseDtoInterface> searchRankMemberDistanceWithUpAndDown(Long myDistanceRank);
+
+    @Query(value = "select member_id as memberId, tag_id as tagId " +
+            "from (select  member_id, tag_id, cnt, " +
+            "@cnt_member_rank \\:= IF(@current_member_id = member_id, @cnt_member_rank + 1, 1) as cnt_rank, " +
+            "@current_member_id \\:= member_id " +
+            "from " +
+            "(SELECT m.member_id, tag_id, count(*) as cnt " +
+            "from member m join review r on m.member_id = r.member_id join review_tag rt on r.review_id = rt.review_id " +
+            "group by member_id, tag_id " +
+            "order by cnt desc) a " +
+            ") b " +
+            "where cnt_rank <= 5;", nativeQuery = true)
+    List<MemberReviewTagTop5DtoInterface> getMemberReviewTagTop5();
 }
