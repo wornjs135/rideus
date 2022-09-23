@@ -17,6 +17,7 @@ import {
 import history from "../utils/history.js";
 import { latlng } from "../utils/data";
 import useWatchLocation from "../hooks/watchLocationHook";
+import { distanceHandle, speedHandle, timeHandle } from "../utils/util";
 
 const geolocationOptions = {
   enableHighAccuracy: true,
@@ -61,6 +62,26 @@ export const Ride = () => {
     e.preventDefault();
     e.returnValue = "";
   };
+
+  function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+    var R = 6371; // Radius of the earth in km
+    var dLat = deg2rad(lat2 - lat1); // deg2rad below
+    var dLon = deg2rad(lon2 - lon1);
+    var a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(deg2rad(lat1)) *
+        Math.cos(deg2rad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var d = R * c; // Distance in km
+    d = Math.round(d * 1000);
+    return d;
+  }
+
+  function deg2rad(deg) {
+    return deg * (Math.PI / 180);
+  }
 
   function getDistance(lat1, lon1, lat2, lon2) {
     if (lat1 == lat2 && lon1 == lon2) return 0;
@@ -130,48 +151,56 @@ export const Ride = () => {
     setWhen(false);
     setConfirmedNavigation(true);
   }, []);
+  let idle = 1;
   useEffect(() => {
     // console.log("hello");
     // let i = 0.000001;
     window.addEventListener("beforeunload", preventClose);
     // let i = 0;
+    // setNowTime(0);
     const timerId = setInterval(() => {
       if (riding && location) {
-        console.log(location);
+        console.log("location : ", location);
 
         const gps = {
-          lat: location.latitude,
-          lng: location.longitude,
+          lat: location.latitude + i,
+          lng: location.longitude + i,
         };
 
-        console.log(gps);
+        console.log("gps : ", gps);
+
         setMapData((prev) => {
           return {
             center: gps,
             latlng: [...prev.latlng, gps],
           };
         });
+
         if (mapData.latlng.length > 1) {
-          console.log(data);
-          let dis = getDistance(
+          console.log("data : ", data);
+
+          let dis = getDistanceFromLatLonInKm(
             mapData.latlng.at(-1).lat,
             mapData.latlng.at(-1).lng,
             gps.lat,
             gps.lng
           );
-          console.log("dis:", dis);
-          if (dis > 0)
+          console.log("dis: ", dis);
+          if (dis > 0) {
             setData((prev) => ({
-              topSpeed: Math.max(prev.topSpeed, dis * 3.6),
-              avgSpeed: dis * 3.6,
+              topSpeed: Math.max(prev.topSpeed, speedHandle(dis, idle)),
+              avgSpeed: speedHandle(dis, idle),
               totalDistance: prev.totalDistance + dis,
             }));
-          else
+            idle = 1;
+          } else {
+            idle = idle + 1;
             setData((prev) => ({
               topSpeed: prev.topSpeed,
               avgSpeed: prev.avgSpeed,
               totalDistance: prev.totalDistance,
             }));
+          }
         }
 
         // setI((prev) => {
@@ -185,9 +214,9 @@ export const Ride = () => {
             totalDistance: prev.totalDistance,
           };
         });
-      // setI((prev) => {
-      //   return prev + 0.0001;
-      // });
+      setI((prev) => {
+        return prev + 0.0001;
+      });
       setNowTime((prev) => prev + 1);
       console.log(mapData.latlng);
     }, 1000);
@@ -250,17 +279,28 @@ export const Ride = () => {
               align="center"
               style={{ marginLeft: "10px", marginRight: "5px" }}
             >
-              <StyledText text={data.totalDistance} size="40px" weight="bold" />
+              <StyledText
+                text={distanceHandle(data.totalDistance)}
+                size="40px"
+                weight="bold"
+              />
               <StyledText text="총 이동거리" color="#979797" size="10px" />
             </Box>
-            <StyledText text="km" color="#979797" />
+            <StyledText
+              text={data.totalDistance > 1000 ? "km" : "m"}
+              color="#979797"
+            />
           </Box>
           {/* 총 이동거리 끝 */}
           {/* 상세 데이터 시작 */}
           <Box direction="row" align="center" gap="medium">
             {/* 주행시간 */}
             <Box align="center">
-              <StyledText text={nowTime} weight="bold" size="18px" />
+              <StyledText
+                text={timeHandle(nowTime)}
+                weight="bold"
+                size="18px"
+              />
               <StyledText text="주행 시간" size="10px" />
             </Box>
             {/* 평균 속도 */}
@@ -287,7 +327,7 @@ export const Ride = () => {
               color="#439652"
               textColor="white"
               bWidth="20%"
-              bHeight="57px"
+              bHeight="46px"
               onClick={() => {
                 if (riding === true) setRiding(false);
                 else setRiding(true);
@@ -300,7 +340,7 @@ export const Ride = () => {
               color="#439652"
               textColor="white"
               bWidth="80%"
-              bHeight="57px"
+              bHeight="46px"
               fontSize="16px"
               fontWeight="bold"
             />
@@ -312,7 +352,7 @@ export const Ride = () => {
               color="#F29393"
               textColor="white"
               bWidth="100%"
-              bHeight="57px"
+              bHeight="46px"
               fontSize="16px"
               fontWeight="bold"
               children="주행 종료"
@@ -337,7 +377,17 @@ export const Ride = () => {
             center={mapData.center}
             isPanto={true}
             style={{ width: "100%", height: "100%" }}
-          ></Map>
+          >
+            {mapData.latlng && (
+              <Polyline
+                path={[mapData.latlng]}
+                strokeWeight={5} // 선의 두께 입니다
+                strokeColor={"#030ff1"} // 선의 색깔입니다
+                strokeOpacity={0.7} // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+                strokeStyle={"solid"} // 선의 스타일입니다
+              />
+            )}
+          </Map>
         }
         cancel="뒤로가기"
         accept="주행종료"

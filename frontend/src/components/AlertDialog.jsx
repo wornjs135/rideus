@@ -67,7 +67,7 @@ export const RideDialog = ({ open, handleClose, title }) => {
         justify="center"
         width="100%"
         pad="15px"
-        margin={{ top: "20px", bottom: "50px" }}
+        margin={{ top: "20px" }}
         gap="small"
       >
         <GBtn
@@ -155,6 +155,84 @@ const TopBanner = styled.div`
 `;
 
 export const MapDialog = ({
+  type,
+  open,
+  handleClose,
+  handleAction,
+  title,
+  map,
+  cancel,
+  accept,
+}) => {
+  return (
+    <Dialog fullScreen open={open} onClose={handleClose}>
+      <Box width="100vw" height="100vh" align="center">
+        {map}
+        {/* 상단 바 */}
+        <Box
+          align="center"
+          style={{
+            position: "absolute",
+            width: "100%",
+            zIndex: "5",
+            top: "0",
+            display: "flex",
+            marginTop: "15px",
+          }}
+        >
+          <Box width="100%" align="center">
+            {/* 코스 이름 */}
+            <Box
+              round={{ size: "small" }}
+              width="90%"
+              height="43px"
+              background={"rgb(67, 150, 82)"}
+              align="center"
+              justify="center"
+            >
+              <StyledText text={title} color="white" size="20px" />
+            </Box>
+            {type === "detail" && (
+              <Box width="100%" align="center">
+                <Box direction="row" justify="start" overflow="scroll">
+                  <StyledHorizonTable>
+                    <Button InfoSelect children="전체" />
+                    <Button Info children="관광명소" />
+                    <Button Info children="음식점" />
+                    <Button Info children="카페" />
+                    <Button Info children="편의점" />
+                    <Button Info children="화장실" />
+                    <Button Info children="문화시설" />
+                    <Button Info children="자전거수리" />
+                  </StyledHorizonTable>
+                </Box>
+                <img width="50px" src={WeatherBtn} />
+              </Box>
+            )}
+          </Box>
+        </Box>
+        {/* 하단 버튼 */}
+        <BottomBtn>
+          <Button MediumWhite onClick={handleClose}>
+            {cancel}
+          </Button>
+          {accept && (
+            <Button
+              MediumPink={type === "detail" ? false : true}
+              MediumGreen={type === "detail" ? true : false}
+              onClick={handleAction}
+              autoFocus
+            >
+              {accept}
+            </Button>
+          )}
+        </BottomBtn>
+      </Box>
+    </Dialog>
+  );
+};
+
+export const ReviewDialog = ({
   type,
   open,
   handleClose,

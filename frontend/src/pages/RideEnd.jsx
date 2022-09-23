@@ -5,6 +5,7 @@ import TotalBike from "../assets/images/totalRideBike.png";
 import { Map, Polyline } from "react-kakao-maps-sdk";
 import Button from "../components/Button";
 import { useLocation, useNavigate } from "react-router-dom";
+import { distanceHandle, timeHandle } from "../utils/util";
 
 export const RideEnd = () => {
   const navigate = useNavigate();
@@ -69,14 +70,17 @@ export const RideEnd = () => {
               style={{ marginLeft: "10px", marginRight: "5px" }}
             >
               <StyledText
-                text={data.totalDistance}
+                text={distanceHandle(data.totalDistance)}
                 size="40px"
                 weight="bold"
                 color="white"
               />
               <StyledText text="총 이동거리" size="10px" color="white" />
             </Box>
-            <StyledText text="km" color="white" />
+            <StyledText
+              text={data.totalDistance > 1000 ? "km" : "m"}
+              color="white"
+            />
           </Box>
           {/* 총 이동거리 끝 */}
           {/* 상세 데이터 시작 */}
@@ -84,7 +88,7 @@ export const RideEnd = () => {
             {/* 주행시간 */}
             <Box align="center">
               <StyledText
-                text={data.nowTime}
+                text={timeHandle(data.nowTime)}
                 weight="bold"
                 size="18px"
                 color="white"

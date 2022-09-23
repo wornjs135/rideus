@@ -20,7 +20,8 @@ export const CourseDetail = () => {
   const [open, setOpen] = useState(true);
   const [start, setStart] = useState(false);
   const [openMap, setOpenMap] = useState(false);
-  const [score, setScore] = useState("3.58");
+  const [bmk, setBmk] = useState(false);
+  const [score, setScore] = useState("5");
   const [mapData, setMapData] = useState({
     latlng: [],
     center: { lng: 127.002158, lat: 37.512847 },
@@ -54,7 +55,7 @@ export const CourseDetail = () => {
   };
   const array = [0, 1, 2, 3, 4];
   return (
-    <Box align="center" width="100%">
+    <Box align="center" width="100%" height="86%">
       <Box direction="row" justify="center">
         <StyledText text={courseName} size="24px" weight="bold" />
       </Box>
@@ -83,7 +84,7 @@ export const CourseDetail = () => {
         <Box direction="row" align="center">
           <StyledText text={score} weight="bold" size="19px" />
           <Box style={{ position: "relative", marginTop: "10px" }}>
-            <Box
+            <div
               // align="center"
               style={{
                 width: starView,
@@ -101,7 +102,7 @@ export const CourseDetail = () => {
                   width: "114px",
                 }}
               />
-            </Box>
+            </div>
             <img
               className="backgrdoundStar"
               alt="별"
@@ -116,13 +117,21 @@ export const CourseDetail = () => {
           </Box>
         </Box>
         <Box direction="row" align="center">
-          <Button
+          {/* <Button
             children="북마크"
             // onClick={() => {
             //   check();
             // }}
+          /> */}
+          <img
+            src={bmk ? Bookmark : BookmarkBlank}
+            width="25px"
+            height="25px"
+            onClick={() => {
+              if (bmk === true) setBmk(false);
+              else setBmk(true);
+            }}
           />
-          <img src={Bookmark} width="20px" height="20px" />
         </Box>
       </Box>
       <Button
