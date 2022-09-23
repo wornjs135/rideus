@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Column;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,11 +16,14 @@ public class RecommendationCourseDto {
 
     private String courseId;
     private String courseName;
-    private String distance;
-    private String expectedTime;
+    private Double distance;
+    private Integer expectedTime;
     private String start;
     private String finish;
     private Integer likeCount;
+    private String imageUrl;
+    private String category;
+    
     private List<RecommendationCourseTagDto> tags = new ArrayList<>();
 
     public static RecommendationCourseDto from(RecommendationCourseDtoInterface list) {
