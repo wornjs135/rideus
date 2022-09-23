@@ -4,6 +4,7 @@ import lombok.*;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.ssafy.rideus.domain.NearInfo;
 import com.ssafy.rideus.domain.base.Coordinate;
 
 import javax.persistence.Id;
@@ -20,6 +21,7 @@ public class CourseCoordinate {
     private String id;
     private List<Coordinate> coordinates;
     private List<Coordinate> checkpoints;
+    private List<NearInfo> nearInfos;
     
     public static CourseCoordinate create(List<Coordinate> coordinates, List<Coordinate> checkpoints) {
         CourseCoordinate courseCoordinate = new CourseCoordinate();
@@ -29,23 +31,5 @@ public class CourseCoordinate {
         return courseCoordinate;
     }
 	
-	/*
-    @Id
-    private String id;
-    private int age;
-    private String name;
-    private List<String> favorite;
-    private List<Point> points;
-
-    public static CoursePoint create(int age, String name, List<String> favorite, List<Point> points) {
-        CoursePoint testCollection = new CoursePoint();
-        testCollection.age = age;
-        testCollection.name = name;
-        testCollection.favorite = favorite;
-        testCollection.points = points;
-
-        return testCollection;
-    }
-    */
 
 }
