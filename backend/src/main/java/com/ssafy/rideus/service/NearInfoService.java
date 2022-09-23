@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface NearInfoService {
 
-    List<NearInfo> findNearInfo(long courseId);
+    List<NearInfo> findNearInfo(String courseId);
 
     // 코스 주변 전체 정보 조회
-    List<NearInfo> saveNearInfo(long courseId);
+    List<NearInfo> saveNearInfo(String courseId);
 }
