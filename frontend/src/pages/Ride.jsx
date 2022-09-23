@@ -163,8 +163,8 @@ export const Ride = () => {
         console.log("location : ", location);
 
         const gps = {
-          lat: location.latitude + i,
-          lng: location.longitude + i,
+          lat: location.latitude,
+          lng: location.longitude,
         };
 
         console.log("gps : ", gps);
@@ -214,9 +214,9 @@ export const Ride = () => {
             totalDistance: prev.totalDistance,
           };
         });
-      setI((prev) => {
-        return prev + 0.0001;
-      });
+      // setI((prev) => {
+      //   return prev + 0.0001;
+      // });
       setNowTime((prev) => prev + 1);
       console.log(mapData.latlng);
     }, 1000);
