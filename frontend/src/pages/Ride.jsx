@@ -20,7 +20,7 @@ import useWatchLocation from "../hooks/watchLocationHook";
 import { distanceHandle, speedHandle, timeHandle } from "../utils/util";
 
 const geolocationOptions = {
-  enableHighAccuracy: true,
+  enableHighAccuracy: false,
   timeout: 500, // 1 min (1000 ms * 60 sec * 1 minute = 60 000ms)
   maximumAge: 0, // 24 hour
 };
@@ -50,9 +50,9 @@ export const Ride = () => {
   // const { coords, isGeolocationAvailable, isGeolocationEnabled } =
   //   useGeolocated({
   //     positionOptions: {
-  //       enableHighAccuracy: true,
+  //       enableHighAccuracy: false,
   //       maximumAge: 0,
-  //       timeout: Infinity,
+  //       timeout: 1000,
   //     },
   //     watchPosition: true,
   //   });
@@ -159,7 +159,16 @@ export const Ride = () => {
     // let i = 0;
     // setNowTime(0);
     const timerId = setInterval(() => {
+      // if (riding && isGeolocationAvailable && isGeolocationEnabled) {
+      console.log(error);
       if (riding && location) {
+        // console.log("location : ", coords);
+
+        // const gps = {
+        //   lat: coords.latitude,
+        //   lng: coords.longitude,
+        // };
+
         console.log("location : ", location);
 
         const gps = {
@@ -204,9 +213,10 @@ export const Ride = () => {
         }
 
         // setI((prev) => {
-        //   return prev + 0.0001;
+        //   return prev + 0.001;
         // });
-      } else
+      } else {
+        // idle = idle + 1;
         setData((prev) => {
           return {
             topSpeed: prev.topSpeed,
@@ -214,6 +224,7 @@ export const Ride = () => {
             totalDistance: prev.totalDistance,
           };
         });
+      }
       // setI((prev) => {
       //   return prev + 0.0001;
       // });
@@ -242,12 +253,12 @@ export const Ride = () => {
         height="90vh"
         round={{ size: "large", corner: "top" }}
         background="#ffffff"
-        pad={{ top: "20px" }}
+        pad={{ top: "20px", bottom: "20px" }}
         border={{ color: "#ffffff", size: "small", side: "top" }}
       >
         {/* 카카오맵 */}
         <Box
-          style={{ width: "85%", height: "500px" }}
+          style={{ width: "85%", height: "50vh" }}
           onClick={() => {
             setOpenMap(true);
           }}
