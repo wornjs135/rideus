@@ -20,9 +20,9 @@ export const tags = [
 ];
 
 export const timeHandle = (time) => {
-  if (time < 60) return `${time}초`;
-  else if (time < 3600) return `${parseInt(time / 60)}분 ${time % 60}초`;
-  else return `${parseInt(time / 3600)}시간 ${parseInt((time % 3600) / 60)}분`;
+  if (time < 60) return `${time}"`;
+  else if (time < 3600) return `${parseInt(time / 60)}' ${time % 60}"`;
+  else return `${parseInt(time / 3600)}h ${parseInt((time % 3600) / 60)}'`;
 };
 
 export const distanceHandle = (dis) => {
