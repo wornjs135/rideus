@@ -47,17 +47,17 @@ export const Ride = () => {
   const [riding, setRiding] = useState(true);
   const [when, setWhen] = useState(true);
   const [lastLocation, setLastLocation] = useState(null);
-  // const { coords, isGeolocationAvailable, isGeolocationEnabled } =
-  //   useGeolocated({
-  //     positionOptions: {
-  //       enableHighAccuracy: false,
-  //       maximumAge: 0,
-  //       timeout: 1000,
-  //     },
-  //     watchPosition: true,
-  //   });
-  const { location, cancelLocationWatch, error } =
-    useWatchLocation(geolocationOptions);
+  const { coords, isGeolocationAvailable, isGeolocationEnabled } =
+    useGeolocated({
+      positionOptions: {
+        enableHighAccuracy: false,
+        maximumAge: 0,
+        timeout: 500,
+      },
+      watchPosition: true,
+    });
+  // const { location, cancelLocationWatch, error } =
+  //   useWatchLocation(geolocationOptions);
   const preventClose = (e) => {
     e.preventDefault();
     e.returnValue = "";
@@ -159,22 +159,22 @@ export const Ride = () => {
     // let i = 0;
     // setNowTime(0);
     const timerId = setInterval(() => {
-      // if (riding && isGeolocationAvailable && isGeolocationEnabled) {
-      console.log(error);
-      if (riding && location) {
-        // console.log("location : ", coords);
-
-        // const gps = {
-        //   lat: coords.latitude,
-        //   lng: coords.longitude,
-        // };
-
-        console.log("location : ", location);
+      if (riding && isGeolocationAvailable && isGeolocationEnabled) {
+        // console.log(error);
+        // if (riding && location) {
+        console.log("location : ", coords);
 
         const gps = {
-          lat: location.latitude,
-          lng: location.longitude,
+          lat: coords.latitude,
+          lng: coords.longitude,
         };
+
+        // console.log("location : ", location);
+
+        // const gps = {
+        //   lat: location.latitude,
+        //   lng: location.longitude,
+        // };
 
         console.log("gps : ", gps);
 
