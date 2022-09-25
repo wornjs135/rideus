@@ -6,6 +6,7 @@ import com.ssafy.rideus.domain.collection.CourseCoordinate;
 import com.ssafy.rideus.domain.collection.NearInfo;
 import com.ssafy.rideus.repository.mongo.CourseCoordinateRepository;
 import com.ssafy.rideus.repository.mongo.NearInfoRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import java.util.*;
 
 
 @Service("nearInfoService")
+@Slf4j
 public class NearInfoServiceImpl implements NearInfoService {
 
     ///////////////// mongoDB Repository ////////////////
@@ -52,20 +54,19 @@ public class NearInfoServiceImpl implements NearInfoService {
 
         // mongoDB에서 체크포인트 리스트 가져오기
         List<Coordinate> checkpoints = courseCoordinate.getCheckpoints();
-
         // 전체 주변 정보 리스트
         List<NearInfo> allNearInfo = nearInfoRepository.findAll();
-        System.out.println("allNearInfo = " + allNearInfo.size());
-
         // 주변 정보 중복 체크 map
         Map<String, NearInfo> checkedInfo = new HashMap<>();
 
-        System.out.println("checkpoints = " + checkpoints.size());
+        log.info("all Near Info size = " + allNearInfo.size());
+        log.info("check point size = " + checkpoints.size());
+
         // 체크포인트 별로 주변정보 검색
-        int count = 1;
+        int checkpointCounter = 1;
         for ( Coordinate checkPoint : checkpoints ) {
 
-            System.out.println(count++ + " checkPoint = " + checkPoint);
+            log.info(checkpointCounter++ +" "+ checkPoint);
             // 체크포인트 좌표
             double cpLat = Double.parseDouble(checkPoint.getLat());
             double cpLng = Double.parseDouble(checkPoint.getLng());
@@ -73,7 +74,6 @@ public class NearInfoServiceImpl implements NearInfoService {
             // 주변 정보 전체 조회
             for ( NearInfo nearInfo : allNearInfo ) {
 
-//                System.out.println("nearInfo = " + nearInfo.toString());
                 if(checkedInfo.containsKey(nearInfo.getId())) continue;
 
                 // 주변 정보 위,경도 좌표
@@ -89,7 +89,7 @@ public class NearInfoServiceImpl implements NearInfoService {
         } // end of checkpoint loop
 
         List<NearInfo> nearInfos = new ArrayList<>(checkedInfo.values());
-        System.out.println("nearInfos.size() = " + nearInfos.size());
+        log.info("near Infos size = " + nearInfos.size());
 
         courseCoordinateRepository.save( new CourseCoordinate(
                 courseCoordinate.getId(),
@@ -102,8 +102,31 @@ public class NearInfoServiceImpl implements NearInfoService {
 
     @Override
     public List<NearInfo> findAllNearInfo() {
-        System.out.println("find all near info");
+        log.info("find all near info");
         return nearInfoRepository.findAll();
+    }
+
+    @Override
+    public List<NearInfo> findNearinfoByCategories(String courseid, List<String> categories) {
+
+        List<NearInfo> possibleNearinfos = new ArrayList<>();
+        List<NearInfo> selectedInfo = new ArrayList<>();
+        Map<String, Boolean> categoryMap = new HashMap<>();
+
+        List<NearInfo> courseNearinfo = courseCoordinateRepository.findById(courseid).get().getNearInfos();
+
+        categories.forEach(category -> categoryMap.put(category, true));
+
+        courseNearinfo.stream().forEach(info -> {
+            if(categoryMap.containsKey(info.getNearinfoCategory()))
+                possibleNearinfos.add(info);
+        });
+        return possibleNearinfos;
+    }
+
+    @Override
+    public List<NearInfo> findNearinfoByCourseid(String courseid) {
+        return courseCoordinateRepository.findById(courseid).get().getNearInfos();
     }
 
 

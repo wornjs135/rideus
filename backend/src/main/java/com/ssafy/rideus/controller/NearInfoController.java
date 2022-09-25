@@ -19,7 +19,7 @@ public class NearInfoController {
     @Autowired
     NearInfoService nearInfoService;
 
-    @GetMapping("/save")
+    @PostMapping("/save")
     public ResponseEntity<?> saveNearInfo(@RequestParam("courseId") String courseId) {
         // 주행 코스 id
         // 코스 주변 정보 리스트
@@ -29,11 +29,19 @@ public class NearInfoController {
     }
 
     @GetMapping("/find")
-    public ResponseEntity<?> findNearInfo(@RequestParam("courseId") String courseId) {
+    public ResponseEntity<?> findNearinfoByCategories( @RequestParam("courseid") String courseid, @RequestParam("categories") List<String> categories) {
         // 주행 코스 id
-        List<NearInfo> nearInfos = nearInfoService.findNearInfo(courseId);
-        return new ResponseEntity<List<NearInfo>>(nearInfos, HttpStatus.OK);
+        List<NearInfo> courseNearinfos = nearInfoService.findNearinfoByCategories(courseid, categories);
+        return new ResponseEntity<List<NearInfo>>(courseNearinfos, HttpStatus.OK);
     }
+
+    @GetMapping("/findById")
+    public ResponseEntity<?> findNearinfoByCategories( @RequestParam("courseid") String courseid) {
+        // 주행 코스 id
+        List<NearInfo> courseNearinfos = nearInfoService.findNearinfoByCourseid(courseid);
+        return new ResponseEntity<List<NearInfo>>(courseNearinfos, HttpStatus.OK);
+    }
+
 
     @GetMapping("/findAll")
     public ResponseEntity<?> findAllNearInfo() {

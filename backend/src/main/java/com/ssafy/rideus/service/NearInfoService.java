@@ -12,4 +12,8 @@ public interface NearInfoService {
     List<NearInfo> saveNearInfo(String courseId);
 
     List<NearInfo> findAllNearInfo();
+
+    List<NearInfo> findNearinfoByCategories(String courseid, List<String> categories);
+
+    List<NearInfo> findNearinfoByCourseid(String courseid);
 }
