@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.lang.model.SourceVersion;
 import java.util.List;
 
 @RequestMapping("/near")
@@ -31,8 +32,16 @@ public class NearInfoController {
     public ResponseEntity<?> findNearInfo(@RequestParam("courseId") String courseId) {
         // 주행 코스 id
         List<NearInfo> nearInfos = nearInfoService.findNearInfo(courseId);
-
         return new ResponseEntity<List<NearInfo>>(nearInfos, HttpStatus.OK);
     }
 
+    @GetMapping("/findAll")
+    public ResponseEntity<?> findAllNearInfo() {
+
+        System.out.println("near info controller, find all near info");
+        // 주행 코스 id
+        List<NearInfo> allNearInfo = nearInfoService.findAllNearInfo();
+        System.out.println("allNearInfo = " + allNearInfo.size());
+        return new ResponseEntity<List<NearInfo>>(allNearInfo,HttpStatus.OK);
+    }
 }

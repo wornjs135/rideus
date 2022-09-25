@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
+@ToString
 public class Course extends BaseEntity {
 
     @Id

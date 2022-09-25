@@ -20,6 +20,9 @@ public class NearInfoServiceImpl implements NearInfoService {
     CourseCoordinateRepository courseCoordinateRepository;
     @Autowired
     NearInfoRepository nearInfoRepository;
+
+    @Autowired
+
     static final int DISTANCE_LIMIT = 4000; // 반경 4km 안에 있는 시설 정보 조회
 
 
@@ -55,13 +58,14 @@ public class NearInfoServiceImpl implements NearInfoService {
         System.out.println("allNearInfo = " + allNearInfo.size());
 
         // 주변 정보 중복 체크 map
-        Map<Long, NearInfo> checkedInfo = new HashMap<>();
+        Map<String, NearInfo> checkedInfo = new HashMap<>();
 
         System.out.println("checkpoints = " + checkpoints.size());
         // 체크포인트 별로 주변정보 검색
+        int count = 1;
         for ( Coordinate checkPoint : checkpoints ) {
 
-
+            System.out.println(count++ + " checkPoint = " + checkPoint);
             // 체크포인트 좌표
             double cpLat = Double.parseDouble(checkPoint.getLat());
             double cpLng = Double.parseDouble(checkPoint.getLng());
@@ -69,6 +73,7 @@ public class NearInfoServiceImpl implements NearInfoService {
             // 주변 정보 전체 조회
             for ( NearInfo nearInfo : allNearInfo ) {
 
+//                System.out.println("nearInfo = " + nearInfo.toString());
                 if(checkedInfo.containsKey(nearInfo.getId())) continue;
 
                 // 주변 정보 위,경도 좌표
@@ -83,10 +88,8 @@ public class NearInfoServiceImpl implements NearInfoService {
             } // end of neainfo loop
         } // end of checkpoint loop
 
-        List<NearInfo> nearInfos = new ArrayList<>();
-        nearInfos.addAll(checkedInfo.values());
-
-
+        List<NearInfo> nearInfos = new ArrayList<>(checkedInfo.values());
+        System.out.println("nearInfos.size() = " + nearInfos.size());
 
         courseCoordinateRepository.save( new CourseCoordinate(
                 courseCoordinate.getId(),
@@ -95,6 +98,12 @@ public class NearInfoServiceImpl implements NearInfoService {
                 nearInfos));
 
         return nearInfos;
+    }
+
+    @Override
+    public List<NearInfo> findAllNearInfo() {
+        System.out.println("find all near info");
+        return nearInfoRepository.findAll();
     }
 
 
