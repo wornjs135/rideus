@@ -138,6 +138,7 @@ export const Ride = () => {
   const handleBlockedNavigation = useCallback(
     (tx) => {
       if (!confirmedNavigation && tx.location.pathname !== locations.pathname) {
+        confirmNavigation();
         setOpen(true);
         setLastLocation(tx);
         return false;
@@ -150,6 +151,12 @@ export const Ride = () => {
     setOpen(false);
     setWhen(false);
     setConfirmedNavigation(true);
+  }, []);
+
+  const unconfirmNavigation = useCallback(() => {
+    setOpen(false);
+    setWhen(true);
+    setConfirmedNavigation(false);
   }, []);
   let idle = 1;
   useEffect(() => {
@@ -234,7 +241,7 @@ export const Ride = () => {
 
     return () => {
       clearInterval(timerId);
-      cancelLocationWatch();
+      // cancelLocationWatch();
       window.removeEventListener("beforeunload", preventClose);
     };
   });
@@ -260,6 +267,7 @@ export const Ride = () => {
         <Box
           style={{ width: "85%", height: "50vh" }}
           onClick={() => {
+            confirmNavigation();
             setOpenMap(true);
           }}
         >
@@ -368,6 +376,7 @@ export const Ride = () => {
               fontWeight="bold"
               children="주행 종료"
               onClick={() => {
+                confirmNavigation();
                 setOpen(true);
               }}
             />
@@ -378,6 +387,7 @@ export const Ride = () => {
         type="riding"
         open={openMap}
         handleClose={() => {
+          unconfirmNavigation();
           setOpenMap(false);
         }}
         handleAction={() => {
@@ -407,10 +417,10 @@ export const Ride = () => {
       <AlertDialog
         open={open}
         handleClose={() => {
+          unconfirmNavigation();
           setOpen(false);
         }}
         handleAction={() => {
-          confirmNavigation();
           // useBlocker(handleBlockedNavigation, false);
           navigate("/rideEnd", {
             state: {
