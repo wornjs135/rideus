@@ -3,11 +3,10 @@ package com.ssafy.rideus.service;
 
 import com.jcraft.jsch.JSchException;
 import com.ssafy.rideus.domain.Course;
-import com.ssafy.rideus.domain.collection.CourseCoordinate;
 import com.ssafy.rideus.domain.collection.NearInfo;
+import com.ssafy.rideus.dto.CategoryDto;
 import com.ssafy.rideus.hadoop.Controller.SSHUtils;
 import com.ssafy.rideus.repository.jpa.CourseRepository;
-import com.ssafy.rideus.repository.mongo.CourseCoordinateRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,16 +34,17 @@ public class HadoopServiceImpl implements HadoopService{
     @Autowired
     NearInfoService nearInfoService;
 
-    @Autowired
-    CourseCoordinateRepository courseCoordinateRepository;
 
+    private static final String sendFilePath = "C:\\input\\";
+    private static final String receiveFilePath = "/home/j7a603/"; // hadoop path
+    private static final String hadoopdefault = "/usr/local/hadoop/bin/"; // hadoop
+    private static final String hadoopdefault2 = "/home/j7a603/"; // hadoop
 
-    //    private String sendFilePath = "/home/ubuntu/mysqltablefile/"; // ubuntu ?
-    private String sendFilePath = "C:\\input\\";
-    private String receiveFilePath = "/home/j7a603/"; // hadoop path
-    private String hadoopdefault = "/usr/local/hadoop/bin/"; // hadoop
-    private String hadoopdefault2 = "/home/j7a603/"; // hadoop
-
+    private static final String LOCAL_FILE_PATH = "C:\\input\\";
+    private static final String SERVER_FILE_PATH = "/home/j7a603/";
+    private static final String INPUT_FILE_NAME = "input";
+    private static final String OUTPUT_FILE_NAME = "output";
+    private static final String FILE_TYPE = ".txt";
 
 
     /*
@@ -54,82 +54,44 @@ public class HadoopServiceImpl implements HadoopService{
     4. mapreduce 실행
     5. 가장 많은 카테고리를 mysql 코스 카테고리로 update
      */
-    @Transactional
-    @Override
-    public void saveCategoryToCourse(String courseid) {
-
-        // session 연결 상태 아님
-        if (!ssh.checksession()) {
-            try {
-                ssh.connectSSH();
-            } catch (JSchException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-
-        System.out.println("connect to ssh");
-        StringBuilder sb,temp;
-        try {
-
-            ssh.getSSHResponse("hdfs dfs -rm -r output");
-            ssh.getSSHResponse("hadoop jar category.jar categorycount a.txt output2");
-            String sshResponse = ssh.getSSHResponse("hdfs dfs -cat output2/*");
-            System.out.println("sshResponse = " + sshResponse);
-
-            List<Category> categories = new ArrayList<>();
-
-            StringTokenizer st = new StringTokenizer(sshResponse, "\n");
-            int line = 1;
-            while(st.hasMoreTokens()) {
-                String[] split = st.nextToken().split("\t");
-                String category = split[0];
-                int count = Integer.parseInt(split[1]);
-                categories.add(new Category(category, count));
-                System.out.println(line++ + " : "+st.nextToken());
-            }
-
-            Collections.sort(categories);
-            System.out.println(categories.get(0));
-            Category category = categories.get(0);
-            // mysql 카테고리 넣기
-            Course course = courseRepository.findById(courseid).get();
-            System.out.println("Before : " + course.toString());
-            course.setCategory(category.getCategory());
-            System.out.println("After : " + course.toString());
-            courseRepository.save(course);
-
-
-            log.info("********전송끝 *******");
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
 
 
     /* 새로 입력된 코스 주변정보 update */
-    public List<NearInfo> updateCourseNearInfo(String courseid) {
+    public List<NearInfo> mapreduceCategory(String courseid) {
+
+        /* mongoDB 새로 입력된 코스 주변정보 입력 */
         List<NearInfo> nearInfos = nearInfoService.saveNearInfo(courseid);
+
+        /* 코스 주변정보 카테고리 mapreudce 실행, 결과 MySQL Update */
         parsingCourseCategory(nearInfos, courseid);
+
         return nearInfos;
     }
 
     /* 코스 주변정보 카테고리만 분류해서 txt파일로 변환 */
+
+    /**
+     * 실행 순서
+     * 1. make input.txt, course nearinfo category file
+     * 2. send input.txt file to cluster server
+     * 3. copy input.txt to hdfs
+     * 4. run mapreduce
+     * 5. read output file, MySQL Update
+     *
+     * @param courseNearinfos : 코스 주변 정보
+     * @param courseid : 코스 id
+     */
     public void parsingCourseCategory(List<NearInfo> courseNearinfos,String courseid) {
 
-
         /* input 파일 생성*/
-        File file = new File("C:\\input\\file.txt");
+        File file = new File(LOCAL_FILE_PATH + INPUT_FILE_NAME + FILE_TYPE);
         try {
-            if(file.exists()){ // 파일이 존재하지 않으면
-                file.delete();
-            }
-            if (file.createNewFile()) {
-                System.out.println("File created");
-            } else {
-                System.out.println("File already exists");
-            }
+            if(file.exists()) file.delete();
+            if (file.createNewFile())
+                log.info("File created");
+            else
+                log.info("File already exists");
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -137,18 +99,17 @@ public class HadoopServiceImpl implements HadoopService{
         /* 카테고리 input.txt에 입력 */
         try
         {
-            String filePath = "C:\\input\\file.txt";
+            String filePath = LOCAL_FILE_PATH + INPUT_FILE_NAME + FILE_TYPE;
             FileWriter fw = new FileWriter(filePath, true);
-            String fileInputString = "";
 
-            /* txt 파일에 입력 */
+            /* 주변정보 카테고리만 추출 후 txt 파일에 입력 */
             for(NearInfo nearinfo : courseNearinfos) {
                 fw.write(nearinfo.getNearinfoCategory() + "\n");
             }
             fw.close();
 
             /* input파일 hdfs로 복사 */
-            copyFileToHdfs(file ,filePath, courseid);
+            copyFileToHdfs(courseid);
         }
         catch(Exception e){
             System.out.println(e);
@@ -157,7 +118,7 @@ public class HadoopServiceImpl implements HadoopService{
     }
     @Transactional
     @Override
-    public void copyFileToHdfs(File file, String filePath, String courseid) {
+    public void copyFileToHdfs(String courseid) {
 
         /* session 연결 */
         if (!ssh.checksession()) {
@@ -169,48 +130,71 @@ public class HadoopServiceImpl implements HadoopService{
             }
         }
 
+            /*
+             [Process 1]
+             1. local file을 server로 복사
+             2. hdfs에 file 전송
+            */
+        String localPath = LOCAL_FILE_PATH + INPUT_FILE_NAME + FILE_TYPE;
+        String serverPath = SERVER_FILE_PATH + INPUT_FILE_NAME + FILE_TYPE;
+        String inputFileName = INPUT_FILE_NAME + FILE_TYPE;
+        String outputFileName = OUTPUT_FILE_NAME + FILE_TYPE;
 
         try {
-            String filename = "file";
 
-            /* local input.txt파일을 cluster 서버로 복사 */
-            ssh.sendFileToOtherServer(sendFilePath+filename+".txt", receiveFilePath, "a.txt");
-            ssh.getSSHResponse("hdfs dfs -rm -r a.txt");
-            ssh.getSSHResponse("hdfs dfs -put a.txt");
+            ssh.sendFileToOtherServer(localPath, SERVER_FILE_PATH, inputFileName);
+
+            // server command
+            ssh.getSSHResponse("hdfs dfs -rm -r " + inputFileName);
+            ssh.getSSHResponse("hdfs dfs -put " + inputFileName);
             /* cluster 속 input.txt파일 hdfs로 복사 */
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        System.out.println("connect to ssh");
-        StringBuilder sb,temp;
+        /*
+            [Proecss 2]
+            1. 기존 output파일 삭제
+            2. hadoop mapreduce 실행
+         */
         try {
+            ssh.getSSHResponse("hdfs dfs -rm -r " + OUTPUT_FILE_NAME);
+            ssh.getSSHResponse("hadoop jar category.jar categorycount " + inputFileName + " " + OUTPUT_FILE_NAME);
 
-            ssh.getSSHResponse("hdfs dfs -rm -r output2");
-            ssh.getSSHResponse("hadoop jar category.jar categorycount a.txt output2");
-            String sshResponse = ssh.getSSHResponse("hdfs dfs -cat output2/*");
-            System.out.println("sshResponse = " + sshResponse);
+            // for debugging
+            String sshResponse = ssh.getSSHResponse("hdfs dfs -cat " + OUTPUT_FILE_NAME + "/*");
+            log.info("sshResponse = " + sshResponse);
 
-            List<Category> categories = new ArrayList<>();
 
+            List<CategoryDto> categories = new ArrayList<>();
             StringTokenizer st = new StringTokenizer(sshResponse, "\n");
-            int line = 1;
+
+            /* output 파일 분석 */
+            int debugLineCounter = 1;
             while(st.hasMoreTokens()) {
-                String[] split = st.nextToken().split("\t");
+                String line = st.nextToken();
+                log.info(debugLineCounter++ + " : "+line);
+                String[] split = line.split("\t");
                 String category = split[0];
                 int count = Integer.parseInt(split[1]);
-                categories.add(new Category(category, count));
-                System.out.println(line++ + " : "+st.nextToken());
+                categories.add(new CategoryDto(category, count));
             }
 
+        /*
+            [Process 3]
+            1. 카테고리가 많은 순서대로 정렬
+            2. 가장 많은 카테고리를 MySQL 코스 카테고리로 저장
+         */
             Collections.sort(categories);
-            System.out.println(categories.get(0));
-            Category category = categories.get(0);
-            // mysql 카테고리 넣기
+            CategoryDto category = categories.get(0);
+            log.info("selected category = " + category);
+
+            /* Update MySQL course category */
             courseRepository.updateCourseCategoryByid(courseid, category.getCategory());
 
-            log.info("********전송끝 *******");
+            log.info("******** End of Hadoop *******");
+
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -224,47 +208,8 @@ public class HadoopServiceImpl implements HadoopService{
         List<Course> courses = courseRepository.findAll();
         for(Course course : courses) {
             String courseid = course.getId();
-            updateCourseNearInfo(courseid);
+            mapreduceCategory(courseid);
         }
     }
 
-
-    public class Category implements Comparable<Category>{
-        String category;
-        int count;
-
-        @Override
-        public String toString() {
-            return "Category{" +
-                    "category='" + category + '\'' +
-                    ", count=" + count +
-                    '}';
-        }
-
-        public Category(String category, int count) {
-            this.category = category;
-            this.count = count;
-        }
-
-        public String getCategory() {
-            return category;
-        }
-
-        public void setCategory(String category) {
-            this.category = category;
-        }
-
-        public int getCount() {
-            return count;
-        }
-
-        public void setCount(int count) {
-            this.count = count;
-        }
-
-        @Override
-        public int compareTo(Category o) {
-            return o.count - this.count;
-        }
-    }
 }
