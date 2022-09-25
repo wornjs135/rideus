@@ -33,4 +33,7 @@ public interface CourseRepository extends JpaRepository<Course, String> {
             "group by a.course_id, a.tag_id\n" +
             "order by max desc", nativeQuery = true)
     List<RecommendationCourseDtoInterface> getRecommendationCourseByMemberId(@Param("memberId") Long memberId);
+
+    @Query("select distinct c from Course c join fetch c.courseTags ct join fetch ct.tag order by c.likeCount desc ")
+    List<Course> findAllOrderByLikeCount();
 }

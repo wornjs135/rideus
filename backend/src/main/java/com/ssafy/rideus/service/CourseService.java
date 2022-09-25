@@ -1,7 +1,9 @@
 package com.ssafy.rideus.service;
 
+import com.ssafy.rideus.domain.Course;
 import com.ssafy.rideus.dto.course.common.RecommendationCourseDto;
 import com.ssafy.rideus.dto.course.common.RecommendationCourseDtoInterface;
+import com.ssafy.rideus.dto.course.response.PopularityCourseResponse;
 import com.ssafy.rideus.repository.jpa.CourseRepository;
 import com.ssafy.rideus.repository.jpa.MemberTagRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -41,5 +44,11 @@ public class CourseService {
 //        System.out.println(recommendationCourseDtos);
 
         return recommendationCourseDtos;
+    }
+
+    public List<PopularityCourseResponse> getPopularityCourse() {
+        List<Course> popularityCourses = courseRepository.findAllOrderByLikeCount();
+
+         return popularityCourses.stream().map(course -> PopularityCourseResponse.from(course)).collect(Collectors.toList());
     }
 }
