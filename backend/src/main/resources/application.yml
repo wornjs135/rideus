@@ -88,6 +88,11 @@ spring:
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
 
+  task:
+    scheduling:
+      pool:
+        size: 10
+
 token:
   # 일단 하루
   expiration_time: 86400000
