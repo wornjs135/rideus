@@ -17,8 +17,8 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class SSHUtils {
 
-    //	private final String sendFilePath = "C:\\SSAFY\\aws\\check.txt";
-//	private final String receiveFilePath = "/home/j5d205/receive/test.txt";
+    private final String sendFilePath = "C:\\input\\";
+	private final String receiveFilePath = "/home/j7a603/file.txt";
     private static Session session;
     private ChannelExec channelExec=null;
     private static Channel channel = null;

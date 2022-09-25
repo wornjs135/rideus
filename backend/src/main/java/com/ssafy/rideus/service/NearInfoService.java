@@ -10,4 +10,6 @@ public interface NearInfoService {
 
     // 코스 주변 전체 정보 조회
     List<NearInfo> saveNearInfo(String courseId);
+
+    List<NearInfo> findAllNearInfo();
 }
