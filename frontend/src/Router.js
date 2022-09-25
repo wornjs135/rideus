@@ -15,6 +15,7 @@ import {OAuth2RedirectHandler} from "./pages/login/OAuth2RedirectHandler";
 import MapTest from "./pages/test/MapTest";
 import {MoreInfo} from "./pages/login/MoreInfo";
 import {RecentRide} from "./pages/RecentRide";
+import {EditProfile} from "./pages/EditProfile";
 
 const Layout = () => {
     return (
@@ -92,6 +93,7 @@ export const Router = () => {
             <Route path="/" element={<NoHeaderLayout/>}>
                 <Route path="/mypage" element={<MyPage/>}/>
                 <Route path="/recent" element={<RecentRide/>}/>
+                <Route path="/profile" element={<EditProfile/>}/>
             </Route>
 
         </Routes>
