@@ -373,7 +373,7 @@ public class CourseService {
 	
 	
 	// 두 좌표 간 거리 (단위: meter)
-    private static double intervalMeter(double lat1, double lon1, double lat2, double lon2) {
+    public static double intervalMeter(double lat1, double lon1, double lat2, double lon2) {
         
     	if(lat1 == lat2 && lon1 == lon2) {
     		return 0;
