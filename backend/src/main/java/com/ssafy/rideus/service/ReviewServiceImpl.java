@@ -1,6 +1,8 @@
 package com.ssafy.rideus.service;
 
+import com.ssafy.rideus.common.api.S3Upload;
 import com.ssafy.rideus.common.exception.BadRequestException;
+import com.ssafy.rideus.common.exception.NotFoundException;
 import com.ssafy.rideus.domain.*;
 import com.ssafy.rideus.dto.review.*;
 import com.ssafy.rideus.repository.jpa.*;
@@ -8,10 +10,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.ssafy.rideus.common.exception.BadRequestException.NOT_REGISTED_COURSE;
+import static com.ssafy.rideus.common.exception.NotFoundException.RECORD_NOT_FOUND;
+import static com.ssafy.rideus.common.exception.NotFoundException.TAG_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -23,22 +31,36 @@ public class ReviewServiceImpl implements ReviewService{
     private final ReviewTagRepository reviewTagRepository;
     private final MemberRepository memberRepository;
     private final CourseRepository courseRepository;
+    private final RecordRepository recordRepository;
+    private final S3Upload s3Upload;
+    private final TagRepository tagRepository;
 
     @Override
     @Transactional
-    public Review writeReview(ReviewRequestDto reviewRequestDto, Long mid) {
-        Course course = courseRepository.findById(reviewRequestDto.getCid()).orElseThrow(() -> new BadRequestException("유효하지 않은 코스입니다."));
-        Member member = memberRepository.findById(mid).orElseThrow(() -> new BadRequestException("유효하지 않은 회원입니다."));
-        Review review = Review.builder()
-                .member(member)
-                .course(course)
-                .score(reviewRequestDto.getScore())
-                .content(reviewRequestDto.getContent())
-                .imageUrl(reviewRequestDto.getImageUrl())
-                .build();
-        reviewRepository.save(review);
+    public WriteReviewResponse writeReview(ReviewRequestDto reviewRequestDto, Long mid, MultipartFile image) {
 
-        return review;
+        Record findRecord = recordRepository.findRecordWithCourseAndRideRoomAndMember(reviewRequestDto.getRecordId())
+                .orElseThrow(() -> new NotFoundException(RECORD_NOT_FOUND));
+
+        // 에러 처리
+        if (findRecord.getCourse() == null) {
+            throw new BadRequestException(NOT_REGISTED_COURSE);
+        }
+
+        Member findMember = memberRepository.findById(mid).orElseThrow(() -> new BadRequestException("유효하지 않은 회원입니다."));
+
+        Review saveReview = reviewRepository.save(Review.createReview(reviewRequestDto, findMember, s3Upload.uploadImageToS3(image), findRecord));
+
+        List<ReviewTagRequest> tags = reviewRequestDto.getTags();
+        List<ReviewTag> reviewTags = new ArrayList<>();
+        for (ReviewTagRequest tag : tags) {
+            Tag findTag = tagRepository.findById(tag.getId())
+                    .orElseThrow(() -> new NotFoundException(TAG_NOT_FOUND));
+            reviewTags.add(ReviewTag.createReviewTag(saveReview, findTag));
+        }
+        reviewTagRepository.saveAll(reviewTags);
+
+        return WriteReviewResponse.from(saveReview.getId());
     }
 
     @Override

@@ -105,10 +105,10 @@ oauth2:
 cloud:
   aws:
     credentials:
-      accessKey:
-      secretKey:
+      accessKey: AKIASQN6UNY6TV5Y5GEP
+      secretKey: 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
     s3:
-      bucket:
+      bucket: rideus-image
     region:
       static: ap-northeast-2
     stack:
