@@ -12,10 +12,9 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class ReviewRequestDto {
-    private String cid;
+    private String recordId;
     private int score;
     private String content;
-    private String imageUrl;
-    private List<String> tags;
+    private List<ReviewTagRequest> tags;
 
 }

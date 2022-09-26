@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface RecordRepository extends JpaRepository<Record, String> {
     public List<Record> findTop5RecordsByMemberIdOrderByIdDesc(Long id);
@@ -38,4 +39,7 @@ public interface RecordRepository extends JpaRepository<Record, String> {
             "FROM record r JOIN member m ON r.member_id = m.member_id) c " +
             "WHERE ranking BETWEEN :myBestSpeedRank -1 AND :myBestSpeedRank + 1", nativeQuery = true)
     List<RankBestSpeedResponseDtoInterface> searchRankMemberBestSpeedWithUpAndDown(@Param("myBestSpeedRank") Long myBestSpeedRank);
+
+    @Query("select r from Record r left outer join fetch r.course c join fetch r.member join fetch r.rideRoom")
+    Optional<Record> findRecordWithCourseAndRideRoomAndMember(String recordId);
 }
