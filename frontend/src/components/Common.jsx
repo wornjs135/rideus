@@ -12,7 +12,10 @@ import MypageIcon from "../assets/images/mypage.png";
 import ActiveMypageIcon from "../assets/images/mypage_active.png";
 import { PrivateTerms } from "./PrivateTerms";
 import { ServiceTerms } from "./ServiceTerms";
+import Stars from "../assets/images/stars.png";
+import StarsBlank from "../assets/images/stars_blank.png";
 import { Box } from "grommet";
+import { Map, Polyline } from "react-kakao-maps-sdk";
 // 공통 컴포넌트들을 정의하는 클래스
 // ex) 버튼, 레이아웃, 틀
 
@@ -201,11 +204,6 @@ export function Footer() {
           />
         </Box>
         <Box direction="row" align="center">
-          <FooterContent
-            title="이용안내"
-            desc={["이용 정책", "페널티 정책", "커뮤니티 가이드라인"]}
-          />
-          <FooterContent title="고객지원" desc={["공지사항", "서비스 소개"]} />
           <PrivateTerms open={userTerm} onDismiss={onDismiss} />
           <ServiceTerms open={serviceTerm} onDismiss={onDismiss} />
         </Box>
@@ -226,3 +224,71 @@ export function Footer() {
     </Box>
   );
 }
+
+export const StarBox = ({ score, starView }) => {
+  return (
+    <Box direction="row" align="center">
+      <StyledText text={score} weight="bold" size="19px" />
+      <Box style={{ position: "relative", marginTop: "10px" }}>
+        <div
+          // align="center"
+          style={{
+            width: starView,
+            marginLeft: "15px",
+            height: "28px",
+            overflow: "hidden",
+          }}
+        >
+          <img
+            className="pointOfStar"
+            alt="별"
+            src={Stars}
+            style={{
+              height: "28px",
+              width: "114px",
+            }}
+          />
+        </div>
+        <img
+          className="backgrdoundStar"
+          alt="별"
+          src={StarsBlank}
+          style={{
+            position: "absolute",
+            marginLeft: "15px",
+            width: "114px",
+            height: "28px",
+          }}
+        />
+      </Box>
+    </Box>
+  );
+};
+
+export const CourseMap = ({
+  course,
+  width,
+  height,
+  marker,
+  marker1,
+  infoMarkers,
+}) => {
+  return (
+    <Map
+      center={course[0]}
+      isPanto={true}
+      style={{ borderRadius: "25px", width: width, height: height }}
+    >
+      <Polyline
+        path={[course]}
+        strokeWeight={5} // 선의 두께 입니다
+        strokeColor={"#030ff1"} // 선의 색깔입니다
+        strokeOpacity={0.7} // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+        strokeStyle={"solid"} // 선의 스타일입니다
+      />
+      {marker1}
+      {marker}
+      {infoMarkers}
+    </Map>
+  );
+};
