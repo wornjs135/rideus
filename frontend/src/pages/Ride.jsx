@@ -18,6 +18,7 @@ import history from "../utils/history.js";
 import { latlng } from "../utils/data";
 import useWatchLocation from "../hooks/watchLocationHook";
 import { distanceHandle, speedHandle, timeHandle } from "../utils/util";
+import { ExitButton, PauseButton } from "../components/Buttons";
 
 const geolocationOptions = {
   enableHighAccuracy: false,
@@ -256,7 +257,6 @@ export const Ride = () => {
       {/* 바디 부분 */}
       <Box
         align="center"
-        justify="between"
         height="90vh"
         round={{ size: "large", corner: "top" }}
         background="#ffffff"
@@ -265,7 +265,7 @@ export const Ride = () => {
       >
         {/* 카카오맵 */}
         <Box
-          style={{ width: "85%", height: "50vh" }}
+          style={{ width: "85%", height: "40vh" }}
           onClick={() => {
             confirmNavigation();
             setOpenMap(true);
@@ -338,49 +338,33 @@ export const Ride = () => {
         {/* 데이터 부분 끝 */}
         {/* 일시정지, 체크포인트 버튼 */}
         <Box width="90%">
-          <Box direction="row">
+          <Box direction="row" justify="center">
             {/* 일시정지 버튼 */}
-            <Button
-              children={<img src={riding ? PlayBtn : PauseBtn} />}
-              Custom
-              color="#439652"
-              textColor="white"
-              bWidth="20%"
-              bHeight="46px"
+            <PauseButton
               onClick={() => {
                 if (riding === true) setRiding(false);
                 else setRiding(true);
               }}
-            />
+            >
+              <img
+                src={riding ? PlayBtn : PauseBtn}
+                width="25px"
+                height="25px"
+              />
+              <StyledText text="일시정지" color="white" />
+            </PauseButton>
             {/* 체크 포인트 저장 버튼 */}
-            <Button
-              children="체크 포인트 저장"
-              Custom
-              color="#439652"
-              textColor="white"
-              bWidth="80%"
-              bHeight="46px"
-              fontSize="16px"
-              fontWeight="bold"
-            />
-          </Box>
-          {/* 주행 종료 버튼 */}
-          <Box direction="row">
-            <Button
-              Custom
-              color="#F29393"
-              textColor="white"
-              bWidth="100%"
-              bHeight="46px"
-              fontSize="16px"
-              fontWeight="bold"
-              children="주행 종료"
+            <ExitButton
               onClick={() => {
                 confirmNavigation();
                 setOpen(true);
               }}
-            />
+            >
+              주행 종료
+            </ExitButton>
           </Box>
+          {/* 주행 종료 버튼 */}
+          <Box direction="row"></Box>
         </Box>
       </Box>
       <MapDialog

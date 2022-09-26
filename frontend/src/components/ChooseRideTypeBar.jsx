@@ -7,6 +7,9 @@ import CourseButton from "../assets/images/recCourse.png";
 import RideButton from "../assets/images/myride.png";
 import { useNavigate } from "react-router-dom";
 import { Box, Button } from "grommet";
+import { Dialog } from "@mui/material";
+import { MdDirectionsBike, MdOutlineMap } from "react-icons/md";
+import { GrMapLocation } from "react-icons/gr";
 const HeaderDiv = styled.div`
   margin: 5px;
   display: flex;
@@ -32,51 +35,42 @@ export const HeaderBox = ({ goBack, title }) => {
     </HeaderDiv>
   );
 };
-
 export const ChooseRideTypeBar = ({ open, onDismiss }) => {
   const navigate = useNavigate();
   return (
-    <BottomSheet
+    <Dialog
       open={open}
-      onDismiss={() => {
+      onClose={() => {
         onDismiss();
       }}
     >
-      <HeaderBox
-        title="RIDE!"
-        goBack={() => {
-          onDismiss();
-        }}
-      />
       <Box
         direction="row"
         justify="around"
-        width="100%"
-        pad="15px"
-        margin={{ top: "20px", bottom: "50px" }}
+        width="80vw"
+        height="15vh"
+        pad="small"
+        gap="small"
       >
         <Button
-          color="#439652"
           onClick={() => {
             navigate("/course");
           }}
           children={
-            <Box
-              width="145px"
-              align="center"
-              background="#439652"
-              style={{ borderRadius: "8px" }}
-            >
-              <img src={CourseButton} width="100px" />
+            <Box width="145px" align="center" style={{ borderRadius: "8px" }}>
+              {/* <img src={CourseButton} width="100px" /> */}
+
+              <MdOutlineMap size="35" color="#439652" />
               <StyledText
                 text="추천 코스"
-                color="white"
+                color="#439652"
                 weight="bold"
                 size="18px"
               />
             </Box>
           }
         />
+        <Box style={{ borderLeft: "1px solid black" }} />
         <Button
           onClick={() => {
             navigate("/ride", {
@@ -88,16 +82,12 @@ export const ChooseRideTypeBar = ({ open, onDismiss }) => {
             });
           }}
           children={
-            <Box
-              width="145px"
-              align="center"
-              background="#439652"
-              style={{ borderRadius: "8px" }}
-            >
-              <img src={RideButton} width="100px" />
+            <Box width="145px" align="center" style={{ borderRadius: "8px" }}>
+              {/* <img src={RideButton} width="100px" /> */}
+              <MdDirectionsBike size="35" color="#439652" />
               <StyledText
                 text="나만의 코스"
-                color="white"
+                color="#439652"
                 weight="bold"
                 size="18px"
               />
@@ -105,6 +95,6 @@ export const ChooseRideTypeBar = ({ open, onDismiss }) => {
           }
         />
       </Box>
-    </BottomSheet>
+    </Dialog>
   );
 };

@@ -24,7 +24,7 @@ export const RideEnd = () => {
     center: { lng: 127.002158, lat: 37.512847 },
   });
   return (
-    <Box background="#439652" align="center">
+    <Box background="#439652" align="center" justify="around">
       <StyledText
         text={courseName}
         color="white"
@@ -33,7 +33,7 @@ export const RideEnd = () => {
         style={{ marginTop: "20px" }}
       />
       {/* 카카오맵 */}
-      <Box width="70vw" height="50vh" margin={{ top: "20px", bottom: "20px" }}>
+      <Box width="80vw" height="40vh" margin={{ top: "20px", bottom: "20px" }}>
         <Map
           center={courseData.latlng[0]}
           isPanto={true}
