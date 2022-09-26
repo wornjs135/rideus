@@ -21,10 +21,10 @@ public class PopularityCourseResponse {
 
     private String courseId;
     private String courseName;
-    private String distance;
+    private Double distance;
     private String start;
     private String finish;
-    private String expectedTime;
+    private Integer expectedTime;
     private Integer likeCount;
     private List<TagDto> tags = new ArrayList<>();
 
