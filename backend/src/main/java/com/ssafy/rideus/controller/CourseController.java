@@ -36,6 +36,7 @@ public class CourseController {
 	
     private final CourseService courseService;
 
+    // 추천 코스(리뷰 + 코스 태그 기반)
     @GetMapping("/recommendation")
     public ResponseEntity<List<RecommendationCourseDto>> getRecommendationCourseByTag(@ApiIgnore @LoginMember Member member) {
 //        public ResponseEntity<List<RecommendationCourseDto>> getRecommendationCourseByTag() {

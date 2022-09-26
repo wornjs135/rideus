@@ -1,5 +1,11 @@
 package com.ssafy.rideus.service;
 
+import com.ssafy.rideus.domain.Course;
+import com.ssafy.rideus.dto.course.common.RecommendationCourseDto;
+import com.ssafy.rideus.dto.course.common.RecommendationCourseDtoInterface;
+import com.ssafy.rideus.dto.course.response.PopularityCourseResponse;
+import com.ssafy.rideus.repository.jpa.CourseRepository;
+import com.ssafy.rideus.repository.jpa.MemberTagRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -9,6 +15,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -78,14 +85,12 @@ public class CourseService {
 
         return recommendationCourseDtos;
     }
-	
-	
-	
-	
-	
-	
-	
-	
+
+    public List<PopularityCourseResponse> getPopularityCourse() {
+        List<Course> popularityCourses = courseRepository.findAllOrderByLikeCount();
+
+         return popularityCourses.stream().map(course -> PopularityCourseResponse.from(course)).collect(Collectors.toList());
+    }
 	
 	// 추천 코스 리스트 조회
 	public List<Course> findAllCourses() {
@@ -449,5 +454,4 @@ public class CourseService {
     	System.out.println("코스 데이터 매칭 안 됨");
     	return null;
     }	
-	
 }
