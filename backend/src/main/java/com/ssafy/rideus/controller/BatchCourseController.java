@@ -22,4 +22,5 @@ public class BatchCourseController {
     public void setMemberReviewTop5() {
         batchCourseService.setMemberReviewTop5();
     }
+
 }
