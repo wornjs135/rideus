@@ -82,4 +82,12 @@ public class Record extends BaseEntity {
 
         return result;
     }
+
+    public static Record findCourse(Record record, Course findCourse) {
+        
+        record.course = findCourse;
+
+        return record;
+    }
+
 }
