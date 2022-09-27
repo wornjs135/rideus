@@ -66,4 +66,9 @@ public class MemberController {
     public ResponseEntity<List<MemberTagResponse>> getMyTag(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
         return ResponseEntity.ok(memberService.getMyTag(member.getId()));
     }
+
+    @GetMapping("/recent/my-ride")
+    public ResponseEntity<List<Record>> recentMyRide(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
+        return ResponseEntity.ok(memberService.getMyRideRecord(member.getId()));
+    }
 }

@@ -5,6 +5,7 @@ import com.ssafy.rideus.domain.Member;
 import com.ssafy.rideus.domain.Record;
 import com.ssafy.rideus.dto.member.request.MemberMoreInfoReq;
 import com.ssafy.rideus.dto.member.response.MemberMeRes;
+import com.ssafy.rideus.dto.record.response.MyRideRecordRes;
 import com.ssafy.rideus.dto.record.response.RecordTotalResponse;
 import com.ssafy.rideus.dto.tag.response.MemberTagResponse;
 import com.ssafy.rideus.repository.jpa.MemberRepository;
@@ -13,8 +14,6 @@ import com.ssafy.rideus.repository.query.MemberQueryRepository;
 import com.ssafy.rideus.repository.query.TagQueryRepository;
 import lombok.RequiredArgsConstructor;
 import com.ssafy.rideus.dto.member.request.MemberUpdateRequest;
-import com.ssafy.rideus.repository.jpa.MemberRepository;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -85,5 +84,11 @@ public class MemberService {
     @Transactional(readOnly = true)
     public List<Record> getRecentRecord(Long memberId) {
         return recordRepository.findTop5RecordsByMemberIdOrderByIdDesc(memberId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Record> getMyRideRecord(Long memberId) {
+
+        return recordRepository.findMyRideRecentRecord(memberId);
     }
 }
