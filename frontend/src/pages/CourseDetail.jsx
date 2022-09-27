@@ -13,6 +13,7 @@ import { useLocation } from "react-router-dom";
 import { latlng as courseData } from "../utils/data";
 import { checkNickname } from "../utils/api/testApi";
 import { BootstrapButton } from "../components/Buttons";
+import { ChooseSoloGroupBar } from "../components/ChooseRideTypeBar";
 
 export const CourseDetail = () => {
   const location = useLocation();
@@ -153,9 +154,9 @@ export const CourseDetail = () => {
           }}
           reviews={reviews}
         />
-        <RideDialog
+        <ChooseSoloGroupBar
           open={start}
-          handleClose={() => {
+          onDismiss={() => {
             setStart(false);
           }}
           title={"마포점-정서진"}

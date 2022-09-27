@@ -40,7 +40,7 @@ const NavBarDiv = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  width: 100vw;
+  width: 100%;
   background-color: white;
   padding: 5px 0px;
   opacity: ${(props) => props.opacity || "1"};
@@ -94,10 +94,10 @@ export function NavBar() {
         </Link>
       </div>
       <div style={IconButtonStyle}>
-        <Link to="/course">
+        <Link to="/courseList">
           <img
             alt="코스"
-            src={pathname === "/course" ? ActiveCourseIcon : CourseIcon}
+            src={pathname === "/courseList" ? ActiveCourseIcon : CourseIcon}
           />
         </Link>
       </div>
