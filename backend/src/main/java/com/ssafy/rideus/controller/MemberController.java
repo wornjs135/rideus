@@ -1,6 +1,8 @@
 package com.ssafy.rideus.controller;
 
 import com.ssafy.rideus.config.security.auth.CustomUserDetails;
+import com.ssafy.rideus.config.web.LoginMember;
+import com.ssafy.rideus.domain.Member;
 import com.ssafy.rideus.domain.Record;
 import com.ssafy.rideus.dto.member.request.MemberMoreInfoReq;
 import com.ssafy.rideus.dto.member.request.MemberUpdateRequest;
@@ -25,13 +27,13 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping("/me")
-    public ResponseEntity<MemberMeRes> loginMemberInformation(@ApiIgnore @AuthenticationPrincipal CustomUserDetails user) {
-        return ResponseEntity.ok(memberService.findByLoginMember(user.getId()));
+    public ResponseEntity<MemberMeRes> loginMemberInformation(@ApiIgnore @LoginMember Member member) {
+        return ResponseEntity.ok(memberService.findByLoginMember(member.getId()));
     }
 
     @DeleteMapping("/me")
-    public ResponseEntity<Void> deleteMemberMyself(@ApiIgnore @AuthenticationPrincipal CustomUserDetails user) {
-        memberService.deleteMember(user.getId());
+    public ResponseEntity<Void> deleteMemberMyself(@ApiIgnore @LoginMember Member member) {
+        memberService.deleteMember(member.getId());
         return ResponseEntity.noContent().build();
     }
 
@@ -41,28 +43,28 @@ public class MemberController {
     }
 
     @PutMapping("/info")
-    public ResponseEntity<Void> moreInformation(@Valid @RequestBody MemberMoreInfoReq memberMoreInfoReq, @ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
+    public ResponseEntity<Void> moreInformation(@Valid @RequestBody MemberMoreInfoReq memberMoreInfoReq, @ApiIgnore @LoginMember CustomUserDetails member) {
         memberService.updateMoreInformation(memberMoreInfoReq, member.getId());
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/modify")
-    public ResponseEntity<Void> modifyMemberInformation(@Valid @RequestBody MemberUpdateRequest request, @ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
+    public ResponseEntity<Void> modifyMemberInformation(@Valid @RequestBody MemberUpdateRequest request, @ApiIgnore @LoginMember Member member) {
         memberService.updateMember(request, member.getId());
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/recent")
-    public ResponseEntity<List<Record>> getRecentRocrd(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
+    public ResponseEntity<List<Record>> getRecentRocrd(@ApiIgnore @LoginMember Member member) {
         return ResponseEntity.ok(memberService.getRecentRecord(member.getId()));
     }
     @GetMapping("/totalRecord")
-    public ResponseEntity<RecordTotalResponse> getTotalRecord(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
+    public ResponseEntity<RecordTotalResponse> getTotalRecord(@ApiIgnore @LoginMember Member member) {
         return ResponseEntity.ok(memberService.getTotalRecord(member.getId()));
     }
 
     @GetMapping("/myTag")
-    public ResponseEntity<List<MemberTagResponse>> getMyTag(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
+    public ResponseEntity<List<MemberTagResponse>> getMyTag(@ApiIgnore @LoginMember Member member) {
         return ResponseEntity.ok(memberService.getMyTag(member.getId()));
     }
 }
