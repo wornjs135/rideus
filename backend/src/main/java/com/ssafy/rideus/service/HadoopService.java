@@ -3,7 +3,6 @@ package com.ssafy.rideus.service;
 
 import com.ssafy.rideus.domain.collection.NearInfo;
 
-import java.io.File;
 import java.util.List;
 
 public interface HadoopService {
@@ -16,5 +15,5 @@ public interface HadoopService {
     // 생성된 파일 hdfs안에 저장
     void copyFileToHdfs(String courseid);
 
-    void settingDB();
+    void settingDB(List<String> newCourseList);
 }

@@ -40,4 +40,7 @@ public interface CourseRepository extends JpaRepository<Course, String> {
     @Modifying
     @Query("update Course c set c.category = :category where c.id = :id")
     void updateCourseCategoryByid(@Param("id") String id, @Param("category") String category);
+
+
+    List<Course> findCoruseByCategoryNull();
 }

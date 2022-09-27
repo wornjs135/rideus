@@ -2,11 +2,16 @@ package com.ssafy.rideus.service;
 
 
 import com.jcraft.jsch.JSchException;
+import com.ssafy.rideus.common.exception.NotFoundException;
 import com.ssafy.rideus.domain.Course;
+import com.ssafy.rideus.domain.base.Coordinate;
+import com.ssafy.rideus.domain.collection.CourseCoordinate;
 import com.ssafy.rideus.domain.collection.NearInfo;
 import com.ssafy.rideus.dto.CategoryDto;
 import com.ssafy.rideus.hadoop.Controller.SSHUtils;
 import com.ssafy.rideus.repository.jpa.CourseRepository;
+import com.ssafy.rideus.repository.mongo.CourseCoordinateRepository;
+import com.ssafy.rideus.repository.mongo.NearInfoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +22,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
+
+import static com.ssafy.rideus.service.NearInfoServiceImpl.distance;
+
 
 @Service
 @RequiredArgsConstructor
@@ -33,19 +41,19 @@ public class HadoopServiceImpl implements HadoopService{
 
     @Autowired
     NearInfoService nearInfoService;
+    @Autowired
+    NearInfoRepository nearInfoRepository;
 
-
-    private static final String sendFilePath = "C:\\input\\";
-    private static final String receiveFilePath = "/home/j7a603/"; // hadoop path
-    private static final String hadoopdefault = "/usr/local/hadoop/bin/"; // hadoop
-    private static final String hadoopdefault2 = "/home/j7a603/"; // hadoop
-
+    @Autowired
+    CourseCoordinateRepository courseCoordinateRepository;
+    // FIXME: 배포 시 EC2 디렉토리로 변경
     private static final String LOCAL_FILE_PATH = "C:\\input\\";
     private static final String SERVER_FILE_PATH = "/home/j7a603/";
     private static final String INPUT_FILE_NAME = "input";
     private static final String OUTPUT_FILE_NAME = "output";
     private static final String FILE_TYPE = ".txt";
 
+    static final int DISTANCE_LIMIT = 4000; // 반경 4km 안에 있는 시설 정보 조회
 
     /*
     o 1. 코스 주변정보 mongodb에 update
@@ -55,7 +63,7 @@ public class HadoopServiceImpl implements HadoopService{
     5. 가장 많은 카테고리를 mysql 코스 카테고리로 update
      */
 
-
+    @Transactional
     /* 새로 입력된 코스 주변정보 update */
     public List<NearInfo> mapreduceCategory(String courseid) {
 
@@ -159,24 +167,24 @@ public class HadoopServiceImpl implements HadoopService{
             2. hadoop mapreduce 실행
          */
         try {
-            ssh.getSSHResponse("hdfs dfs -rm -r " + OUTPUT_FILE_NAME);
-            ssh.getSSHResponse("hadoop jar category.jar categorycount " + inputFileName + " " + OUTPUT_FILE_NAME);
+                    ssh.getSSHResponse("hdfs dfs -rm -r " + OUTPUT_FILE_NAME);
+                    ssh.getSSHResponse("hadoop jar category.jar categorycount " + inputFileName + " " + OUTPUT_FILE_NAME);
 
-            // for debugging
-            String sshResponse = ssh.getSSHResponse("hdfs dfs -cat " + OUTPUT_FILE_NAME + "/*");
-            log.info("sshResponse = " + sshResponse);
+                    // for debugging
+                    String sshResponse = ssh.getSSHResponse("hdfs dfs -cat " + OUTPUT_FILE_NAME + "/*");
+                    log.info("sshResponse = " + sshResponse);
 
 
-            List<CategoryDto> categories = new ArrayList<>();
-            StringTokenizer st = new StringTokenizer(sshResponse, "\n");
+                    List<CategoryDto> categories = new ArrayList<>();
+                    StringTokenizer st = new StringTokenizer(sshResponse, "\n");
 
-            /* output 파일 분석 */
-            int debugLineCounter = 1;
-            while(st.hasMoreTokens()) {
-                String line = st.nextToken();
-                log.info(debugLineCounter++ + " : "+line);
-                String[] split = line.split("\t");
-                String category = split[0];
+                    /* output 파일 분석 */
+                    int debugLineCounter = 1;
+                    while(st.hasMoreTokens()) {
+                        String line = st.nextToken();
+                        log.info(debugLineCounter++ + " : "+line);
+                        String[] split = line.split("\t");
+                        String category = split[0];
                 int count = Integer.parseInt(split[1]);
                 categories.add(new CategoryDto(category, count));
             }
@@ -202,14 +210,75 @@ public class HadoopServiceImpl implements HadoopService{
 
 
     }
-
+    @Transactional
     @Override
-    public void settingDB() {
-        List<Course> courses = courseRepository.findAll();
-        for(Course course : courses) {
-            String courseid = course.getId();
-            mapreduceCategory(courseid);
+    public void settingDB(List<String> newCourseList) {
+
+        List<Course> courseByCategoryNull = courseRepository.findCoruseByCategoryNull();
+        newCourseList = new ArrayList<>();
+        for(Course course : courseByCategoryNull)
+            newCourseList.add(course.getId());
+        System.out.println(Arrays.toString(newCourseList.toArray()));
+
+        List<NearInfo> allNearInfo = nearInfoRepository.findAll();
+
+        for(String courseId : newCourseList) {
+//            mapreduceCategory(courseId);
+            CourseCoordinate courseCoordinate =
+                    courseCoordinateRepository
+                            .findById(courseId)
+                            .orElseThrow(() -> new NotFoundException("코스 상세 조회 실패"));
+
+            // mongoDB에서 체크포인트 리스트 가져오기
+            List<Coordinate> checkpoints = courseCoordinate.getCheckpoints();
+            // 주변 정보 중복 체크 map
+            Map<String, NearInfo> checkedInfo = new HashMap<>();
+
+            log.info("all Near Info size = " + allNearInfo.size());
+            log.info("check point size = " + checkpoints.size());
+
+            // 체크포인트 별로 주변정보 검색
+            int checkpointCounter = 1;
+            for ( Coordinate checkPoint : checkpoints ) {
+
+                log.info(checkpointCounter++ +" "+ checkPoint);
+                // 체크포인트 좌표
+                double cpLat = Double.parseDouble(checkPoint.getLat());
+                double cpLng = Double.parseDouble(checkPoint.getLng());
+
+                // 주변 정보 전체 조회
+                for ( NearInfo nearInfo : allNearInfo ) {
+
+                    if(checkedInfo.containsKey(nearInfo.getId())) continue;
+
+                    // 주변 정보 위,경도 좌표
+                    double infoLat = Double.parseDouble(nearInfo.getNearinfoLat());
+                    double infoLng = Double.parseDouble(nearInfo.getNearinfoLng());
+
+                    // 제한 거리 안에 존재하는 경우
+                    if(distance(infoLat, infoLng, cpLat, cpLng) < DISTANCE_LIMIT) {
+                        checkedInfo.put(nearInfo.getId(), nearInfo);
+                    }
+
+                } // end of neainfo loop
+            } // end of checkpoint loop
+
+            List<NearInfo> nearInfos = new ArrayList<>(checkedInfo.values());
+            log.info("near Infos size = " + nearInfos.size());
+
+            courseCoordinateRepository.save( new CourseCoordinate(
+                    courseCoordinate.getId(),
+                    courseCoordinate.getCoordinates(),
+                    courseCoordinate.getCheckpoints(),
+                    nearInfos));
+
+            /* 코스 주변정보 카테고리 mapreudce 실행, 결과 MySQL Update */
+            parsingCourseCategory(nearInfos, courseId);
+
         }
+
+
     }
+
 
 }
