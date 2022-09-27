@@ -21,7 +21,7 @@ public class NearInfoController {
     @Autowired
     NearInfoService nearInfoService;
 
-    @GetMapping("/save/{courseid}")
+    @GetMapping("/save/{courseId}")
     public ResponseEntity<?> saveNearInfo(@PathVariable String courseId) {
         // 주행 코스 id
         long course = Long.parseLong(courseId);
@@ -31,7 +31,7 @@ public class NearInfoController {
         return new ResponseEntity<List<NearInfo>>(nearInfos, HttpStatus.OK);
     }
 
-    @GetMapping("/find/{courseid}")
+    @GetMapping("/find/{courseId}")
     public ResponseEntity<?> findNearInfo(@PathVariable String courseId) {
         // 주행 코스 id
         List<NearInfo> nearInfos = nearInfoService.findNearInfo(Long.parseLong(courseId));
