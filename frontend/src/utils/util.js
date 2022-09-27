@@ -25,6 +25,11 @@ export const timeHandle = (time) => {
   else return `${parseInt(time / 3600)}h ${parseInt((time % 3600) / 60)}'`;
 };
 
+export const expectTimeHandle = (time) => {
+  if (time < 60) return `${time}m`;
+  else return `${parseInt(time / 60)}h ${parseInt(time % 60)}m`;
+};
+
 export const distanceHandle = (dis) => {
   if (dis < 1000) return dis;
   else return parseFloat(dis / 1000.0).toFixed(2);

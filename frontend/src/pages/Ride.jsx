@@ -41,7 +41,8 @@ export const Ride = () => {
   });
 
   // 코스 이름, 싱글 or 그룹, 추천코스 or 나만의 코스
-  const { courseName, rideType, courseType } = locations.state;
+  const { courseName, rideType, courseType, coordinates, checkPoints } =
+    locations.state;
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [openMap, setOpenMap] = useState(false);
@@ -51,7 +52,7 @@ export const Ride = () => {
   const { coords, isGeolocationAvailable, isGeolocationEnabled } =
     useGeolocated({
       positionOptions: {
-        enableHighAccuracy: false,
+        enableHighAccuracy: true,
         maximumAge: 0,
         timeout: 500,
       },
@@ -84,27 +85,27 @@ export const Ride = () => {
     return deg * (Math.PI / 180);
   }
 
-  function getDistance(lat1, lon1, lat2, lon2) {
-    if (lat1 == lat2 && lon1 == lon2) return 0;
+  // function getDistance(lat1, lon1, lat2, lon2) {
+  //   if (lat1 == lat2 && lon1 == lon2) return 0;
 
-    var radLat1 = (Math.PI * lat1) / 180;
-    var radLat2 = (Math.PI * lat2) / 180;
-    var theta = lon1 - lon2;
-    var radTheta = (Math.PI * theta) / 180;
-    var dist =
-      Math.sin(radLat1) * Math.sin(radLat2) +
-      Math.cos(radLat1) * Math.cos(radLat2) * Math.cos(radTheta);
-    if (dist > 1) dist = 1;
+  //   var radLat1 = (Math.PI * lat1) / 180;
+  //   var radLat2 = (Math.PI * lat2) / 180;
+  //   var theta = lon1 - lon2;
+  //   var radTheta = (Math.PI * theta) / 180;
+  //   var dist =
+  //     Math.sin(radLat1) * Math.sin(radLat2) +
+  //     Math.cos(radLat1) * Math.cos(radLat2) * Math.cos(radTheta);
+  //   if (dist > 1) dist = 1;
 
-    dist = Math.acos(dist);
-    dist = (dist * 180) / Math.PI;
-    dist = dist * 60 * 1.1515 * 1.609344 * 1000;
-    // dist = dist * 6371;
-    if (dist < 100) dist = Math.round(dist / 10) * 10;
-    else dist = Math.round(dist / 100) * 100;
+  //   dist = Math.acos(dist);
+  //   dist = (dist * 180) / Math.PI;
+  //   dist = dist * 60 * 1.1515 * 1.609344 * 1000;
+  //   // dist = dist * 6371;
+  //   if (dist < 100) dist = Math.round(dist / 10) * 10;
+  //   else dist = Math.round(dist / 100) * 100;
 
-    return dist;
-  }
+  //   return dist;
+  // }
 
   function useBlocker(blocker, when = true) {
     const { navigator } = useContext(NavigationContext);
@@ -206,7 +207,7 @@ export const Ride = () => {
           if (dis > 0) {
             setData((prev) => ({
               topSpeed: Math.max(prev.topSpeed, speedHandle(dis, idle)),
-              avgSpeed: speedHandle(dis, idle),
+              avgSpeed: (prev.avgSpeed + speedHandle(dis, idle)) / 2,
               totalDistance: prev.totalDistance + dis,
             }));
             idle = 1;
@@ -285,6 +286,19 @@ export const Ride = () => {
                 strokeStyle={"solid"} // 선의 스타일입니다
               />
             )}
+            {coordinates && (
+              <Polyline
+                path={[coordinates]}
+                strokeWeight={5} // 선의 두께 입니다
+                strokeColor={"#5b60b8"} // 선의 색깔입니다
+                strokeOpacity={0.7} // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+                strokeStyle={"solid"} // 선의 스타일입니다
+              />
+            )}
+            {checkPoints &&
+              checkPoints.map((m, idx) => {
+                return <MapMarker position={m} key={idx}></MapMarker>;
+              })}
           </Map>
         </Box>
         {/* 데이터 부분 시작 */}
@@ -392,6 +406,19 @@ export const Ride = () => {
                 strokeStyle={"solid"} // 선의 스타일입니다
               />
             )}
+            {coordinates && (
+              <Polyline
+                path={[coordinates]}
+                strokeWeight={5} // 선의 두께 입니다
+                strokeColor={"#5b60b8"} // 선의 색깔입니다
+                strokeOpacity={0.7} // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+                strokeStyle={"solid"} // 선의 스타일입니다
+              />
+            )}
+            {checkPoints &&
+              checkPoints.map((m, idx) => {
+                return <MapMarker position={m} key={idx}></MapMarker>;
+              })}
           </Map>
         }
         cancel="뒤로가기"
