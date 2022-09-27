@@ -24,6 +24,7 @@ public class GpsTransfer {
     public GpsTransfer(double lat, double lon) {
         this.lat = lat;
         this.lon = lon;
+        this.transfer(this, 0);
     }
 
 
@@ -64,11 +65,10 @@ public class GpsTransfer {
             theta *= sn;
             double x = Math.floor(ra * Math.sin(theta) + XO + 0.5);
             double y = Math.floor(ro - ra * Math.cos(theta) + YO + 0.5);
-
             System.out.println("x = " + x);
             System.out.println("y = " + y);
-            gpt.setXLat(Integer.parseInt(x+""));
-            gpt.setYLon(Integer.parseInt(y+""));
+            gpt.setXLat(Integer.parseInt((int) x+""));
+            gpt.setYLon(Integer.parseInt((int) y+""));
         }
         else {
             double xlat = gpt.getXLat();
