@@ -34,6 +34,33 @@ public interface CourseRepository extends JpaRepository<Course, String> {
             "order by max desc", nativeQuery = true)
     List<RecommendationCourseDtoInterface> getRecommendationCourseByMemberId(@Param("memberId") Long memberId);
 
-    // keyword 포함한 리스트
-//    List<Course> findAllBy
+    
+    
+    // 전체 리스트 조회 (등록 최신 순)
+    @Query(value = "SELECT c.course_id courseId, course_name courseName, distance, expected_time expectedTime, start, finish, like_count likeCount, image_url imageUrl, category, bookmark_id bookmarkId FROM course c LEFT OUTER JOIN (SELECT course_id, bookmark_id FROM bookmark WHERE member_id = :memberId) b ON c.course_id = b.course_id ORDER BY created_date DESC", nativeQuery = true)
+    List<RecommendationCourseDtoInterface> getAllCourses(@Param("memberId") Long memberId);
+    // 코스에 해당하는 태그 가져오기 (전체 리스트 조회 시 사용하기 위해)
+    @Query(value = "SELECT ct.course_id courseId, ct.tag_id tagId, t.tag_name tagName FROM course_tag ct JOIN tag t ON ct.tag_id = t.tag_id;", nativeQuery = true)
+    List<CourseReviewTagTop5DtoInterface> getAllCourseTags();
+    
+    // 특정 코스 조회 (courseIds에 해당하는 코스)
+    // 상세 조회, 코스 검색, 코스 추천 시 사용
+    @Query(value = "SELECT c.course_id courseId, course_name courseName, distance, expected_time expectedTime, start, finish, like_count likeCount, image_url imageUrl, category, bookmark_id bookmarkId FROM course c LEFT OUTER JOIN (SELECT course_id, bookmark_id FROM bookmark WHERE member_id = :memberId) b ON c.course_id = b.course_id WHERE c.course_id IN (:courseIds) ORDER BY created_date DESC", nativeQuery = true)
+    List<RecommendationCourseDtoInterface> getSpecificCourse(@Param("memberId") Long memberId, @Param("courseIds") List<String> courseIds);
+    // 특정 코스에 해당하는 태그 가져오기
+    @Query(value = "SELECT ct.course_id courseId, ct.tag_id tagId, t.tag_name tagName FROM course_tag ct JOIN tag t ON ct.tag_id = t.tag_id WHERE ct.course_id IN (:courseIds)", nativeQuery = true)
+    List<CourseReviewTagTop5DtoInterface> getSpecificCourseTags(@Param("courseIds") List<String> courseIds);
+    
+    // 특정 리뷰 평점
+    @Query(value = "SELECT CONCAT(sum, '/', count) result FROM (SELECT COUNT(*) count, SUM(score) sum FROM review WHERE course_id = :courseId) tmp", nativeQuery = true)
+    String getStarAvg(@Param("courseId") String courseId);
+    
+    
+    // keyword 포함한 코스 식별자 리스트
+    @Query(value = "SELECT course_id FROM course WHERE course_name LIKE %:keyword% OR start LIKE %:keyword%", nativeQuery = true)
+    List<String> getAllCourseIdsByKeyword(@Param("keyword") String keyword);
+    @Query(value = "SELECT course_id FROM course_tag ct JOIN tag t ON ct.tag_id = t.tag_id WHERE t.tag_name LIKE %:keyword%", nativeQuery = true)
+    List<String> getAllCourseIdsByTagKeyword(@Param("keyword") String keyword);
+    
+    
 }

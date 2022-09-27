@@ -13,6 +13,7 @@ public interface RecommendationCourseDtoInterface {
     Integer getLikeCount();
     String getImageUrl();
     String getCategory();
+    String getBookmarkId();
     Long getTagId();
     String getTagName();
     Integer getMax();

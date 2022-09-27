@@ -56,7 +56,7 @@ spring:
       password: yfass1234
       authentication-database: admin
       auto-index-creation:
-#      uri: mongodb://localhost:27017/test
+#      uri: mongodb://localhost:27017/test    
       host: j7a603.p.ssafy.io
       port: 27017
       database: rideus

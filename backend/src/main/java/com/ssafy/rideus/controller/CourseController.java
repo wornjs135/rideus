@@ -3,6 +3,7 @@ package com.ssafy.rideus.controller;
 import com.ssafy.rideus.config.web.LoginMember;
 import com.ssafy.rideus.domain.Member;
 import com.ssafy.rideus.dto.course.common.RecommendationCourseDto;
+import com.ssafy.rideus.dto.member.request.MemberMoreInfoReq;
 import com.ssafy.rideus.domain.Course;
 import com.ssafy.rideus.domain.collection.CourseCoordinate;
 import com.ssafy.rideus.domain.collection.TestCollection;
@@ -22,12 +23,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Api("코스  API")
 @RestController
@@ -43,58 +46,52 @@ public class CourseController {
         return ResponseEntity.ok(courseService.getRecommendationCourseByTag(member.getId()));
     }
 
-	
-//	@Autowired
-//	private CourseService courseService;
-
-
+		
 	// 추천 코스 리스트 조회
 	@GetMapping()
-	public ResponseEntity<List<Course>> findAllCourses() {
+	public ResponseEntity<List<RecommendationCourseDto>> getAllCourses(@ApiIgnore @LoginMember Member member) {
 	
-		// MySQL의 course 테이블에서 데이터 가져오기
-		// MongoDB에 있는 코스 좌표와 체크 포인트는 가져올 필요 없음
-		List<Course> courseList = courseService.findAllCourses();
+		List<RecommendationCourseDto> courseList = courseService.getAllCourses(member.getId());
 		return ResponseEntity.status(HttpStatus.OK).body(courseList);
 	}
 	
+	
 	// 추천 코스 상세 조회
 	@GetMapping("/{courseId}")
-	public ResponseEntity detail(@PathVariable String courseId) {
+	public ResponseEntity<Map<String, Object>> detail(@ApiIgnore @LoginMember Member member, @PathVariable String courseId) {
 	
-		// MongoDB에 있는 코스 좌표와 체크포인트 좌표 가져오기 필수
-		CourseCoordinate courseCoordinate = courseService.findCourse(courseId);
+		Map<String, Object> course = courseService.getCourse(member.getId(), courseId);
 		
-		
-		return ResponseEntity.status(HttpStatus.OK).body(courseCoordinate);
+		return ResponseEntity.status(HttpStatus.OK).body(course);
+//		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
 	
 	// 코스 검색
 	@GetMapping("/search/{keyword}")
-	public ResponseEntity search(@PathVariable String keyword) {
+	public ResponseEntity<List<RecommendationCourseDto>> search(@ApiIgnore @LoginMember Member member, @PathVariable String keyword) {
 		
-		
-		
-		return ResponseEntity.ok().build();
+		List<RecommendationCourseDto> courseList = courseService.getAllCoursesByKeyword(member.getId(), keyword);
+		return ResponseEntity.status(HttpStatus.OK).body(courseList);
 	}
 
 	
-	// 코스 추가 (사용자가 탄 코스 추가하는 경우)
-	@PutMapping("/add")
-//	public ResponseEntity add()
-	
-	
-	
 	// 현 위치 기반 코스 추천
-	@GetMapping("/{lat}/{lon}")
-	public ResponseEntity recommendByLoc(@PathVariable String keyword) {
+	@GetMapping("/recommendByLoc/{lat}/{lng}")
+	public ResponseEntity<List<RecommendationCourseDto>> recommendByLoc(@ApiIgnore @LoginMember Member member, @PathVariable Double lat, @PathVariable Double lng) {
 		
-		
-		
-		return ResponseEntity.ok().build();
+		List<RecommendationCourseDto> courseList = courseService.getAllCoursesByLoc(member.getId(), lat, lng);
+		return ResponseEntity.status(HttpStatus.OK).body(courseList);
 	}
 	
+	
+	// 코스 추가 (사용자가 탄 코스 추가하는 경우)
+	@PutMapping("/add")
+	public ResponseEntity<Integer> add(@ApiIgnore @LoginMember Member member, @RequestBody Map<String, String> inputMap) {
+		
+		int result = courseService.addCourseData(inputMap, member.getId());
+		return ResponseEntity.status(HttpStatus.OK).body(result);
+	}
 	
 	
 	// 추천 코스 크롤링 데이터 넣기

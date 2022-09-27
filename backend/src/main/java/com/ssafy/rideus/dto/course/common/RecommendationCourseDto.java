@@ -23,6 +23,7 @@ public class RecommendationCourseDto {
     private Integer likeCount;
     private String imageUrl;
     private String category;
+    private String bookmarkId;
     
     private List<RecommendationCourseTagDto> tags = new ArrayList<>();
 
@@ -42,5 +43,22 @@ public class RecommendationCourseDto {
 
     public void addTags(Long tagId, String tagName) {
         this.tags.add(RecommendationCourseTagDto.from(tagId, tagName));
+    }
+    
+    
+    public static RecommendationCourseDto find(RecommendationCourseDtoInterface list, List<RecommendationCourseTagDto> tags) {
+    	RecommendationCourseDto recommendationCourseDto = new RecommendationCourseDto();
+    	recommendationCourseDto.courseId = list.getCourseId();
+        recommendationCourseDto.courseName = list.getCourseName();
+        recommendationCourseDto.distance = list.getDistance();
+        recommendationCourseDto.expectedTime = list.getExpectedTime();
+        recommendationCourseDto.start = list.getStart();
+        recommendationCourseDto.finish = list.getFinish();
+        recommendationCourseDto.likeCount = list.getLikeCount();
+        recommendationCourseDto.imageUrl = list.getImageUrl();
+        recommendationCourseDto.category = list.getCategory();
+        recommendationCourseDto.bookmarkId = list.getBookmarkId();
+        recommendationCourseDto.tags = tags;
+    	return recommendationCourseDto;
     }
 }
