@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/hadoop")
@@ -29,20 +31,9 @@ public class HadoopController {
     }
 
 
-
-
-    @GetMapping("/parse/{courseid}")
-    public ResponseEntity<?> parseNearinfo(@PathVariable String courseid) {
-
-
-        hadoopService.mapreduceCategory(courseid);
-        System.out.println("end of cotroller");
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
     @GetMapping("/setting")
-    public ResponseEntity<?> settingDB() {
-        hadoopService.settingDB();
+    public ResponseEntity<?> settingDB(@RequestParam("newCourseList") List<String> newCourseList) {
+        hadoopService.settingDB(newCourseList);
         System.out.println("end of cotroller");
         return new ResponseEntity<>(HttpStatus.OK);
     }

@@ -23,8 +23,6 @@ public class NearInfoServiceImpl implements NearInfoService {
     @Autowired
     NearInfoRepository nearInfoRepository;
 
-    @Autowired
-
     static final int DISTANCE_LIMIT = 4000; // 반경 4km 안에 있는 시설 정보 조회
 
 
@@ -133,7 +131,7 @@ public class NearInfoServiceImpl implements NearInfoService {
     //------------------------- 위 경도 두 좌표 사이의 거리 계산 --------------------------
 
     // dsitance(첫번쨰 좌표의 위도, 첫번째 좌표의 경도, 두번째 좌표의 위도, 두번째 좌표의 경도)
-    private static double distance(double lat1, double lon1, double lat2, double lon2){
+    public static double distance(double lat1, double lon1, double lat2, double lon2){
         double theta = lon1 - lon2;
         double dist = Math.sin(deg2rad(lat1))* Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1))*Math.cos(deg2rad(lat2))*Math.cos(deg2rad(theta));
         dist = Math.acos(dist);
