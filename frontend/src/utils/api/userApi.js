@@ -22,4 +22,9 @@ const checkDuplicateNickname = async (data) => {
     return res;
 }
 
-export {updateMoreInfo,checkDuplicateNickname};
+const recentRide = async (data) => {
+    let axiosResponse = await instance.get("/recent");
+    console.log(axiosResponse);
+};
+
+export {updateMoreInfo, checkDuplicateNickname, recentRide};
