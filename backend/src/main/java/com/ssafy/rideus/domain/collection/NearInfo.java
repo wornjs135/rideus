@@ -16,7 +16,7 @@ public class NearInfo {
     private String id;
     private String nearinfoName;
     private String nearinfoCategory;
-    private String nearinfoUrl;
+    private String nearinfoURL;
     private String nearinfoAddress;
     private String nearinfoTel;
     private String nearinfoLat;

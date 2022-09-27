@@ -11,6 +11,8 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
+@Setter
+@ToString
 public class Course extends BaseEntity {
 
     @Id

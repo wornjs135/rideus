@@ -6,6 +6,7 @@ import com.ssafy.rideus.domain.collection.CourseCoordinate;
 import com.ssafy.rideus.domain.collection.NearInfo;
 import com.ssafy.rideus.repository.mongo.CourseCoordinateRepository;
 import com.ssafy.rideus.repository.mongo.NearInfoRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import java.util.*;
 
 
 @Service("nearInfoService")
+@Slf4j
 public class NearInfoServiceImpl implements NearInfoService {
 
     ///////////////// mongoDB Repository ////////////////
@@ -20,45 +22,46 @@ public class NearInfoServiceImpl implements NearInfoService {
     CourseCoordinateRepository courseCoordinateRepository;
     @Autowired
     NearInfoRepository nearInfoRepository;
+
     static final int DISTANCE_LIMIT = 4000; // 반경 4km 안에 있는 시설 정보 조회
 
 
     @Override
-    public List<NearInfo> findNearInfo(long courseId) {
+    public List<NearInfo> findNearInfo(String courseId) {
 
         // 코스 정보 mongoDB find
         CourseCoordinate courseCoordinate =
                 courseCoordinateRepository
-                        .findById(String.valueOf(courseId))
+                        .findById(courseId)
                         .orElseThrow(() -> new NotFoundException("코스 상세 조회 실패"));
         return courseCoordinate.getNearInfos();
     }
 
     // 코스 주변 전체 정보 조회
     @Override
-    public List<NearInfo> saveNearInfo(long courseId) {
-
+    public List<NearInfo> saveNearInfo(String courseId) {
 
         // 코스 정보 mongoDB find
         CourseCoordinate courseCoordinate =
                 courseCoordinateRepository
-                .findById(String.valueOf(courseId))
+                .findById(courseId)
                 .orElseThrow(() -> new NotFoundException("코스 상세 조회 실패"));
-
 
         // mongoDB에서 체크포인트 리스트 가져오기
         List<Coordinate> checkpoints = courseCoordinate.getCheckpoints();
-
         // 전체 주변 정보 리스트
         List<NearInfo> allNearInfo = nearInfoRepository.findAll();
-
         // 주변 정보 중복 체크 map
-        Map<Long, NearInfo> checkedInfo = new HashMap<>();
+        Map<String, NearInfo> checkedInfo = new HashMap<>();
 
+        log.info("all Near Info size = " + allNearInfo.size());
+        log.info("check point size = " + checkpoints.size());
 
         // 체크포인트 별로 주변정보 검색
+        int checkpointCounter = 1;
         for ( Coordinate checkPoint : checkpoints ) {
 
+            log.info(checkpointCounter++ +" "+ checkPoint);
             // 체크포인트 좌표
             double cpLat = Double.parseDouble(checkPoint.getLat());
             double cpLng = Double.parseDouble(checkPoint.getLng());
@@ -80,33 +83,52 @@ public class NearInfoServiceImpl implements NearInfoService {
             } // end of neainfo loop
         } // end of checkpoint loop
 
-
-        /*
-        하둡에서 처리해야할 사항
-
-        코스별로 mongoDB에 있는 주변정보를 가져와서
-        카테고리별로 count돌리고
-        가장 많은 카테고리를 MySQL에 저장!!
-
-
-
-
-         */
+        List<NearInfo> nearInfos = new ArrayList<>(checkedInfo.values());
+        log.info("near Infos size = " + nearInfos.size());
 
         courseCoordinateRepository.save( new CourseCoordinate(
                 courseCoordinate.getId(),
                 courseCoordinate.getCoordinates(),
                 courseCoordinate.getCheckpoints(),
-                (List<NearInfo>) checkedInfo.values()));
+                nearInfos));
 
-        return (List<NearInfo>) checkedInfo.values();
+        return nearInfos;
+    }
+
+    @Override
+    public List<NearInfo> findAllNearInfo() {
+        log.info("find all near info");
+        return nearInfoRepository.findAll();
+    }
+
+    @Override
+    public List<NearInfo> findNearinfoByCategories(String courseid, List<String> categories) {
+
+        List<NearInfo> possibleNearinfos = new ArrayList<>();
+        List<NearInfo> selectedInfo = new ArrayList<>();
+        Map<String, Boolean> categoryMap = new HashMap<>();
+
+        List<NearInfo> courseNearinfo = courseCoordinateRepository.findById(courseid).get().getNearInfos();
+
+        categories.forEach(category -> categoryMap.put(category, true));
+
+        courseNearinfo.stream().forEach(info -> {
+            if(categoryMap.containsKey(info.getNearinfoCategory()))
+                possibleNearinfos.add(info);
+        });
+        return possibleNearinfos;
+    }
+
+    @Override
+    public List<NearInfo> findNearinfoByCourseid(String courseid) {
+        return courseCoordinateRepository.findById(courseid).get().getNearInfos();
     }
 
 
     //------------------------- 위 경도 두 좌표 사이의 거리 계산 --------------------------
 
     // dsitance(첫번쨰 좌표의 위도, 첫번째 좌표의 경도, 두번째 좌표의 위도, 두번째 좌표의 경도)
-    private static double distance(double lat1, double lon1, double lat2, double lon2){
+    public static double distance(double lat1, double lon1, double lat2, double lon2){
         double theta = lon1 - lon2;
         double dist = Math.sin(deg2rad(lat1))* Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1))*Math.cos(deg2rad(lat2))*Math.cos(deg2rad(theta));
         dist = Math.acos(dist);

@@ -74,7 +74,10 @@ dependencies {
     
     // jsop
     implementation 'org.jsoup:jsoup:1.15.3'
-    
+
+    // https://mvnrepository.com/artifact/com.jcraft/jsch
+    implementation group: 'com.jcraft', name: 'jsch', version: '0.1.55'
+
 }
 
 tasks.named('test') {
