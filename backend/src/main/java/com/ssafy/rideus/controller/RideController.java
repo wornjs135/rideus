@@ -1,5 +1,6 @@
 package com.ssafy.rideus.controller;
 
+import com.ssafy.rideus.config.security.auth.CustomUserDetails;
 import com.ssafy.rideus.dto.record.request.FinishRiddingRequest;
 import com.ssafy.rideus.dto.record.request.SaveCoordinatesRequest;
 import com.ssafy.rideus.dto.record.response.CreateRecordResponse;
@@ -10,6 +11,7 @@ import com.ssafy.rideus.dto.rideroom.response.GroupRiddingResponse;
 import com.ssafy.rideus.config.security.util.JwtUtil;
 import com.ssafy.rideus.config.web.LoginMember;
 import com.ssafy.rideus.domain.Member;
+import com.ssafy.rideus.service.MemberService;
 import com.ssafy.rideus.service.RideService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -36,14 +39,15 @@ public class RideController {
     private final RideService rideService;
 
     private final SimpMessageSendingOperations messagingTemplate;
+
     private final JwtUtil jwtUtil;
 
     static final String SOCKET_SUBSCRIBE_BASE_URI = "/sub/ride/room/";
 
     // 그룹 라이딩 방 생성
     @PostMapping("/room")
-    public ResponseEntity<CreateRideRoomResponse> createRideRoom(@ApiIgnore @LoginMember Member member) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(rideService.createRiddingRoom(member));
+    public ResponseEntity<CreateRideRoomResponse> createRideRoom(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(rideService.createRiddingRoom(member.getId()));
     }
 
     // 그룹 주행 관련 웹소켓 기능
@@ -66,23 +70,22 @@ public class RideController {
 
     // 주행 시작
     @PostMapping("/start")
-    public ResponseEntity<CreateRecordResponse> startRidding(@ApiIgnore @LoginMember Member member) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(rideService.startRidding(member));
+    public ResponseEntity<CreateRecordResponse> startRidding(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(rideService.startRidding(member.getId()));
     }
 
     // 주행 종료
     @PostMapping("/finish/{riddingType}")
-    public ResponseEntity finishRidding(@ApiIgnore @LoginMember Member member, @PathVariable RiddingType riddingType,
+    public ResponseEntity finishRidding(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member, @PathVariable RiddingType riddingType,
                                         @RequestBody FinishRiddingRequest request) {
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(rideService.finishRidding(member, riddingType, request));
+        return ResponseEntity.status(HttpStatus.CREATED).body(rideService.finishRidding(member.getId(), riddingType, request));
     }
 
     // 중간 주행 좌표 리스트들 저장
     @PostMapping("/save/{recordId}")
-    public ResponseEntity saveCoordinatesPerPeriod(@ApiIgnore @LoginMember Member member, @PathVariable String recordId,
+    public ResponseEntity saveCoordinatesPerPeriod(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member, @PathVariable String recordId,
                                                    @RequestBody SaveCoordinatesRequest saveCoordinatesRequest) {
-        rideService.saveCoordinatesPerPeriod(member, recordId, saveCoordinatesRequest);
+        rideService.saveCoordinatesPerPeriod(member.getId(), recordId, saveCoordinatesRequest);
 
         return ResponseEntity.ok().build();
     }

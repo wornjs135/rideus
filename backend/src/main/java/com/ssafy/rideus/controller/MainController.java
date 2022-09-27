@@ -1,5 +1,6 @@
 package com.ssafy.rideus.controller;
 
+import com.ssafy.rideus.config.security.auth.CustomUserDetails;
 import com.ssafy.rideus.config.web.LoginMember;
 import com.ssafy.rideus.domain.Member;
 import com.ssafy.rideus.domain.Tag;
@@ -10,6 +11,7 @@ import com.ssafy.rideus.service.CourseService;
 import com.ssafy.rideus.service.ReviewService;
 import com.ssafy.rideus.service.ReviewTagService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import springfox.documentation.annotations.ApiIgnore;
 
 import org.springframework.cache.annotation.Cacheable;
@@ -48,7 +50,7 @@ public class MainController {
     
 	// 현 위치 기반 코스 추천
 	@GetMapping("/{lat}/{lng}")
-	public ResponseEntity<List<RecommendationCourseDto>> recommendByLoc(@ApiIgnore @LoginMember Member member, @PathVariable Double lat, @PathVariable Double lng) {
+	public ResponseEntity<List<RecommendationCourseDto>> recommendByLoc(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member, @PathVariable Double lat, @PathVariable Double lng) {
 		
 		List<RecommendationCourseDto> courseList = courseService.getAllCoursesByLoc(member.getId(), lat, lng);
 		return ResponseEntity.status(HttpStatus.OK).body(courseList);

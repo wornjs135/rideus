@@ -1,5 +1,6 @@
 package com.ssafy.rideus.controller;
 
+import com.ssafy.rideus.config.security.auth.CustomUserDetails;
 import com.ssafy.rideus.config.web.LoginMember;
 import com.ssafy.rideus.domain.Member;
 import com.ssafy.rideus.dto.rank.response.*;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -53,21 +55,21 @@ public class RankController {
     // 개인 랭킹 시간별(+ top3)
     @GetMapping("/member/time")
     @Cacheable(value = RANK_MEMBER_TIME, key = "#member.id", unless = "#result == null", cacheManager = "cacheManager")
-    public RankMemberTimeResponseDto getRankMemberTimeWithTop3(@ApiIgnore @LoginMember Member member) {
+    public RankMemberTimeResponseDto getRankMemberTimeWithTop3(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
         return rankService.getRankMemberTimeWithTop3(member.getId());
     }
 
     // 개인 랭킹 거리별(+ top3)
     @GetMapping("/member/distance")
     @Cacheable(value = RANK_MEMBER_DISTANCE, key = "#member.id", unless = "#result == null", cacheManager = "cacheManager")
-    public RankMemberDistanceResponseDto getRankMemberDistanceWithTop3(@ApiIgnore @LoginMember Member member) {
+    public RankMemberDistanceResponseDto getRankMemberDistanceWithTop3(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
         return rankService.getRankMemberDistanceWithTop3(member.getId());
     }
 
     // 개인 랭킹 속도별(+ top3)
     @GetMapping("/member/speed")
     @Cacheable(value = RANK_MEMBER_BEST_SPEED, key = "#member.id", unless = "#result == null", cacheManager = "cacheManager")
-    public RankMemberBestSpeedResponseDto getRankMemberSpeedwithTop3(@ApiIgnore @LoginMember Member member) {
+    public RankMemberBestSpeedResponseDto getRankMemberSpeedwithTop3(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
         return rankService.getRankMemberSpeedWithTop3(member.getId());
     }
 

@@ -1,5 +1,6 @@
 package com.ssafy.rideus.controller;
 
+import com.ssafy.rideus.config.security.auth.CustomUserDetails;
 import com.ssafy.rideus.config.web.LoginMember;
 import com.ssafy.rideus.domain.Member;
 import com.ssafy.rideus.dto.course.common.RecommendationCourseDto;
@@ -19,6 +20,7 @@ import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,7 +44,7 @@ public class CourseController {
 
     // 추천 코스(리뷰 + 코스 태그 기반)
     @GetMapping("/recommendation")
-    public ResponseEntity<List<RecommendationCourseDto>> getRecommendationCourseByTag(@ApiIgnore @LoginMember Member member) {
+    public ResponseEntity<List<RecommendationCourseDto>> getRecommendationCourseByTag(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
 //        public ResponseEntity<List<RecommendationCourseDto>> getRecommendationCourseByTag() {
         return ResponseEntity.ok(courseService.getRecommendationCourseByTag(member.getId()));
     }
@@ -50,7 +52,7 @@ public class CourseController {
 		
 	// 추천 코스 리스트 조회
 	@GetMapping()
-	public ResponseEntity<List<RecommendationCourseDto>> getAllCourses(@ApiIgnore @LoginMember Member member) {
+	public ResponseEntity<List<RecommendationCourseDto>> getAllCourses(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
 	
 		List<RecommendationCourseDto> courseList = courseService.getAllCourses(member.getId());
 		return ResponseEntity.status(HttpStatus.OK).body(courseList);
@@ -59,7 +61,7 @@ public class CourseController {
 	
 	// 추천 코스 상세 조회
 	@GetMapping("/{courseId}")
-	public ResponseEntity<Map<String, Object>> detail(@ApiIgnore @LoginMember Member member, @PathVariable String courseId) {
+	public ResponseEntity<Map<String, Object>> detail(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member, @PathVariable String courseId) {
 	
 		Map<String, Object> course = courseService.getCourse(member.getId(), courseId);
 		
@@ -70,7 +72,7 @@ public class CourseController {
 	
 	// 코스 검색
 	@GetMapping("/search/{keyword}")
-	public ResponseEntity<List<RecommendationCourseDto>> search(@ApiIgnore @LoginMember Member member, @PathVariable String keyword) {
+	public ResponseEntity<List<RecommendationCourseDto>> search(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member, @PathVariable String keyword) {
 		
 		List<RecommendationCourseDto> courseList = courseService.getAllCoursesByKeyword(member.getId(), keyword);
 		return ResponseEntity.status(HttpStatus.OK).body(courseList);
@@ -80,7 +82,7 @@ public class CourseController {
 	// MainController로 이동
 //	// 현 위치 기반 코스 추천
 //	@GetMapping("/recommendByLoc/{lat}/{lng}")
-//	public ResponseEntity<List<RecommendationCourseDto>> recommendByLoc(@ApiIgnore @LoginMember Member member, @PathVariable Double lat, @PathVariable Double lng) {
+//	public ResponseEntity<List<RecommendationCourseDto>> recommendByLoc(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member, @PathVariable Double lat, @PathVariable Double lng) {
 //		
 //		List<RecommendationCourseDto> courseList = courseService.getAllCoursesByLoc(member.getId(), lat, lng);
 //		return ResponseEntity.status(HttpStatus.OK).body(courseList);
@@ -89,7 +91,7 @@ public class CourseController {
 	
 	// 코스 추가 (사용자가 탄 코스 추가하는 경우)
 	@PutMapping("/add")
-	public ResponseEntity<Integer> add(@ApiIgnore @LoginMember Member member, @RequestBody Map<String, String> inputMap) {
+	public ResponseEntity<Integer> add(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member, @RequestBody Map<String, String> inputMap) {
 		
 		int result = courseService.addCourseData(inputMap, member.getId());
 		return ResponseEntity.status(HttpStatus.OK).body(result);
