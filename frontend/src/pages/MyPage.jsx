@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {Box} from "grommet";
 import bike1 from "../assets/images/bicycle.png";
 import weather from "../assets/images/weather.png";
@@ -6,8 +6,14 @@ import {StyledText} from "../components/Common";
 import {StyledHorizonTable} from "../components/HorizontalScrollBox";
 import {MyPageCourse} from "../components/MyPageCourseComponent";
 import {UserSettings} from "grommet-icons";
+import {recentRide} from "../utils/api/userApi";
 
 export const MyPage = () => {
+
+    useEffect(() => {
+        recentRide();
+    }, []);
+
     return <Box width="100vw" justify="center" margin="0 auto" gap="small">
         {/* 자전거사진, 멘트, 버튼 */}
         <Box align="center" justify="between">
