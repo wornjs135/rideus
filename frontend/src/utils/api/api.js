@@ -5,10 +5,10 @@ export const API_SERVER = "https://j7a603.p.ssafy.io/api";
 export const SERVER_URL = "http://localhost:8080/api";
 
 export const CLIENT_URL = "https://j7a603.p.ssafy.io";
-
+export const CLIENT_URL2 = "http://localhost:3000";
 export const AUTH_URL = API_SERVER + "/oauth2/authorize/kakao";
 
-export const OAUTH2_REDIRECT_URI = `?redirect_uri=${CLIENT_URL}/oauth2/redirect`;
+export const OAUTH2_REDIRECT_URI = `?redirect_uri=${CLIENT_URL2}/oauth2/redirect`;
 //
 // const checkToken = async (config) => {
 //     let accessToken = localStorage.getItem("accessToken");
