@@ -44,11 +44,12 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
     //리뷰 상세
-    @GetMapping("/{course_id}/{review_id}")
+    @GetMapping("/{review_id}")
     public ResponseEntity<?> reviewDetail(@PathVariable(value = "review_id") Long rid) {
         ReviewDetailResponseDto result = reviewService.showReviewDetail(rid);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
+
     //리뷰 좋아요
     @PostMapping("/click")
     public ResponseEntity<?> likeClick(@RequestBody ReviewLikeRequestDto reviewLikeRequestDto, @ApiIgnore @AuthenticationPrincipal CustomUserDetails user) {

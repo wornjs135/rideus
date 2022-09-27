@@ -54,8 +54,8 @@ public class RideService {
     private final CourseCoordinateRepository courseCoordinateRepository;
 
     @Transactional
-    public CreateRideRoomResponse createRiddingRoom(Member member) {
-        Member findMember = memberRepository.findById(member.getId())
+    public CreateRideRoomResponse createRiddingRoom(Long memberId) {
+        Member findMember = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
 
         return CreateRideRoomResponse.from(rideRoomRepository.save(RideRoom.create(findMember)).getId());
@@ -84,7 +84,7 @@ public class RideService {
             List<ParticipantDto> participants = realRideRoom.getParticipants();
 
             for (ParticipantDto participant : participants) {
-                if (participant.getMemberId() == findMember.getId()) {
+                if (participant.getMemberId().equals(findMember.getId())) {
                     throw new DuplicateException(GROUP_PARTICIPATE_DUPLICATE);
                 }
             }
@@ -101,14 +101,14 @@ public class RideService {
     }
 
     @Transactional
-    public CreateRecordResponse startRidding(Member member) {
-        MongoRecord saveRecord = mongoRecordRepository.save(MongoRecord.create(member.getId()));
+    public CreateRecordResponse startRidding(Long memberId) {
+        MongoRecord saveRecord = mongoRecordRepository.save(MongoRecord.create(memberId));
 
         return CreateRecordResponse.from(saveRecord.getId());
     }
 
     @Transactional
-    public CreateRecordResponse finishRidding(Member member, RiddingType riddingType, FinishRiddingRequest request) {
+    public CreateRecordResponse finishRidding(Long memberId, RiddingType riddingType, FinishRiddingRequest request) {
         MongoRecord mongoRecord = mongoRecordRepository.findById(request.getRecordId())
                 .orElseThrow(() -> new NotFoundException(RECORD_NOT_FOUND));
 
@@ -126,7 +126,7 @@ public class RideService {
             recordCoordinates = mongoRecord.getCoordinates();
             courseCoordinates = mongoCourse.getCoordinates();
         }
-        Member findMember = memberRepository.findById(member.getId())
+        Member findMember = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
 
         // 개인 기록 update
@@ -154,10 +154,10 @@ public class RideService {
     }
 
     @Transactional
-    public void saveCoordinatesPerPeriod(Member member, String recordId, SaveCoordinatesRequest saveCoordinatesRequest) {
+    public void saveCoordinatesPerPeriod(Long memberId, String recordId, SaveCoordinatesRequest saveCoordinatesRequest) {
         MongoRecord mongoRecord = mongoRecordRepository.findById(recordId)
                 .orElseThrow(() -> new NotFoundException(RECORD_NOT_FOUND));
-        if (mongoRecord.getMemberId() != member.getId()) {
+        if (!mongoRecord.getMemberId().equals(memberId)) {
             throw new NotMatchException(MEMBER_RECORD_NOT_MATCH);
         }
 

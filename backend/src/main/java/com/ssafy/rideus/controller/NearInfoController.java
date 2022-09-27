@@ -18,8 +18,7 @@ import java.util.List;
 @RestController
 public class NearInfoController {
 
-    @Autowired
-    NearInfoService nearInfoService;
+    private final NearInfoService nearInfoService;
 
     @GetMapping("/save/{courseid}")
     public ResponseEntity<?> saveNearInfo(@PathVariable String courseId) {
