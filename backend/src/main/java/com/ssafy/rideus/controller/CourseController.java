@@ -77,13 +77,14 @@ public class CourseController {
 	}
 
 	
-	// 현 위치 기반 코스 추천
-	@GetMapping("/recommendByLoc/{lat}/{lng}")
-	public ResponseEntity<List<RecommendationCourseDto>> recommendByLoc(@ApiIgnore @LoginMember Member member, @PathVariable Double lat, @PathVariable Double lng) {
-		
-		List<RecommendationCourseDto> courseList = courseService.getAllCoursesByLoc(member.getId(), lat, lng);
-		return ResponseEntity.status(HttpStatus.OK).body(courseList);
-	}
+	// MainController로 이동
+//	// 현 위치 기반 코스 추천
+//	@GetMapping("/recommendByLoc/{lat}/{lng}")
+//	public ResponseEntity<List<RecommendationCourseDto>> recommendByLoc(@ApiIgnore @LoginMember Member member, @PathVariable Double lat, @PathVariable Double lng) {
+//		
+//		List<RecommendationCourseDto> courseList = courseService.getAllCoursesByLoc(member.getId(), lat, lng);
+//		return ResponseEntity.status(HttpStatus.OK).body(courseList);
+//	}
 	
 	
 	// 코스 추가 (사용자가 탄 코스 추가하는 경우)
