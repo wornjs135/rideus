@@ -2,14 +2,18 @@ import React from "react";
 import { Box } from "grommet";
 import bike1 from "../assets/images/bicycle.png";
 import bike2 from "../assets/images/bicycle2.png";
-import Button from "../components/Button";
+// import Button from "../components/Button";
+// import { Button, styled } from "@material-ui/core";
 import { StyledText } from "../components/Common";
-import styled from "styled-components";
+// import styled from "styled-components";
 import { StyledHorizonTable } from "../components/HorizontalScrollBox";
 import { BestCourse } from "../components/CourseComponent";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { ChooseRideTypeBar } from "../components/ChooseRideTypeBar";
+import { styled } from "@mui/material/styles";
+import { Button } from "@mui/material";
+import { BootstrapButton } from "../components/Buttons";
 
 export const Main = () => {
   const navigate = useNavigate();
@@ -18,7 +22,7 @@ export const Main = () => {
     setOpen(false);
   };
   return (
-    <Box width="100vw" justify="center" margin="0 auto" gap="small">
+    <Box width="100vw" justify="center" gap="small">
       {/* 자전거사진, 멘트, 버튼 */}
       <Box align="center" justify="between">
         <Box direction="row" align="center">
@@ -31,23 +35,23 @@ export const Main = () => {
           weight="bold"
           size="18px"
         />
-        <Button
+        <BootstrapButton
           onClick={() => {
             // naviagate("/ride", { state: { courseName: "나만의 길" } });
             setOpen(true);
           }}
-          BigGreen
         >
           RIDE!
-        </Button>
-        <Button
-          BigGreen
+        </BootstrapButton>
+        {/* <Button
+          variant="contained"
+          size="large"
           onClick={() => {
             navigate("/gpsTest");
           }}
         >
-          GPS TEST
-        </Button>
+          label="GPS TEST"
+        </Button> */}
       </Box>
       {/* 인기코스, 월간코스, 인기태그 */}
       <Box
