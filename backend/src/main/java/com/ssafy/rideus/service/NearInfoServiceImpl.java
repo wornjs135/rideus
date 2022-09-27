@@ -80,6 +80,19 @@ public class NearInfoServiceImpl implements NearInfoService {
             } // end of neainfo loop
         } // end of checkpoint loop
 
+
+        /*
+        하둡에서 처리해야할 사항
+
+        코스별로 mongoDB에 있는 주변정보를 가져와서
+        카테고리별로 count돌리고
+        가장 많은 카테고리를 MySQL에 저장!!
+
+
+
+
+         */
+
         courseCoordinateRepository.save( new CourseCoordinate(
                 courseCoordinate.getId(),
                 courseCoordinate.getCoordinates(),
