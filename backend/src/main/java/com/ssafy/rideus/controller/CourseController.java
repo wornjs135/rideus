@@ -44,9 +44,11 @@ public class CourseController {
 
     // 추천 코스(리뷰 + 코스 태그 기반)
     @GetMapping("/recommendation")
-    public ResponseEntity<List<RecommendationCourseDto>> getRecommendationCourseByTag(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
-//        public ResponseEntity<List<RecommendationCourseDto>> getRecommendationCourseByTag() {
-        return ResponseEntity.ok(courseService.getRecommendationCourseByTag(member.getId()));
+//    public ResponseEntity<List<RecommendationCourseDto>> getRecommendationCourseByTag(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
+        public ResponseEntity<List<RecommendationCourseDto>> getRecommendationCourseByTag() {
+			return ResponseEntity.ok(courseService.getRecommendationCourseByTag(1L));
+
+//		return ResponseEntity.ok(courseService.getRecommendationCourseByTag(member.getId()));
     }
 
 		

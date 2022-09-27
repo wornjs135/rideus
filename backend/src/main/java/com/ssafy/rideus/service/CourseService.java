@@ -93,6 +93,7 @@ public class CourseService {
                     recommendationCourseDtos.add(RecommendationCourseDto.from(r));
                 }
             }
+
         }
 
 //        System.out.println(recommendationCourseDtos.size());
