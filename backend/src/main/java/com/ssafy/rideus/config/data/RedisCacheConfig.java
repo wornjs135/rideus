@@ -55,6 +55,9 @@ public class RedisCacheConfig {
         cacheConfigurations.put(RANK_MEMBER_BEST_SPEED,RedisCacheConfiguration.defaultCacheConfig()
                 .entryTtl(Duration.ofSeconds(RANK_TOTAL_EXPIRE_SEC)));
 
+        cacheConfigurations.put(POPULARITY_TAG,RedisCacheConfiguration.defaultCacheConfig()
+                .entryTtl(Duration.ofSeconds(POPULARITY_TAG_EXPIRE_SEC)));
+
         return RedisCacheManager.RedisCacheManagerBuilder.fromConnectionFactory(connectionFactory)
                 .cacheDefaults(configuration).withInitialCacheConfigurations(cacheConfigurations).build();
     }

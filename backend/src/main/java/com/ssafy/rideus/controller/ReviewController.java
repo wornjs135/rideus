@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
@@ -28,9 +29,13 @@ public class ReviewController {
 
     //리뷰 작성
     @PostMapping("/write")
-    public ResponseEntity<?> writeReview(@RequestBody ReviewRequestDto reviewRequestDto, @ApiIgnore @AuthenticationPrincipal CustomUserDetails user) {
-        reviewService.writeReview(reviewRequestDto, user.getId());
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+//    public ResponseEntity<?> writeReview(@RequestPart ReviewRequestDto reviewRequestDto, @RequestPart MultipartFile image,
+//                                         @ApiIgnore @AuthenticationPrincipal CustomUserDetails user) {
+    public ResponseEntity<WriteReviewResponse> writeReview(@RequestPart ReviewRequestDto request, @RequestPart MultipartFile image) {
+//        reviewService.writeReview(reviewRequestDto, user.getId(), image);
+
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(reviewService.writeReview(request, 1L, image));
     }
     //코스 별 리뷰 목록
     @GetMapping("/{course_id}")
