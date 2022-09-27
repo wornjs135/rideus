@@ -44,7 +44,7 @@ public class WeatherController {
     // 최근 1일간의 자료만 보여줌
 
 
-    @GetMapping("/today")
+    @GetMapping("/gps")
     public ResponseEntity<?> weatherAPI(@RequestParam double lat, @RequestParam double lon) throws Exception {
 
 

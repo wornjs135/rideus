@@ -4,8 +4,10 @@ import com.ssafy.rideus.domain.Course;
 import com.ssafy.rideus.dto.course.common.CourseReviewTagTop5DtoInterface;
 import com.ssafy.rideus.dto.course.common.RecommendationCourseDtoInterface;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -65,4 +67,11 @@ public interface CourseRepository extends JpaRepository<Course, String> {
     List<String> getAllCourseIdsByTagKeyword(@Param("keyword") String keyword);
     
 
+    @Transactional(readOnly = false)
+    @Modifying
+    @Query("update Course c set c.category = :category where c.id = :id")
+    void updateCourseCategoryByid(@Param("id") String id, @Param("category") String category);
+
+
+    List<Course> findCoruseByCategoryNull();
 }
