@@ -56,12 +56,13 @@ public class MemberController {
     public ResponseEntity<List<Record>> getRecentRocrd(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
         return ResponseEntity.ok(memberService.getRecentRecord(member.getId()));
     }
-    @GetMapping("/totalRecord")
+
+    @GetMapping("/total-record")
     public ResponseEntity<RecordTotalResponse> getTotalRecord(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
         return ResponseEntity.ok(memberService.getTotalRecord(member.getId()));
     }
 
-    @GetMapping("/myTag")
+    @GetMapping("/my-tag")
     public ResponseEntity<List<MemberTagResponse>> getMyTag(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
         return ResponseEntity.ok(memberService.getMyTag(member.getId()));
     }

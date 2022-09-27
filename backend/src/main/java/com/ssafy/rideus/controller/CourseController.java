@@ -90,7 +90,7 @@ public class CourseController {
 	
 	
 	// 코스 추가 (사용자가 탄 코스 추가하는 경우)
-	@PutMapping("/add")
+	@PostMapping("/add")
 	public ResponseEntity<Integer> add(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member, @RequestBody Map<String, String> inputMap) {
 		
 		int result = courseService.addCourseData(inputMap, member.getId());
