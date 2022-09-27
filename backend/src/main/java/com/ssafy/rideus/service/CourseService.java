@@ -1,5 +1,12 @@
 package com.ssafy.rideus.service;
 
+import com.ssafy.rideus.domain.Course;
+import com.ssafy.rideus.dto.course.common.RecommendationCourseDto;
+import com.ssafy.rideus.dto.course.common.RecommendationCourseDtoInterface;
+import com.ssafy.rideus.dto.course.response.PopularityCourseResponse;
+import com.ssafy.rideus.dto.tag.common.TagDto;
+import com.ssafy.rideus.repository.jpa.CourseRepository;
+import com.ssafy.rideus.repository.jpa.MemberTagRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -8,7 +15,15 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -33,14 +48,20 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.ssafy.rideus.common.exception.NotFoundException;
+import com.ssafy.rideus.dto.course.common.CourseReviewTagTop5DtoInterface;
 import com.ssafy.rideus.dto.course.common.RecommendationCourseDto;
 import com.ssafy.rideus.dto.course.common.RecommendationCourseDtoInterface;
 import com.ssafy.rideus.domain.Course;
+import com.ssafy.rideus.domain.Member;
+import com.ssafy.rideus.domain.Record;
 import com.ssafy.rideus.domain.base.Coordinate;
 import com.ssafy.rideus.domain.collection.CourseCoordinate;
 import com.ssafy.rideus.repository.jpa.CourseRepository;
+import com.ssafy.rideus.repository.jpa.MemberRepository;
 import com.ssafy.rideus.repository.mongo.CourseCoordinateRepository;
+import com.ssafy.rideus.repository.mongo.MongoRecordRepository;
 import com.ssafy.rideus.repository.jpa.MemberTagRepository;
+import com.ssafy.rideus.repository.jpa.RecordRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -49,9 +70,10 @@ public class CourseService {
 	
 	@Autowired
 	private CourseCoordinateRepository courseCoordinateRepository;
-	@Autowired
-	private CourseRepository courseRepository;
-//    private final CourseRepository courseRepository;
+	private final MongoRecordRepository mongoRecordRepository;
+    private final CourseRepository courseRepository;
+    private final RecordRepository recordRepository;
+    private final MemberRepository memberRepository;
     private final MemberTagRepository memberTagRepository;
 	
 	
@@ -78,50 +100,281 @@ public class CourseService {
 
         return recommendationCourseDtos;
     }
+
+
+    public List<PopularityCourseResponse> getPopularityCourse() {
+        List<Course> popularityCourses = courseRepository.findAllOrderByLikeCount();
+
+         return popularityCourses.stream().map(course -> PopularityCourseResponse.from(course)).collect(Collectors.toList());
+    }
 	
+
+    
+	// 코스에 대한 태그들 정리
+    public Map<String, List<TagDto>> getAllCourseTagsMap(List<String> courseIds) {
+    	List<CourseReviewTagTop5DtoInterface> allCourseTags;
+    	if(courseIds.size() == 0) {
+    		allCourseTags = courseRepository.getAllCourseTags();
+    	} else {
+    		allCourseTags = courseRepository.getSpecificCourseTags(courseIds);
+    	}
+        
+        Map<String, List<TagDto>> allCourseTagsMap = new HashMap<String, List<TagDto>>();
+        for(CourseReviewTagTop5DtoInterface courseTags : allCourseTags) {
+        	String courseId = courseTags.getCourseId();
+        	if(allCourseTagsMap.containsKey(courseId)) {
+        		List<TagDto> tagList = allCourseTagsMap.get(courseId);
+        		tagList.add(TagDto.from(courseTags.getTagId(), courseTags.getTagName()));
+        		allCourseTagsMap.replace(courseId, tagList);
+        	} else {
+        		List<TagDto> tagList = new ArrayList<TagDto>();
+        		tagList.add(TagDto.from(courseTags.getTagId(), courseTags.getTagName()));
+        		allCourseTagsMap.put(courseTags.getCourseId(), tagList);
+        	}
+        }
+        
+        return allCourseTagsMap;
+    }
+
 	
+	// 코스 리스트 조회
+    public List<RecommendationCourseDto> getAllCourses(Long memberId) {
+    	// 코스 정보 
+    	List<RecommendationCourseDtoInterface> allCourses = courseRepository.getAllCourses(memberId);
+    	
+    	// 코스에 대한 태그들 
+    	Map<String, List<TagDto>> allCourseTagsMap = getAllCourseTagsMap(new ArrayList<String>());
+    	
+    	// 코스 관련 정보 모음
+        List<RecommendationCourseDto> recommendationCourseDtoList = new ArrayList<>();
+        for (RecommendationCourseDtoInterface course : allCourses) {
+        	recommendationCourseDtoList.add(RecommendationCourseDto.find(course, allCourseTagsMap.get(course.getCourseId())));
+        }
+
+        return recommendationCourseDtoList;
+    }
+    
 	
-	
-	
-	
-	
-	
-	
-	// 추천 코스 리스트 조회
-	public List<Course> findAllCourses() {
+    // 특정 코스 정보 조회
+	public List<RecommendationCourseDto> getSpecificCourse(Long memberId, List<String> courseIds) {
+		// 코스 정보
+		List<RecommendationCourseDtoInterface> courses = courseRepository.getSpecificCourse(memberId, courseIds);
+
 		
-		List<Course> courses = courseRepository.findAll();
+    	// 코스에 대한 태그들 
+    	Map<String, List<TagDto>> allCourseTagsMap = getAllCourseTagsMap(courseIds);
 		
-		return courses;
+
+//		CourseCoordinate courseDetail = courseCoordinateRepository.findById(courseId)
+//				.orElseThrow(() -> new NotFoundException("코스 상세 조회 실패"));
+//		// CourseCoordinate courseDetail = courseCoordinateRepository.findById(coureId).get();
+		
+        List<RecommendationCourseDto> recommendationCourseDtoList = new ArrayList<>();
+        for (RecommendationCourseDtoInterface course : courses) {
+        	recommendationCourseDtoList.add(RecommendationCourseDto.find(course, allCourseTagsMap.get(course.getCourseId())));
+        }
+
+        return recommendationCourseDtoList;
 	}
 	
 	
-	// 추천 코스 상세 조회
-	public CourseCoordinate findCourse(String courseId) {
+	
+    // 코스 상세 조회
+	// 특정 코스 정보 조회 + 몽고디비 데이터 가져오기
+	public Map<String, Object> getCourse(Long memberId, String courseId) {
 		
-		CourseCoordinate courseDetail = courseCoordinateRepository.findById(courseId)
-				.orElseThrow(() -> new NotFoundException("코스 상세 조회 실패"));
-		// CourseCoordinate courseDetail = courseCoordinateRepository.findById(coureId).get();
+		// Map 혹은 Json 객체 생성해서 거기에 담아 보내기
+//		JSONObject
+		Map<String, Object> resultMap = new HashMap<String, Object>();
 		
-		return courseDetail;
+		// MySQL에 있는 코스 데이터
+		List<String> courseIds = new ArrayList<String>();
+		courseIds.add(courseId);
+		RecommendationCourseDto course = getSpecificCourse(memberId, courseIds).get(0);
+		
+		// 리뷰 별점 평균
+		String starInfo = courseRepository.getStarAvg(courseId);
+		String[] starInfoArr = starInfo.split("/");
+		double starSum = Double.parseDouble(starInfoArr[0]);
+		double reviewCnt = Double.parseDouble(starInfoArr[1]);
+		double starAvg = Math.round((starSum / reviewCnt)*10) / 10.0;
+		
+		
+		
+		// MongoDB에 있는 데이터 가져오기
+		CourseCoordinate courseCoordinate = courseCoordinateRepository.findById(courseId).get();
+		
+		// Map에 담기
+		resultMap.put("courseId", course.getCourseId());
+		resultMap.put("courseName", course.getCourseName());
+		resultMap.put("distance", course.getDistance());
+		resultMap.put("expectedTime", course.getExpectedTime());
+		resultMap.put("start", course.getStart());
+		resultMap.put("finish", course.getFinish());
+		resultMap.put("likeCount", course.getLikeCount());
+		resultMap.put("imageUrl", course.getImageUrl());
+		resultMap.put("category", course.getCategory());
+		resultMap.put("bookmarkId", course.getBookmarkId());
+		resultMap.put("starAvg", starAvg);
+		resultMap.put("tags", course.getTags());
+		resultMap.put("coordinates", courseCoordinate.getCoordinates());
+		resultMap.put("checkpoints", courseCoordinate.getCheckpoints());
+		
+		
+		return resultMap;
 	}
 	
 	
 	// 코스 검색
+	public List<RecommendationCourseDto> getAllCoursesByKeyword(Long memberId, String keyword) {
+		
+		Set<String> courseIdsSet = new HashSet<String>();
+		
+		List<String> courseIds1 = courseRepository.getAllCourseIdsByKeyword(keyword);
+		for(int i=0; i<courseIds1.size(); i++) {
+			courseIdsSet.add(courseIds1.get(i));
+		}
+		List<String> courseIds2 = courseRepository.getAllCourseIdsByTagKeyword(keyword);
+		for(int i=0; i<courseIds2.size(); i++) {
+			courseIdsSet.add(courseIds2.get(i));
+		}		
+		
+		List<String> courseIds = new ArrayList<String>(courseIdsSet);
+//		System.out.println(courseIds.toString());
+		
+		return getSpecificCourse(memberId, courseIds);
+	}
 	
+
+	// 현 위치 기반 코스 추천
+	public List<RecommendationCourseDto> getAllCoursesByLoc(Long memberId, Double lat, Double lng) {
+		
+		// 전체 좌표 빼고 나머지만 가져오는 쿼리 작성해보기
+		List<CourseCoordinate> allCourseCoordinates = courseCoordinateRepository.findAll();
+		
+		Map<String, Double> intervalMap = new HashMap<String, Double>();
+//		double lat1 = Double.parseDouble(lat);
+//		double lon1 = Double.parseDouble(lng);
+		double lat1 = lat;
+		double lon1 = lng;
+		for(CourseCoordinate courseCoordinate : allCourseCoordinates) {
+			double lat2 = Double.parseDouble(courseCoordinate.getCheckpoints().get(0).getLat());
+			double lon2 = Double.parseDouble(courseCoordinate.getCheckpoints().get(0).getLng());
+			intervalMap.put(courseCoordinate.getId(), intervalMeter(lat1, lon1, lat2, lon2));
+		}
+		
+		// intervalMeter 기준 오름차순 정렬
+		
+		// Map.Entry 리스트 작성
+		List<Entry<String, Double>> listEntries = new ArrayList<Entry<String, Double>>(intervalMap.entrySet());
+
+		// 비교함수 Comparator를 사용하여 오름차순으로 정렬
+		Collections.sort(listEntries, new Comparator<Entry<String, Double>>() {
+			// compare로 값을 비교
+			public int compare(Entry<String, Double> obj1, Entry<String, Double> obj2) {
+				// 오름 차순 정렬
+				return obj1.getValue().compareTo(obj2.getValue());
+			}
+		});
+
+//		System.out.println("오름 차순 정렬 결과 출력");
+//		// 결과 출력
+//		for(Entry<String, Double> entry : listEntries) {
+//			System.out.println(entry.getKey() + " : " + entry.getValue());
+//		}
+//		System.out.println("_______결과 출력 끝_________");
+		
+		// 시작점 사이 거리 기준 오름차순으로 정렬된 코스식별자
+		List<String> courseIds = new ArrayList<String>();
+		// 추천할 코스 개수
+		int courseCnt = 5;
+		for(int i=0; i<courseCnt; i++) {
+			courseIds.add(listEntries.get(i).getKey());
+		}
+		
+		List<RecommendationCourseDto> courseList = getSpecificCourse(memberId, courseIds);
+		List<RecommendationCourseDto> sortedCourseList = new ArrayList<RecommendationCourseDto>();
+		
+		for(int i=0; i<courseCnt; i++) {
+			String courseId = courseIds.get(i);
+			for(int clIdx=0; clIdx<courseCnt; clIdx++) {
+				RecommendationCourseDto course = courseList.get(clIdx);
+				if(courseId.equals(course.getCourseId())) {
+					sortedCourseList.add(course);
+					break;
+				}
+			}
+		}
+		
+//		System.out.println(sortedCourseList.toString());
+		
+		return sortedCourseList;
+	}
 	
 	
 	// 코스 추가
+	public int addCourseData(Map<String, String> inputMap, Long memberId) {
+		// inputMap - memberId, courseName, distance, recordId
+
+		// 기록 식별자를 받아서 좌표를 가져와서 저장
+		
+		
+		try {
+			// MongoDB에 데이터 넣기
+			
+			// 기록 식별자 받아서 해당 기록 좌표를 코스 좌표로 등록
+			String recordId = inputMap.get("recordId");
+			// 코스 좌표 리스트
+			List<Coordinate> coordinates = new ArrayList<Coordinate>();
+			coordinates = mongoRecordRepository.findById(recordId).get().getCoordinates();
+			
+			// 체크포인트 좌표 리스트 생성
+			List<Coordinate> checkpoints = getCheckpoints(coordinates);
+			
+			// 코스 좌표, 체크포인트 좌표 데이터 MongoDB에 넣기
+			CourseCoordinate courseCoordinate = courseCoordinateRepository.save(CourseCoordinate.create(coordinates, checkpoints));
+			String courseId = courseCoordinate.getId();
+			
+
+			// MySQL에 데이터 넣기
+			
+	    	// (식별자(MongDB 식별자랑 동일), 코스명, 코스 길이, 시작 지점, 죵료 지점, 예상 주행 시간, 좋아요 개수, 사진 url, 회원번호, 리뷰리스트?, 코스태그)
+	        String courseName = inputMap.get("courseName");
+	        String distanceStr = inputMap.get("distance");
+	        Double distance = Double.parseDouble(distanceStr);
+	        
+	        Coordinate startCoordinate = checkpoints.get(0);
+	        Coordinate finishCoordinate = checkpoints.get(checkpoints.size()-1);
+			String start = locAPI(startCoordinate.getLng(), startCoordinate.getLat());
+			String finish = locAPI(finishCoordinate.getLng(), finishCoordinate.getLat());
+	        
+			int expectedTime = Integer.parseInt(calExpectedTime(distanceStr));
+			
+	        // 서버 db 확인하고 member_id 값 수정하기
+			Member member = memberRepository.findById(memberId).get();
+			Course course = new Course(courseId, courseName, distance, start, finish, expectedTime, 0, null, null, member, null, null);
+//	        courseRepository.save(new Course(courseId, courseName, distance, start, finish, expectedTime, 0, null, null, null));
+	        courseRepository.save(course);
+
+	        // 저장한 코스를 record에 course 정보 담아서 저장(update)
+	        Record originRecord = recordRepository.findById(recordId).get();
+	        Record record = Record.findCourse(originRecord, course);
+	        recordRepository.save(record);
+	        
+	        return 1;
+			
+		} catch (Exception e) {
+			System.out.println(">>> addCourseData() Exception: "+e);
+			return 0;
+		}
+		
+	}
 	
-	
-	
-	// 현 위치 기반 코스 추천
 	
 	
 	
 	/////////////////////////////////////////////////////////////////////	
 	// 추천 코스 크롤링 데이터 넣기
-	// 배열 
 	public void addCrawlingData() {
 		
 		try { 
@@ -217,8 +470,8 @@ public class CourseService {
 	    		int expectedTime = Integer.parseInt(courseAdditionalData[3]);
 	            
 	            // 서버 db 확인하고 member_id 값 수정하기
+//	            courseRepository.save(new Course(courseId, courseName, distance, start, finish, expectedTime, 0, null, null, null));
 	            courseRepository.save(new Course(courseId, courseName, distance, start, finish, expectedTime, 0, null, null, null, null, null));
-
 	        }
 	            
 	            
@@ -276,7 +529,7 @@ public class CourseService {
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-				System.out.println(">>> Exception: " + e);
+				System.out.println(">>> getAdditionalData() Exception: " + e);
 			}
 		}
 		return courseInfoArr;		
@@ -296,7 +549,7 @@ public class CourseService {
 			
 			return Integer.toString(expectedTime);
 		} catch(Exception e) {
-			System.out.println(">>> calExpectedTime Exception : "+e);
+			System.out.println(">>> calExpectedTime() Exception : "+e);
 			return "";
 		}
 
@@ -368,7 +621,7 @@ public class CourseService {
 	
 	
 	// 두 좌표 간 거리 (단위: meter)
-    private static double intervalMeter(double lat1, double lon1, double lat2, double lon2) {
+    public static double intervalMeter(double lat1, double lon1, double lat2, double lon2) {
         
     	if(lat1 == lat2 && lon1 == lon2) {
     		return 0;
@@ -432,7 +685,7 @@ public class CourseService {
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			System.out.println(">>> locAPI Exception: "+e);
+			System.out.println(">>> locAPI() Exception: "+e);
 			return addressName;
 		}
 	}
@@ -449,5 +702,5 @@ public class CourseService {
     	System.out.println("코스 데이터 매칭 안 됨");
     	return null;
     }	
-	
+
 }

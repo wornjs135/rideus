@@ -6,11 +6,14 @@ public interface RecommendationCourseDtoInterface {
 
     String getCourseId();
     String getCourseName();
-    String getDistance();
-    String getExpectedTime();
+    Double getDistance();
+    Integer getExpectedTime();
     String getStart();
     String getFinish();
     Integer getLikeCount();
+    String getImageUrl();
+    String getCategory();
+    String getBookmarkId();
     Long getTagId();
     String getTagName();
     Integer getMax();
