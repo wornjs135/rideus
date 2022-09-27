@@ -1,5 +1,6 @@
 package com.ssafy.rideus.controller;
 
+import com.ssafy.rideus.dto.weather.GpsTransfer;
 import com.ssafy.rideus.dto.weather.WeatherDto;
 import com.ssafy.rideus.dto.weather.response.WeatherRes;
 import lombok.RequiredArgsConstructor;
@@ -34,30 +35,41 @@ import java.util.*;
 public class WeatherController {
 
     private static final String API_KEY = "fwh2SqF7jcv3y1DAhK0KT7CBDuM5stvTsyb58Ro%2Fnbce3gHu2%2BWQlNcLnty7XiHJRzcWvdN57%2FmU3baP3O%2FZVA%3D%3D";
-    private static final int PAGE_NO = 1; // 한페이지 마다 1시간 단위로 잘라서 확인
-    private static final int HOURS = 12;
-    private static final int UNIT_HOUR = 12;
-    private static final int NUM_OF_ROW = UNIT_HOUR * HOURS; // 예보 타입 개수에 따라 12개
+    private static final String PAGE_NO = "1"; // 한페이지 마다 1시간 단위로 잘라서 확인
+    private static final String HOURS = "12";
+    private static final String UNIT_HOUR = "12";
+    private static final String NUM_OF_ROW = "144"; // 예보 타입 개수에 따라 12개
 //    private static final int NUM_OF_ROW = 1000; // 예보 타입 개수에 따라 12개
     private static String baseDate, baseTime;
     // 최근 1일간의 자료만 보여줌
+
+
     @GetMapping("/today")
-    public ResponseEntity<?> weatherAPI(@RequestParam String x, @RequestParam String y) throws Exception {
+    public ResponseEntity<?> weatherAPI(@RequestParam double lat, @RequestParam double lon) throws Exception {
 
 
+        System.out.println("lat = " + lat);
+        System.out.println("lon = " + lon);
+        GpsTransfer gpsTransfer = new GpsTransfer(lat, lon);
+        System.out.println("gpsTransfer.getXLat() = " + gpsTransfer.getXLat());
+        System.out.println("gpsTransfer.getYLon() = " + gpsTransfer.getYLon());
+        final String nx = gpsTransfer.getXLat()+"";
+        final String ny = gpsTransfer.getYLon()+"";
 
+        System.out.println("nx = " + nx);
+        System.out.println("ny = " + ny);
         settingDate(); /* 날씨 데이터 세팅*/
 
         /* Open API URL 생성 */
         StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst"); /*URL*/
         urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=" + API_KEY); /*Service Key*/
-        urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode(PAGE_NO+"", "UTF-8")); /*페이지번호*/
-        urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode(NUM_OF_ROW+"", "UTF-8")); /*한 페이지 결과 수*/
+        urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode(PAGE_NO, "UTF-8")); /*페이지번호*/
+        urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode(NUM_OF_ROW, "UTF-8")); /*한 페이지 결과 수*/
         urlBuilder.append("&" + URLEncoder.encode("dataType","UTF-8") + "=" + URLEncoder.encode("JSON", "UTF-8")); /*요청자료형식(XML/JSON) Default: XML*/
         urlBuilder.append("&" + URLEncoder.encode("base_date","UTF-8") + "=" + URLEncoder.encode(baseDate, "UTF-8")); /* 현재 날짜 */
         urlBuilder.append("&" + URLEncoder.encode("base_time","UTF-8") + "=" + URLEncoder.encode(baseTime, "UTF-8")); /* 현재 시각 */
-        urlBuilder.append("&" + URLEncoder.encode("nx","UTF-8") + "=" + URLEncoder.encode(x, "UTF-8")); /*예보지점의 X 좌표값*/
-        urlBuilder.append("&" + URLEncoder.encode("ny","UTF-8") + "=" + URLEncoder.encode(y, "UTF-8")); /*예보지점의 Y 좌표값*/
+        urlBuilder.append("&" + URLEncoder.encode("nx","UTF-8") + "=" + URLEncoder.encode(nx, "UTF-8")); /*예보지점의 X 좌표값*/
+        urlBuilder.append("&" + URLEncoder.encode("ny","UTF-8") + "=" + URLEncoder.encode(ny, "UTF-8")); /*예보지점의 Y 좌표값*/
 
         URL url = new URL(urlBuilder.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -81,8 +93,8 @@ public class WeatherController {
 
         rd.close();
         conn.disconnect();
-//        System.out.println(sb.toString());
         String result = sb.toString();
+        System.out.println("result = " + result);
 
         //=======이 밑에 부터는 json에서 데이터 파싱해 오는 부분이다=====//
 
@@ -113,38 +125,22 @@ public class WeatherController {
             String category = jsonObj_4.getString("category");
 
             // 날씨
-            if(category.equals("SKY")){
-                weather = fcstValue;
-                announce = "현재 날씨는 ";
-                if(fcstValue.equals("1")) {
-                    announce += "맑은 상태로";
-                }else if(fcstValue.equals("2")) {
-                    announce += "비가 오는 상태로 ";
-                }else if(fcstValue.equals("3")) {
-                    announce += "구름이 많은 상태로 ";
-                }else if(fcstValue.equals("4")) {
-                    announce += "흐린 상태로 ";
-                }
-            }
-
+            if(category.equals("SKY")) weather = fcstValue;
             // 강수 확률
-            if(category.equals("POP")) {
-                rain = fcstValue;
-            }
-
+            if(category.equals("POP")) rain = fcstValue;
             // 온도
-            if(category.equals("T3H") || category.equals("T1H")|| category.equals("TMP")){
-                temperature = fcstValue;
-                announce += "기온은 "+fcstValue+"℃ 입니다.";
-            }
-            if( i!=0 && i % UNIT_HOUR == 0 ) {
-                weatherDtoList.add(new WeatherDto(temperature, weather, rain, announce));
+            if(category.equals("TMP")) temperature = fcstValue;
+
+            if( i!=0 && i % Integer.parseInt(UNIT_HOUR) == 0 ) {
+                weatherDtoList.add(new WeatherDto(temperature, weather, rain));
                 System.out.println(weatherDtoList.get(weatherDtoList.size()-1).toString());
             }
         }
         WeatherRes weatherRes = new WeatherRes(weatherDtoList);
 
         return new ResponseEntity<>(weatherRes, HttpStatus.OK);
+//        return new ResponseEntity<String>(result, HttpStatus.OK);
+
     }
 
     private void settingDate() {
