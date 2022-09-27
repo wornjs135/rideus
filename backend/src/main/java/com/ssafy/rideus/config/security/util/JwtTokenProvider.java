@@ -3,7 +3,6 @@ package com.ssafy.rideus.config.security.util;
 import com.ssafy.rideus.config.security.auth.CustomUserDetails;
 import com.ssafy.rideus.repository.jpa.MemberRepository;
 import io.jsonwebtoken.*;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,11 +21,9 @@ import static com.ssafy.rideus.common.exception.NotFoundException.USER_NOT_FOUND
 
 @Component
 @Slf4j
-@RequiredArgsConstructor
 public class JwtTokenProvider {
-    @Value("${token.secret}")
+
     private final String SECRET_KEY;
-    @Value("${token.refresh-cookie-key}")
     private final String COOKIE_REFRESH_TOKEN_KEY;
 
     @Value("${token.expiration_time}")
@@ -34,8 +31,15 @@ public class JwtTokenProvider {
     private final Long REFRESH_TOKEN_EXPIRE_LENGTH = 1000L * 60 * 60 * 24 * 7;    // 1week
     private final String AUTHORITIES_KEY = "role";
 
+
     private final MemberRepository memberRepository;
 
+    @Autowired
+    public JwtTokenProvider(@Value("${token.secret}") String secretKey, @Value("${token.refresh-cookie-key}") String cookieKey, MemberRepository memberRepository) {
+        this.SECRET_KEY = Base64.getEncoder().encodeToString(secretKey.getBytes());
+        this.COOKIE_REFRESH_TOKEN_KEY = cookieKey;
+        this.memberRepository = memberRepository;
+    }
 
     public String createAccessToken(Authentication authentication) {
         Date now = new Date();
@@ -105,10 +109,13 @@ public class JwtTokenProvider {
 
     }
 
+    public String getSubject(String jwtToken) {
+        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(jwtToken).getBody().getSubject();
+    }
+
     public Boolean validateToken(String token) {
         try {
-            Jws<Claims> claimsJws = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
-            Long l = Long.parseLong(claimsJws.getBody().getSubject());
+            Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
 
             return true;
         } catch (ExpiredJwtException e) {

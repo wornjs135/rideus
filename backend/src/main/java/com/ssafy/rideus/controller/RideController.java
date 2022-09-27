@@ -1,6 +1,7 @@
 package com.ssafy.rideus.controller;
 
 import com.ssafy.rideus.config.security.auth.CustomUserDetails;
+import com.ssafy.rideus.config.security.util.JwtTokenProvider;
 import com.ssafy.rideus.dto.record.request.FinishRiddingRequest;
 import com.ssafy.rideus.dto.record.request.SaveCoordinatesRequest;
 import com.ssafy.rideus.dto.record.response.CreateRecordResponse;
@@ -8,10 +9,6 @@ import com.ssafy.rideus.dto.record.type.RiddingType;
 import com.ssafy.rideus.dto.rideroom.request.GroupRiddingRequest;
 import com.ssafy.rideus.dto.rideroom.response.CreateRideRoomResponse;
 import com.ssafy.rideus.dto.rideroom.response.GroupRiddingResponse;
-import com.ssafy.rideus.config.security.util.JwtUtil;
-import com.ssafy.rideus.config.web.LoginMember;
-import com.ssafy.rideus.domain.Member;
-import com.ssafy.rideus.service.MemberService;
 import com.ssafy.rideus.service.RideService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,8 +21,6 @@ import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
-
-import java.util.List;
 
 import static com.ssafy.rideus.dto.rideroom.type.SocketMessageType.CURRENT_POSITION;
 import static com.ssafy.rideus.dto.rideroom.type.SocketMessageType.ENTER;
@@ -40,7 +35,7 @@ public class RideController {
 
     private final SimpMessageSendingOperations messagingTemplate;
 
-    private final JwtUtil jwtUtil;
+    private final JwtTokenProvider jwtTokenProvider;
 
     static final String SOCKET_SUBSCRIBE_BASE_URI = "/sub/ride/room/";
 
@@ -53,7 +48,7 @@ public class RideController {
     // 그룹 주행 관련 웹소켓 기능
     @MessageMapping("/ride/group")
     public void rideWithGroup(GroupRiddingRequest request, @Header(HttpHeaders.AUTHORIZATION) String bearerToken) {
-        Long memberId = Long.valueOf(jwtUtil.getSubject(bearerToken.substring(7)));
+        Long memberId = Long.valueOf(jwtTokenProvider.getSubject(bearerToken.substring(7)));
         log.debug(request.toString());
         log.debug(bearerToken);
 
