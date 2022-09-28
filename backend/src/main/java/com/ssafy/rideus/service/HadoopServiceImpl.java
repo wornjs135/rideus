@@ -57,7 +57,7 @@ public class HadoopServiceImpl implements HadoopService{
     private static final String OUTPUT_FILE_NAME = "output";
     private static final String FILE_TYPE = ".txt";
 
-    static final int DISTANCE_LIMIT = 2000; // 반경 4km 안에 있는 시설 정보 조회
+    static final int DISTANCE_LIMIT = 1000; // 반경 1km 안에 있는 시설 정보 조회
 
     /*
     o 1. 코스 주변정보 mongodb에 update
