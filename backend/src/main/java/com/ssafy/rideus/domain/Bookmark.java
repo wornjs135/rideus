@@ -26,4 +26,12 @@ public class Bookmark extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
     private Course course;
+
+    public static Bookmark create(Member findMember, Course findCourse) {
+        Bookmark bookmark = new Bookmark();
+        bookmark.member = findMember;
+        bookmark.course = findCourse;
+
+        return bookmark;
+    }
 }
