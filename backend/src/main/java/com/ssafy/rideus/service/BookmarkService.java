@@ -33,6 +33,7 @@ public class BookmarkService {
                 .orElseThrow(() -> new NotFoundException(COURSE_NOT_FOUND));
 
         Bookmark saveBookmark = bookmarkRepository.save(Bookmark.create(findMember, findCourse));
+        findCourse.addBookmarkCount();
 
         return CreateBookmarkResponse.from(saveBookmark.getId());
     }
@@ -45,6 +46,7 @@ public class BookmarkService {
             throw new NotMatchException(MEMBER_BOOKMARK_NOT_MATCH);
         }
 
+        findBookmark.getCourse().minusBookmarkCount();
         bookmarkRepository.delete(findBookmark);
     }
 }
