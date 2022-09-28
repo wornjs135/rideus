@@ -32,7 +32,7 @@ public class NearInfoServiceImpl implements NearInfoService {
     @Autowired
     MongoTemplate mongoTemplate;
 
-    static final int DISTANCE_LIMIT = 4000; // 반경 4km 안에 있는 시설 정보 조회
+    static final int DISTANCE_LIMIT = 2000; // 반경 4km 안에 있는 시설 정보 조회
 
 
     @Override
