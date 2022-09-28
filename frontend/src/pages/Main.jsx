@@ -16,29 +16,130 @@ import { Button } from "@mui/material";
 import { BootstrapButton } from "../components/Buttons";
 import { useEffect } from "react";
 import { getNews } from "../utils/api/newsApi";
+import { useSelector } from "react-redux";
+import {
+  getPopularCourses,
+  getRecommendationCourseByLocation,
+} from "../utils/api/mainApi";
+import { useGeolocated } from "react-geolocated";
+
+// 코스 구조
+// [
+//   {
+//     "courseId": "string",
+//     "courseName": "string",
+//     "distance": 0,
+//     "expectedTime": 0,
+//     "finish": "string",
+//     "likeCount": 0,
+//     "start": "string",
+//     "tags": [
+//       {
+//         "tagId": 0,
+//         "tagName": "string"
+//       }
+//     ]
+//   }
+// ]
 
 export const Main = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [newses, setNewses] = useState([]);
+  const [popularCourses, setPopularCourses] = useState([]);
+  const [nearCourses, setNearCourses] = useState([]);
+  const [loc, setLoc] = useState({
+    center: {
+      lat: 33.450701,
+      lng: 126.570667,
+    },
+    errMsg: null,
+    isLoading: true,
+  });
+  const { coords, isGeolocationAvailable, isGeolocationEnabled } =
+    useGeolocated({});
   const onDismiss = () => {
     setOpen(false);
   };
   const [loading, setLoading] = useState(true);
-
+  const User = useSelector((state) => state.user.user.user);
   useEffect(() => {
     if (loading) {
       getNews(
         (response) => {
           console.log(response);
           setNewses(response.data);
-          setLoading(false);
         },
         (fail) => {
           console.log(fail);
           setLoading(false);
         }
       );
+      getPopularCourses(
+        (response) => {
+          console.log(response);
+          setPopularCourses(response.data);
+        },
+        (fail) => {
+          console.log(fail);
+          setLoading(false);
+        }
+      );
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          console.log(position);
+          setLoc((prev) => ({
+            ...prev,
+            center: {
+              lat: position.coords.latitude, // 위도
+              lng: position.coords.longitude, // 경도
+            },
+          }));
+
+          getRecommendationCourseByLocation(
+            {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            },
+            (response) => {
+              console.log(response);
+            },
+            (fail) => {
+              console.log(fail);
+              setLoading(false);
+            }
+          );
+        },
+        (err) => {
+          setLoc((prev) => ({
+            ...prev,
+            errMsg: err.message,
+          }));
+          setLoading(false);
+        }
+      );
+      // if (isGeolocationAvailable && isGeolocationEnabled) {
+      //   const gps = {
+      //     lat: coords.latitude,
+      //     lng: coords.longitude,
+      //   };
+      //   console.log(gps);
+      //   // getRecommendationCourseByLocation(
+      //   //   {
+      //   //     lat: coords.latitude,
+      //   //     lng: coords.longitude,
+      //   //   },
+      //   //   (response) => {
+      //   //     console.log(response);
+      //   //   },
+      //   //   (fail) => {
+      //   //     console.log(fail);
+      //   //     setLoading(false);
+      //   //   }
+      //   // );
+      // }
+
+      setLoading(false);
     }
   }, []);
   if (loading) return <Spinner />;
@@ -59,8 +160,13 @@ export const Main = () => {
           />
           <BootstrapButton
             onClick={() => {
-              // naviagate("/ride", { state: { courseName: "나만의 길" } });
-              setOpen(true);
+              if (User === undefined) {
+                alert("로그인 하세요!");
+                navigate("/login");
+              } else {
+                // naviagate("/ride", { state: { courseName: "나만의 길" } });
+                setOpen(true);
+              }
             }}
           >
             RIDE!
