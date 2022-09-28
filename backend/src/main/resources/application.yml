@@ -3,6 +3,9 @@ server:
     context-path: /api
 
 spring:
+  weather:
+    api: fwh2SqF7jcv3y1DAhK0KT7CBDuM5stvTsyb58Ro%2Fnbce3gHu2%2BWQlNcLnty7XiHJRzcWvdN57%2FmU3baP3O%2FZVA%3D%3D
+
   cache:
     type: redis
   redis:
@@ -121,3 +124,4 @@ logging:
 
 kakao:
   restapikey:
+

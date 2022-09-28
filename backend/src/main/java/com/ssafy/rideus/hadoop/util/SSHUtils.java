@@ -1,4 +1,4 @@
-package com.ssafy.rideus.hadoop.Controller;
+package com.ssafy.rideus.hadoop.util;
 
 import com.jcraft.jsch.*;
 import org.springframework.stereotype.Component;
