@@ -3,9 +3,6 @@ package com.ssafy.rideus.controller;
 import com.ssafy.rideus.config.security.auth.CustomUserDetails;
 import com.ssafy.rideus.domain.Review;
 import com.ssafy.rideus.dto.review.*;
-import com.ssafy.rideus.repository.jpa.ReviewLikeRepository;
-import com.ssafy.rideus.repository.jpa.ReviewRepository;
-import com.ssafy.rideus.repository.jpa.ReviewTagRepository;
 import com.ssafy.rideus.service.MemberService;
 import com.ssafy.rideus.service.ReviewService;
 import lombok.RequiredArgsConstructor;
@@ -25,17 +22,12 @@ import java.util.List;
 @RequestMapping("/review")
 public class ReviewController {
     private final ReviewService reviewService;
-    private final MemberService memberService;
 
     //리뷰 작성
     @PostMapping("/write")
-//    public ResponseEntity<?> writeReview(@RequestPart ReviewRequestDto reviewRequestDto, @RequestPart MultipartFile image,
-//                                         @ApiIgnore @AuthenticationPrincipal CustomUserDetails user) {
-    public ResponseEntity<WriteReviewResponse> writeReview(@RequestPart ReviewRequestDto request, @RequestPart MultipartFile image) {
-//        reviewService.writeReview(reviewRequestDto, user.getId(), image);
-
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(reviewService.writeReview(request, 1L, image));
+    public ResponseEntity<WriteReviewResponse> writeReview(@RequestPart ReviewRequestDto reviewRequestDto, @RequestPart MultipartFile image,
+                                         @ApiIgnore @AuthenticationPrincipal CustomUserDetails user) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(reviewService.writeReview(reviewRequestDto, user.getId(), image));
     }
     //코스 별 리뷰 목록
     @GetMapping("/{course_id}")
