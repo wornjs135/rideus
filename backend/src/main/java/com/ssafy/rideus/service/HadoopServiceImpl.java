@@ -15,6 +15,10 @@ import com.ssafy.rideus.repository.mongo.NearInfoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,30 +34,30 @@ import static com.ssafy.rideus.service.NearInfoServiceImpl.distance;
 @RequiredArgsConstructor
 @Slf4j
 @Transactional
-
 public class HadoopServiceImpl implements HadoopService{
-
 
     @Autowired
     SSHUtils ssh;
     @Autowired
     CourseRepository courseRepository;
-
     @Autowired
     NearInfoService nearInfoService;
     @Autowired
     NearInfoRepository nearInfoRepository;
-
     @Autowired
     CourseCoordinateRepository courseCoordinateRepository;
+    @Autowired
+    MongoTemplate mongoTemplate;
+
     // FIXME: 배포 시 EC2 디렉토리로 변경
-    private static final String LOCAL_FILE_PATH = "C:\\input\\";
+    private static final String LOCAL_FILE_PATH = "C:\\Users\\SSAFY\\Desktop\\input";
+//    private static final String LOCAL_FILE_PATH = "/home/ubuntu/input/";
     private static final String SERVER_FILE_PATH = "/home/j7a603/";
     private static final String INPUT_FILE_NAME = "input";
     private static final String OUTPUT_FILE_NAME = "output";
     private static final String FILE_TYPE = ".txt";
 
-    static final int DISTANCE_LIMIT = 4000; // 반경 4km 안에 있는 시설 정보 조회
+    static final int DISTANCE_LIMIT = 2000; // 반경 4km 안에 있는 시설 정보 조회
 
     /*
     o 1. 코스 주변정보 mongodb에 update
@@ -221,8 +225,11 @@ public class HadoopServiceImpl implements HadoopService{
         System.out.println(Arrays.toString(newCourseList.toArray()));
 
         List<NearInfo> allNearInfo = nearInfoRepository.findAll();
-
+        int count = 0;
         for(String courseId : newCourseList) {
+
+            List<String> nearInfoIds = new ArrayList<>();
+            if(count++ == 20 )break;
 //            mapreduceCategory(courseId);
             CourseCoordinate courseCoordinate =
                     courseCoordinateRepository
@@ -248,7 +255,6 @@ public class HadoopServiceImpl implements HadoopService{
 
                 // 주변 정보 전체 조회
                 for ( NearInfo nearInfo : allNearInfo ) {
-
                     if(checkedInfo.containsKey(nearInfo.getId())) continue;
 
                     // 주변 정보 위,경도 좌표
@@ -258,6 +264,7 @@ public class HadoopServiceImpl implements HadoopService{
                     // 제한 거리 안에 존재하는 경우
                     if(distance(infoLat, infoLng, cpLat, cpLng) < DISTANCE_LIMIT) {
                         checkedInfo.put(nearInfo.getId(), nearInfo);
+                        nearInfoIds.add(nearInfo.getId());
                     }
 
                 } // end of neainfo loop
@@ -266,11 +273,15 @@ public class HadoopServiceImpl implements HadoopService{
             List<NearInfo> nearInfos = new ArrayList<>(checkedInfo.values());
             log.info("near Infos size = " + nearInfos.size());
 
-            courseCoordinateRepository.save( new CourseCoordinate(
-                    courseCoordinate.getId(),
-                    courseCoordinate.getCoordinates(),
-                    courseCoordinate.getCheckpoints(),
-                    nearInfos));
+//            courseCoordinateRepository.save( new CourseCoordinate(
+//                    courseCoordinate.getId(),
+//                    courseCoordinate.getCoordinates(),
+//                    courseCoordinate.getCheckpoints(),
+//                    nearInfos));
+            Query query = new Query().addCriteria(Criteria.where("_id").is(courseId));
+            Update update = new Update();
+            update.set("nearInfoIds", nearInfoIds);
+            mongoTemplate.updateFirst(query, update, CourseCoordinate.class);
 
             /* 코스 주변정보 카테고리 mapreudce 실행, 결과 MySQL Update */
             parsingCourseCategory(nearInfos, courseId);

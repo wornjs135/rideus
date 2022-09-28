@@ -6,9 +6,16 @@ import com.ssafy.rideus.domain.collection.CourseCoordinate;
 import com.ssafy.rideus.domain.collection.NearInfo;
 import com.ssafy.rideus.repository.mongo.CourseCoordinateRepository;
 import com.ssafy.rideus.repository.mongo.NearInfoRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.data.mongodb.repository.Near;
 import org.springframework.stereotype.Service;
+
 
 import java.util.*;
 
@@ -22,8 +29,10 @@ public class NearInfoServiceImpl implements NearInfoService {
     CourseCoordinateRepository courseCoordinateRepository;
     @Autowired
     NearInfoRepository nearInfoRepository;
+    @Autowired
+    MongoTemplate mongoTemplate;
 
-    static final int DISTANCE_LIMIT = 4000; // 반경 4km 안에 있는 시설 정보 조회
+    static final int DISTANCE_LIMIT = 2000; // 반경 4km 안에 있는 시설 정보 조회
 
 
     @Override
@@ -34,7 +43,7 @@ public class NearInfoServiceImpl implements NearInfoService {
                 courseCoordinateRepository
                         .findById(courseId)
                         .orElseThrow(() -> new NotFoundException("코스 상세 조회 실패"));
-        return courseCoordinate.getNearInfos();
+        return null;
     }
 
     // 코스 주변 전체 정보 조회
@@ -49,10 +58,15 @@ public class NearInfoServiceImpl implements NearInfoService {
 
         // mongoDB에서 체크포인트 리스트 가져오기
         List<Coordinate> checkpoints = courseCoordinate.getCheckpoints();
+        log.info("get checkpoints");
         // 전체 주변 정보 리스트
         List<NearInfo> allNearInfo = nearInfoRepository.findAll();
+//        Optional<NearInfo> nnn = nearInfoRepository.findById("632fe7ee6ff3393a8e8cc584");
+//        log.info("nnn"+nnn.get());
+        log.info("find all"+allNearInfo);
         // 주변 정보 중복 체크 map
         Map<String, NearInfo> checkedInfo = new HashMap<>();
+
 
         log.info("all Near Info size = " + allNearInfo.size());
         log.info("check point size = " + checkpoints.size());
@@ -86,11 +100,16 @@ public class NearInfoServiceImpl implements NearInfoService {
         List<NearInfo> nearInfos = new ArrayList<>(checkedInfo.values());
         log.info("near Infos size = " + nearInfos.size());
 
-        courseCoordinateRepository.save( new CourseCoordinate(
-                courseCoordinate.getId(),
-                courseCoordinate.getCoordinates(),
-                courseCoordinate.getCheckpoints(),
-                nearInfos));
+//        courseCoordinateRepository.save( new CourseCoordinate(
+//                courseCoordinate.getId(),
+//                courseCoordinate.getCoordinates(),
+//                courseCoordinate.getCheckpoints(),
+//                nearInfos));
+//        courseCoordinateRepository.updateNearInfo(nearInfos, courseId);
+        Query query = new Query().addCriteria(Criteria.where("_id").is(courseId));
+        Update update = new Update();
+        update.set("nearInfos", nearInfos);
+        mongoTemplate.updateFirst(query, update, CourseCoordinate.class);
 
         return nearInfos;
     }

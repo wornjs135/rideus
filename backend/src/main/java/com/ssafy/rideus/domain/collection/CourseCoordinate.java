@@ -21,6 +21,7 @@ public class CourseCoordinate {
     private List<Coordinate> coordinates;
     private List<Coordinate> checkpoints;
     private List<NearInfo> nearInfos;
+    private List<String> nearInfoIds;
 
     public static CourseCoordinate create(List<Coordinate> coordinates, List<Coordinate> checkpoints) {
         CourseCoordinate courseCoordinate = new CourseCoordinate();

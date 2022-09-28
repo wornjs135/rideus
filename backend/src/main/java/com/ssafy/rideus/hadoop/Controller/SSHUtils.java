@@ -23,7 +23,7 @@ public class SSHUtils {
     private final String username = "j7a603";
     private final String host = "cluster.ssafy.io";
     private final int port = 22;
-    private final String privatekey = "C:\\Users\\SSAFY\\Desktop\\gitlab\\J7A603T.pem";
+    private final String privatekey = "C:\\Users\\SSAFY\\Desktop\\J7A603T.pem";
 
     /**
      * connect SSH by username, host, port
