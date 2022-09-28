@@ -1,11 +1,14 @@
 import React, {useEffect, useState} from "react";
 import {Box} from "grommet";
 import {Button, TextField} from "@mui/material";
-import {checkDuplicateNickname, updateMoreInfo} from "../../utils/api/userApi";
+import {checkDuplicateNickname, myInfo, updateMoreInfo} from "../../utils/api/userApi";
 import {useNavigate} from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {setUser} from "../../stores/modules/user";
 
 
 export const MoreInfo = () => {
+    const dispatch = useDispatch();
     let [inputs, setInputs] = useState({
         name: '', phone: '', nickname: '',
     });
@@ -59,6 +62,11 @@ export const MoreInfo = () => {
         let status = updateMoreInfo(inputs);
         status.then(value => {
             if (value === 200) {
+                myInfo(null, (res) => {
+                    console.log(res);
+                    const {data} = res;
+                    dispatch(setUser(data));
+                });
                 navigate("/");
             }
 
