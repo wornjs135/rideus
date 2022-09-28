@@ -1,44 +1,76 @@
-import React, { useEffect, useState } from "react";
-import { Box } from "grommet";
-import { Button, TextField } from "@mui/material";
-import {
-  checkDuplicateNickname,
-  updateMoreInfo,
-} from "../../utils/api/userApi";
-import { useNavigate } from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {Box} from "grommet";
+import {Button, TextField} from "@mui/material";
+import {checkDuplicateNickname, myInfo, updateMoreInfo} from "../../utils/api/userApi";
+import {useNavigate} from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {setUser} from "../../stores/modules/user";
+
 
 export const MoreInfo = () => {
-  let [inputs, setInputs] = useState({
-    name: "",
-    phone: "",
-    nickname: "",
-  });
-  const navigate = useNavigate();
+    const dispatch = useDispatch();
+    let [inputs, setInputs] = useState({
+        name: '', phone: '', nickname: '',
+    });
+    const navigate = useNavigate();
 
-  const { name, phone, nickname } = inputs;
+    const {name, phone, nickname} = inputs;
 
-  const [nicknameLengthError, setNicknameLengthError] = useState(true);
-  const [nicknameDupError, setNicknameDupError] = useState(false);
 
-  const hasLengthError = (nickname) =>
-    !(nickname.length <= 10 && nickname.length >= 2);
+    const [nicknameLengthError, setNicknameLengthError] = useState(true);
+    const [nicknameDupError, setNicknameDupError] = useState(false);
 
-  const onChange = (e) => {
-    let { value, name } = e.target; // 우선 e.target 에서 name 과 value 를 추출
-    if (name === "nickname") {
-      console.log(name);
-      setNicknameLengthError(hasLengthError(value));
-      let res = checkDuplicateNickname(value);
 
-      res.then((val) => {
-        if (val === true) {
-          console.log("닉네임 중복 " + val);
-          setNicknameDupError(true);
-        } else {
-          console.log("사용 가능" + val);
-          setNicknameDupError(false);
+    const hasLengthError = (nickname) => !(nickname.length <= 10 && nickname.length >= 2);
+
+    const onChange = (e) => {
+        let {value, name} = e.target; // 우선 e.target 에서 name 과 value 를 추출
+        if (name === "nickname") {
+            console.log(name);
+            setNicknameLengthError(hasLengthError(value));
+            let res = checkDuplicateNickname(value);
+
+            res.then(val => {
+                if (val === true) {
+                    console.log("닉네임 중복 " + val);
+                    setNicknameDupError(true);
+                } else {
+                    console.log("사용 가능" + val);
+                    setNicknameDupError(false);
+                }
+
+            })
         }
-      });
+        // else if (name === "phone") {
+        //     const regex = /^[0-9\b -]{0,13}$/;
+        //     if (!regex.test(e.target.value)) {
+        //         value = e.target.value;
+        //     }
+        // }
+        setInputs({
+            ...inputs, // 기존의 input 객체를 복사한 뒤
+            [name]: value // name 키를 가진 값을 value 로 설정
+        });
+    };
+
+    const onClick = (e) => {
+
+        if (name === '') {
+
+        }
+
+        let status = updateMoreInfo(inputs);
+        status.then(value => {
+            if (value === 200) {
+                myInfo(null, (res) => {
+                    console.log(res);
+                    const {data} = res;
+                    dispatch(setUser(data));
+                });
+                navigate("/");
+            }
+
+        })
     }
     // else if (name === "phone") {
     //     const regex = /^[0-9\b -]{0,13}$/;
