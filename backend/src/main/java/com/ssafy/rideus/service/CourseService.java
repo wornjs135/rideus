@@ -103,11 +103,31 @@ public class CourseService {
     }
 
 
-    public List<PopularityCourseResponse> getPopularityCourse() {
-        List<Course> popularityCourses = courseRepository.findAllOrderByLikeCount();
+	public List<RecommendationCourseDto> getPopularityCourseWithBookmark(Long memberId) {
+		List<RecommendationCourseDtoInterface> popularityCourses = courseRepository.findAllOrderByLikeCountWithBookmark(memberId);
 
-         return popularityCourses.stream().map(course -> PopularityCourseResponse.from(course)).collect(Collectors.toList());
-    }
+		List<RecommendationCourseDto> recommendationCourseDtos = new ArrayList<>();
+		for (RecommendationCourseDtoInterface c : popularityCourses) {
+			if (recommendationCourseDtos.isEmpty()) {
+				recommendationCourseDtos.add(RecommendationCourseDto.from(c));
+			} else {
+				RecommendationCourseDto lastCourse = recommendationCourseDtos.get(recommendationCourseDtos.size() - 1);
+				if(lastCourse.getCourseId().equals(c.getCourseId())) {
+					lastCourse.addTags(c.getTagId(), c.getTagName());
+				} else {
+					recommendationCourseDtos.add(RecommendationCourseDto.from(c));
+				}
+			}
+		}
+
+		return recommendationCourseDtos;
+	}
+
+	public List<PopularityCourseResponse> getPopularityCourseWithBookmarkWithoutBookmark() {
+		List<Course> popularityCourses = courseRepository.findAllOrderByLikeCountWithoutBookmark();
+
+		return popularityCourses.stream().map(course -> PopularityCourseResponse.from(course)).collect(Collectors.toList());
+	}
 	
 
     
