@@ -1,8 +1,12 @@
 import React from "react";
-import { useNavigate } from 'react-router-dom';
+import {useDispatch} from 'react-redux'
+import {useNavigate} from 'react-router-dom';
+import {myInfo} from "../../utils/api/userApi";
+import {setUser} from "../../stores/modules/user";
 
 export const OAuth2RedirectHandler = (props) => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const params = new URLSearchParams(window.location.search);
 
     const accessToken = params.get("accessToken");
@@ -20,6 +24,12 @@ export const OAuth2RedirectHandler = (props) => {
     if (isRegister === true) {
         window.location.href = '/moreinfo';
     } else {
+        myInfo(null, (res) => {
+            console.log(res);
+            const {data} = res;
+            dispatch(setUser(data));
+        });
+
         window.location.href = '/';
     }
 
