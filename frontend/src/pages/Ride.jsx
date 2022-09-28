@@ -167,23 +167,14 @@ export const Ride = () => {
     window.addEventListener("beforeunload", preventClose);
     // let i = 0;
     // setNowTime(0);
-    const timerId = setInterval(() => {
+    const rideId = setInterval(() => {
       if (riding && isGeolocationAvailable && isGeolocationEnabled) {
-        // console.log(error);
-        // if (riding && location) {
         console.log("location : ", coords);
 
         const gps = {
           lat: coords.latitude,
           lng: coords.longitude,
         };
-
-        // console.log("location : ", location);
-
-        // const gps = {
-        //   lat: location.latitude,
-        //   lng: location.longitude,
-        // };
 
         console.log("gps : ", gps);
 
@@ -237,12 +228,16 @@ export const Ride = () => {
       // setI((prev) => {
       //   return prev + 0.0001;
       // });
-      setNowTime((prev) => prev + 1);
       console.log(mapData.latlng);
     }, 1000);
 
+    const timerId = setTimeout(() => {
+      setNowTime((prev) => prev + 1);
+    }, 1000);
+
     return () => {
-      clearInterval(timerId);
+      clearTimeout(timerId);
+      clearInterval(rideId);
       // cancelLocationWatch();
       window.removeEventListener("beforeunload", preventClose);
     };
