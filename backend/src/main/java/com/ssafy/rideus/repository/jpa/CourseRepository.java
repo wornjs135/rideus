@@ -37,7 +37,17 @@ public interface CourseRepository extends JpaRepository<Course, String> {
     List<RecommendationCourseDtoInterface> getRecommendationCourseByMemberId(@Param("memberId") Long memberId);
 
     @Query("select distinct c from Course c join fetch c.courseTags ct join fetch ct.tag order by c.likeCount desc ")
-    List<Course> findAllOrderByLikeCount();
+    List<Course> findAllOrderByLikeCountWithoutBookmark();
+
+    @Query(value = "select distinct c.course_id courseId, c.course_name courseName, c.distance distance, c.expected_time expectedTime,\n" +
+            "c.start, c.finish, c.like_count likeCount, c.image_url imageUrl, c.category, b.bookmark_id bookmarkId,\n" +
+            "t.tag_id tagId, t.tag_name tagName\n" +
+            "from course c\n" +
+            "join course_tag ct on c.course_id = ct.course_id\n" +
+            "join tag t on ct.tag_id = t.tag_id\n" +
+            "left join bookmark b on c.course_id = b.course_id and b.member_id = :memberId\n" +
+            "order by c.like_count desc", nativeQuery = true)
+    List<RecommendationCourseDtoInterface> findAllOrderByLikeCountWithBookmark(Long memberId);
 
     
     // 전체 리스트 조회 (등록 최신 순)

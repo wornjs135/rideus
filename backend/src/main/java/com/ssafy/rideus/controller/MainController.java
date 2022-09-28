@@ -37,8 +37,12 @@ public class MainController {
 
     // 인기 코스 가져오기(북마크 개수 순)
     @GetMapping("/course")
-    public ResponseEntity<List<PopularityCourseResponse>> getPopularityCourse() {
-        return ResponseEntity.ok(courseService.getPopularityCourse());
+    public ResponseEntity<?> getPopularityCourse(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
+        if (member == null) {
+            return ResponseEntity.ok(courseService.getPopularityCourseWithBookmarkWithoutBookmark());
+        } else {
+            return ResponseEntity.ok(courseService.getPopularityCourseWithBookmark(1L));
+        }
     }
 
     @GetMapping("/tag")
@@ -47,11 +51,11 @@ public class MainController {
     public List<TagDto> getPopularityTag() {
         return reviewTagService.getPopularityTag();
     }
-    
+
 	// 현 위치 기반 코스 추천
 	@GetMapping("/{lat}/{lng}")
 	public ResponseEntity<List<RecommendationCourseDto>> recommendByLoc(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member, @PathVariable Double lat, @PathVariable Double lng) {
-		
+
 		List<RecommendationCourseDto> courseList = courseService.getAllCoursesByLoc(member.getId(), lat, lng);
 		return ResponseEntity.status(HttpStatus.OK).body(courseList);
 	}
