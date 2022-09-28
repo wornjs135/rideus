@@ -54,11 +54,13 @@ public class RideService {
     private final CourseCoordinateRepository courseCoordinateRepository;
 
     @Transactional
-    public CreateRideRoomResponse createRiddingRoom(Long memberId) {
+    public CreateRideRoomResponse createRiddingRoom(Long memberId, String courseId) {
         Member findMember = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
+        Course findCourse = courseRepository.findById(courseId)
+                .orElseThrow(() -> new NotFoundException(COURSE_NOT_FOUND));
 
-        return CreateRideRoomResponse.from(rideRoomRepository.save(RideRoom.create(findMember)).getId());
+        return CreateRideRoomResponse.from(rideRoomRepository.save(RideRoom.create(findMember)).getId(), findCourse.getId(), findMember.getNickname());
     }
 
     public GroupRiddingResponse searchMemberInfo(Long memberId) {
