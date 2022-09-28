@@ -5,6 +5,7 @@ import com.ssafy.rideus.domain.Member;
 import com.ssafy.rideus.domain.Record;
 import com.ssafy.rideus.dto.member.request.MemberMoreInfoReq;
 import com.ssafy.rideus.dto.member.response.MemberMeRes;
+import com.ssafy.rideus.dto.record.response.MyRideRecordRes;
 import com.ssafy.rideus.dto.record.response.RecordTotalResponse;
 import com.ssafy.rideus.dto.tag.response.MemberTagResponse;
 import com.ssafy.rideus.repository.jpa.MemberRepository;
@@ -13,12 +14,11 @@ import com.ssafy.rideus.repository.query.MemberQueryRepository;
 import com.ssafy.rideus.repository.query.TagQueryRepository;
 import lombok.RequiredArgsConstructor;
 import com.ssafy.rideus.dto.member.request.MemberUpdateRequest;
-import com.ssafy.rideus.repository.jpa.MemberRepository;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.ssafy.rideus.common.exception.NotFoundException.USER_NOT_FOUND;
@@ -85,5 +85,22 @@ public class MemberService {
     @Transactional(readOnly = true)
     public List<Record> getRecentRecord(Long memberId) {
         return recordRepository.findTop5RecordsByMemberIdOrderByIdDesc(memberId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<MyRideRecordRes> getMyRideRecord(Long memberId) {
+
+        List<MyRideRecordRes> myRideRecordResList = new ArrayList<>();
+        recordRepository.findMyRideRecentRecord(memberId).forEach(record -> {
+            // 공유된 나만의 주행
+            if (record.getCourse() != null) {
+                myRideRecordResList.add(MyRideRecordRes.sharedMyRide(record));
+            } else {
+            // 공유되지 않은 나만의 주행
+                myRideRecordResList.add(MyRideRecordRes.unSharedMyRide(record));
+            }
+        });
+
+        return myRideRecordResList;
     }
 }
