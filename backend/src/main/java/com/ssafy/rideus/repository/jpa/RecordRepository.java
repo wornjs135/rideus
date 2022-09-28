@@ -42,4 +42,7 @@ public interface RecordRepository extends JpaRepository<Record, String> {
 
     @Query("select r from Record r left outer join fetch r.course c join fetch r.member join fetch r.rideRoom")
     Optional<Record> findRecordWithCourseAndRideRoomAndMember(String recordId);
+
+    @Query("select r from Record r where r.id = :memberId and r.recordIsMine = true order by r.createdDate desc")
+    List<Record> findMyRideRecentRecord(Long memberId);
 }
