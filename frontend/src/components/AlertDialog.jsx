@@ -199,7 +199,7 @@ export const MapDialog = ({
                     <Button Info children="자전거수리" />
                   </StyledHorizonTable>
                 </Box>
-                <img width="50px" src={WeatherBtn} />
+                <img width="50px" src={WeatherBtn} onClick={() => {}} />
               </Box>
             )}
           </Box>
