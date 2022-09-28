@@ -52,14 +52,14 @@ spring:
 
   data:
     mongodb:
-      username: ssafy4
-      password: yfass1234
-      authentication-database: rideus
+#      username: ssafy
+#      password: yfass1234
+#      authentication-database: admin
       auto-index-creation:
-#      uri: mongodb://localhost:27017/test    
-      host: j7a603.p.ssafy.io
-      port: 27017
-      database: rideus
+      uri: mongodb://ssafy4:yfass1234@j7a603.p.ssafy.io:27017/rideus
+#      host: j7a603.p.ssafy.io
+#      port: 27017
+#      database: rideus
 
     web:
       pageable:
