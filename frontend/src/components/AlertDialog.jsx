@@ -8,13 +8,14 @@ import Button from "./Button";
 import { Button as GBtn } from "grommet";
 import { Box } from "grommet";
 import styled from "styled-components";
-import { StyledText } from "./Common";
+import { CourseMap, StarBox, StyledText } from "./Common";
 import WeatherBtn from "../assets/images/weather.png";
 import SoloBtn from "../assets/images/solo.png";
 import GroupBtn from "../assets/images/group.png";
 import { StyledHorizonTable } from "./HorizontalScrollBox";
 import { useNavigate } from "react-router-dom";
 import { HeaderBox } from "./ChooseRideTypeBar";
+import { BootstrapButton, ExitButton, WhiteButton } from "./Buttons";
 export const AlertDialog = ({
   open,
   handleClose,
@@ -61,15 +62,7 @@ export const RideDialog = ({ open, handleClose, title }) => {
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <HeaderBox goBack={handleClose} title="안전한 라이딩 되세요^^" />
-      <Box
-        direction="row"
-        justify="center"
-        width="100%"
-        pad="15px"
-        margin={{ top: "20px", bottom: "50px" }}
-        gap="small"
-      >
+      <Box direction="row" justify="center" width="100%" pad="15px" gap="small">
         <GBtn
           color="#439652"
           onClick={() => {
@@ -84,14 +77,14 @@ export const RideDialog = ({ open, handleClose, title }) => {
           children={
             <Box
               width="145px"
+              height="140px"
               align="center"
               justify="between"
-              height="180px"
               background="#439652"
               style={{ borderRadius: "8px" }}
               pad="small"
             >
-              <img src={SoloBtn} />
+              <img src={SoloBtn} width="100px" />
               <StyledText
                 text="혼자 타기"
                 color="white"
@@ -115,13 +108,13 @@ export const RideDialog = ({ open, handleClose, title }) => {
             <Box
               width="145px"
               align="center"
-              height="180px"
+              height="140px"
               justify="between"
               background="#439652"
               style={{ borderRadius: "8px" }}
               pad="small"
             >
-              <img src={GroupBtn} />
+              <img src={GroupBtn} width="100px" />
               <StyledText
                 text="같이 타기"
                 color="white"
@@ -213,20 +206,87 @@ export const MapDialog = ({
         </Box>
         {/* 하단 버튼 */}
         <BottomBtn>
-          <Button MediumWhite onClick={handleClose}>
-            {cancel}
-          </Button>
-          {accept && (
-            <Button
-              MediumPink={type === "detail" ? false : true}
-              MediumGreen={type === "detail" ? true : false}
-              onClick={handleAction}
-              autoFocus
-            >
-              {accept}
-            </Button>
+          <WhiteButton onClick={handleClose}>{cancel}</WhiteButton>
+          {accept && type === "detail" ? (
+            <BootstrapButton onClick={handleAction}>{accept}</BootstrapButton>
+          ) : (
+            <ExitButton onClick={handleAction}>{accept}</ExitButton>
           )}
         </BottomBtn>
+      </Box>
+    </Dialog>
+  );
+};
+
+export const ReviewDialog = ({
+  open,
+  handleClose,
+  title,
+  desc,
+  course,
+  cancel,
+  score,
+  starView,
+  tags,
+}) => {
+  return (
+    <Dialog open={open} onClose={handleClose}>
+      <Box width="85vw" align="center" pad="small">
+        <Box width="75%" justify="around" align="center">
+          {/* 제목 */}
+          <StyledText text={title} size="20px" weight="bold" />
+          {/* 별점 */}
+          <StarBox score={score} starView={starView} />
+          {/* 내용 */}
+          <StyledText text={desc} />
+          {/* 태그 */}
+          <Box direction="row">
+            {/* arrays.map */}
+            {tags.map((t, idx) => {
+              return <StyledText text={"#" + t.searchTagName} key={idx} />;
+            })}
+          </Box>
+          <CourseMap course={course} width="100%" height="40vh" />
+          {/* 하단 버튼 */}
+          <ExitButton onClick={handleClose}>{cancel}</ExitButton>
+        </Box>
+      </Box>
+    </Dialog>
+  );
+};
+
+export const WeatherDialog = ({
+  open,
+  handleClose,
+  title,
+  desc,
+  course,
+  cancel,
+  score,
+  starView,
+  tags,
+}) => {
+  return (
+    <Dialog open={open} onClose={handleClose}>
+      <Box width="85vw" align="center" pad="small">
+        <Box width="75%" justify="around" align="center">
+          {/* 제목 */}
+          <StyledText text={title} size="20px" weight="bold" />
+          {/* 별점 */}
+          <StarBox score={score} starView={starView} />
+          {/* 내용 */}
+          <StyledText text={desc} />
+          {/* 태그 */}
+          <Box direction="row">
+            {/* arrays.map */}
+            {tags.map((t, idx) => {
+              return <StyledText text={"#" + t.searchTagName} key={idx} />;
+            })}
+          </Box>
+          <CourseMap course={course} width="100%" height="40vh" />
+          {/* 하단 버튼 */}
+          <ExitButton onClick={handleClose}>{cancel}</ExitButton>
+        </Box>
       </Box>
     </Dialog>
   );

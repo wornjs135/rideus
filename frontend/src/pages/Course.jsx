@@ -9,7 +9,9 @@ export const Course = () => {
       <Button
         children="코스 상세"
         onClick={() => {
-          navigate("/courseDetail", { state: { courseName: "마포-정서점" } });
+          navigate(`/courseDetail/${18}`, {
+            state: { courseName: "마포-정서점" },
+          });
         }}
       />
     </div>

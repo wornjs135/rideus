@@ -18,3 +18,18 @@ export const tags = [
   { id: 15, searchTagName: "공원 근처" },
   { id: 16, searchTagName: "쉴 곳 많음" },
 ];
+
+export const timeHandle = (time) => {
+  if (time < 60) return `${time}"`;
+  else if (time < 3600) return `${parseInt(time / 60)}' ${time % 60}"`;
+  else return `${parseInt(time / 3600)}h ${parseInt((time % 3600) / 60)}'`;
+};
+
+export const distanceHandle = (dis) => {
+  if (dis < 1000) return dis;
+  else return parseFloat(dis / 1000.0).toFixed(2);
+};
+
+export const speedHandle = (dis, idle) => {
+  return parseFloat(((dis * 3.6) / idle).toFixed(1));
+};
