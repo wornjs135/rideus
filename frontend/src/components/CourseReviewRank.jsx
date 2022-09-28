@@ -6,7 +6,7 @@ import { RankProfile } from "./RankProfile";
 import Profile from "../assets/images/profile.png";
 import { RankBox } from "./RankBox";
 import { ReviewBox } from "./ReviewBox";
-export const CourseReviewRank = ({ open, onDismiss }) => {
+export const CourseReviewRank = ({ open, onDismiss, reviews }) => {
   const [value, setValue] = useState(0);
   const [data, setData] = useState([]);
 
@@ -47,6 +47,7 @@ export const CourseReviewRank = ({ open, onDismiss }) => {
             background={value === 0 ? "#439652" : "white"}
             width="50%"
             height="4vh"
+            focusIndicator={false}
             onClick={() => {
               setValue(0);
             }}
@@ -60,6 +61,7 @@ export const CourseReviewRank = ({ open, onDismiss }) => {
             background={value === 1 ? "#439652" : "white"}
             width="50%"
             height="4vh"
+            focusIndicator={false}
             onClick={() => {
               setValue(1);
             }}
@@ -77,14 +79,14 @@ export const CourseReviewRank = ({ open, onDismiss }) => {
           overflowY: "hidden",
           overflow: "hidden",
         }}
-        height="52vh"
+        height={{ min: "30vh", max: "50vh" }}
       >
         <Box
           width="90%"
           align="center"
-          margin={{ top: "20px" }}
           pad="small"
           style={{ display: value === 0 ? "block" : "none" }}
+          height="95%"
         >
           <StyledText text="시간별 순위" weight="bold" size="16px" />
           <Box direction="row" justify="center" align="end">
@@ -94,7 +96,7 @@ export const CourseReviewRank = ({ open, onDismiss }) => {
           </Box>
           <div
             style={{
-              height: "30vh",
+              height: "35vh",
               overflow: "scroll",
             }}
           >
@@ -107,18 +109,19 @@ export const CourseReviewRank = ({ open, onDismiss }) => {
           style={{ display: value === 1 ? "block" : "none" }}
           width="90%"
           align="center"
-          margin={{ top: "20px" }}
           pad="small"
+          overflow="scroll"
+          height="95%"
         >
-          <ReviewBox />
-          <ReviewBox />
-          <ReviewBox />
-          <ReviewBox />
-          <ReviewBox />
-          <ReviewBox />
-          <ReviewBox />
-          <ReviewBox />
-          <ReviewBox />
+          {reviews.map((r, idx) => {
+            return (
+              <ReviewBox
+                key={idx}
+                score={r.score}
+                starView={parseFloat(r.score * 22.8)}
+              />
+            );
+          })}
         </Box>
       </Box>
     </BottomSheet>

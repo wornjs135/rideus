@@ -1,7 +1,7 @@
-import { Box } from "grommet";
+import { Box, Spinner } from "grommet";
 import React, { useEffect, useState } from "react";
-import { Map, Polyline } from "react-kakao-maps-sdk";
-import { StyledText } from "../components/Common";
+import { Map, MapMarker, Polyline } from "react-kakao-maps-sdk";
+import { CourseMap, StarBox, StyledText } from "../components/Common";
 import Stars from "../assets/images/stars.png";
 import StarsBlank from "../assets/images/stars_blank.png";
 import Bookmark from "../assets/images/bookmark.png";
@@ -12,6 +12,8 @@ import { MapDialog, RideDialog } from "../components/AlertDialog";
 import { useLocation } from "react-router-dom";
 import { latlng as courseData } from "../utils/data";
 import { checkNickname } from "../utils/api/testApi";
+import { BootstrapButton } from "../components/Buttons";
+import { ChooseSoloGroupBar } from "../components/ChooseRideTypeBar";
 
 export const CourseDetail = () => {
   const location = useLocation();
@@ -20,13 +22,16 @@ export const CourseDetail = () => {
   const [open, setOpen] = useState(true);
   const [start, setStart] = useState(false);
   const [openMap, setOpenMap] = useState(false);
-  const [score, setScore] = useState("3.58");
+  const [bmk, setBmk] = useState(false);
+  const [score, setScore] = useState("5");
   const [mapData, setMapData] = useState({
     latlng: [],
     center: { lng: 127.002158, lat: 37.512847 },
   });
   const [clicked, setClicked] = useState([false, false, false, false, false]);
   const starView = parseFloat(score) * 22.8;
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
   // const check = () => {
   //   checkNickname(
   //     "hi",
@@ -39,10 +44,26 @@ export const CourseDetail = () => {
   //   );
   // };
   useEffect(() => {
-    setMapData({
-      latlng: courseData,
-      center: { lng: 127.002158, lat: 37.512847 },
-    });
+    if (loading) {
+      setMapData({
+        latlng: courseData,
+        center: { lng: 127.002158, lat: 37.512847 },
+      });
+      setReviews([
+        { score: score },
+        { score: score },
+        { score: score },
+        { score: score },
+        { score: score },
+        { score: score },
+        { score: score },
+        { score: score },
+        { score: score },
+        { score: score },
+        { score: score },
+      ]);
+      setLoading(false);
+    }
   }, []);
 
   const handleStarClick = (index) => {
@@ -53,112 +74,24 @@ export const CourseDetail = () => {
     setClicked(clickStates);
   };
   const array = [0, 1, 2, 3, 4];
-  return (
-    <Box align="center" width="100%">
-      <Box direction="row" justify="center">
-        <StyledText text={courseName} size="24px" weight="bold" />
-      </Box>
-      <Box
-        width="90%"
-        height="60vh"
-        onClick={() => {
-          setOpenMap(true);
-        }}
-      >
-        <Map
-          center={mapData.center}
-          isPanto={true}
-          style={{ borderRadius: "25px", width: "100%", height: "100%" }}
+  if (loading) return <Spinner />;
+  else
+    return (
+      <Box align="center" width="100%" height="86%">
+        <Box direction="row" justify="center">
+          <StyledText text={courseName} size="24px" weight="bold" />
+        </Box>
+        <Box
+          width="90%"
+          height="35vh"
+          onClick={() => {
+            setOpenMap(true);
+          }}
         >
-          <Polyline
-            path={[mapData.latlng]}
-            strokeWeight={5} // 선의 두께 입니다
-            strokeColor={"#030ff1"} // 선의 색깔입니다
-            strokeOpacity={0.7} // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
-            strokeStyle={"solid"} // 선의 스타일입니다
-          />
-        </Map>
-      </Box>
-      <Box direction="row" justify="between" width="90%">
-        <Box direction="row" align="center">
-          <StyledText text={score} weight="bold" size="19px" />
-          <Box style={{ position: "relative", marginTop: "10px" }}>
-            <Box
-              // align="center"
-              style={{
-                width: starView,
-                marginLeft: "15px",
-                height: "28px",
-                overflow: "hidden",
-              }}
-            >
-              <img
-                className="pointOfStar"
-                alt="별"
-                src={Stars}
-                style={{
-                  height: "28px",
-                  width: "114px",
-                }}
-              />
-            </Box>
-            <img
-              className="backgrdoundStar"
-              alt="별"
-              src={StarsBlank}
-              style={{
-                position: "absolute",
-                marginLeft: "15px",
-                width: "114px",
-                height: "28px",
-              }}
-            />
-          </Box>
-        </Box>
-        <Box direction="row" align="center">
-          <Button
-            children="북마크"
-            // onClick={() => {
-            //   check();
-            // }}
-          />
-          <img src={Bookmark} width="20px" height="20px" />
-        </Box>
-      </Box>
-      <Button
-        BigGreen
-        children="주행 시작"
-        onClick={() => {
-          setStart(true);
-        }}
-      />
-      <CourseReviewRank
-        open={open}
-        onDismiss={() => {
-          setOpen(false);
-        }}
-      />
-      <RideDialog
-        open={start}
-        handleClose={() => {
-          setStart(false);
-        }}
-        title={"마포점-정서진"}
-      />
-      <MapDialog
-        type="detail"
-        open={openMap}
-        handleClose={() => {
-          setOpenMap(false);
-        }}
-        handleAction={() => {
-          setStart(true);
-        }}
-        map={
           <Map
             center={mapData.center}
             isPanto={true}
-            style={{ width: "100%", height: "100%" }}
+            style={{ borderRadius: "25px", width: "100%", height: "100%" }}
           >
             <Polyline
               path={[mapData.latlng]}
@@ -167,12 +100,111 @@ export const CourseDetail = () => {
               strokeOpacity={0.7} // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
               strokeStyle={"solid"} // 선의 스타일입니다
             />
+            <MapMarker position={mapData.latlng[0]}>
+              <div style={{ color: "#000" }}>시작점</div>
+            </MapMarker>
+            {mapData.latlng[0].lat ===
+              mapData.latlng[mapData.latlng.length - 1].lat &&
+            mapData.latlng[0].lng ===
+              mapData.latlng[mapData.latlng.length - 1].lng ? (
+              <MapMarker position={mapData.latlng[0]}>
+                <div style={{ color: "#000" }}>시작, 종점</div>
+              </MapMarker>
+            ) : (
+              <MapMarker position={mapData.latlng[mapData.latlng.length - 1]}>
+                <div style={{ color: "#000" }}>종점</div>
+              </MapMarker>
+            )}
           </Map>
-        }
-        cancel="뒤로가기"
-        accept="주행시작"
-        title={courseName}
-      />
-    </Box>
-  );
+        </Box>
+        <Box direction="row" justify="between" width="90%">
+          <StarBox score={score} starView={starView} />
+          <Box direction="row" align="center">
+            {/* <Button
+            children="북마크"
+            // onClick={() => {
+            //   check();
+            // }}
+          /> */}
+            <img
+              src={bmk ? Bookmark : BookmarkBlank}
+              width="25px"
+              height="25px"
+              onClick={() => {
+                if (bmk === true) setBmk(false);
+                else setBmk(true);
+              }}
+            />
+          </Box>
+        </Box>
+
+        <Box></Box>
+        <BootstrapButton
+          onClick={() => {
+            setStart(true);
+          }}
+        >
+          주행 시작
+        </BootstrapButton>
+
+        <CourseReviewRank
+          open={open}
+          onDismiss={() => {
+            setOpen(false);
+          }}
+          reviews={reviews}
+        />
+        <ChooseSoloGroupBar
+          open={start}
+          onDismiss={() => {
+            setStart(false);
+          }}
+          title={"마포점-정서진"}
+        />
+        <MapDialog
+          type="detail"
+          open={openMap}
+          handleClose={() => {
+            setOpenMap(false);
+          }}
+          handleAction={() => {
+            setStart(true);
+          }}
+          map={
+            <CourseMap
+              course={mapData.latlng}
+              width={"100%"}
+              height={"100%"}
+              marker1={
+                <MapMarker position={mapData.latlng[0]}>
+                  <div style={{ color: "#000" }}>시작점</div>
+                </MapMarker>
+              }
+              marker={
+                mapData.latlng[0].lat ===
+                  mapData.latlng[mapData.latlng.length - 1].lat &&
+                mapData.latlng[0].lng ===
+                  mapData.latlng[mapData.latlng.length - 1].lng ? (
+                  <MapMarker position={mapData.latlng[0]}>
+                    <div style={{ color: "#000" }}>시작, 종점</div>
+                  </MapMarker>
+                ) : (
+                  <MapMarker
+                    position={mapData.latlng[mapData.latlng.length - 1]}
+                  >
+                    <div style={{ color: "#000" }}>종점</div>
+                  </MapMarker>
+                )
+              }
+              infoMarkers={mapData.latlng.map((m, idx) => {
+                return <MapMarker position={mapData.latlng[0]}></MapMarker>;
+              })}
+            />
+          }
+          cancel="뒤로가기"
+          accept="주행시작"
+          title={courseName}
+        />
+      </Box>
+    );
 };

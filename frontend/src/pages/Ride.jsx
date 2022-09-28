@@ -17,9 +17,11 @@ import {
 import history from "../utils/history.js";
 import { latlng } from "../utils/data";
 import useWatchLocation from "../hooks/watchLocationHook";
+import { distanceHandle, speedHandle, timeHandle } from "../utils/util";
+import { ExitButton, PauseButton } from "../components/Buttons";
 
 const geolocationOptions = {
-  enableHighAccuracy: true,
+  enableHighAccuracy: false,
   timeout: 500, // 1 min (1000 ms * 60 sec * 1 minute = 60 000ms)
   maximumAge: 0, // 24 hour
 };
@@ -46,21 +48,41 @@ export const Ride = () => {
   const [riding, setRiding] = useState(true);
   const [when, setWhen] = useState(true);
   const [lastLocation, setLastLocation] = useState(null);
-  // const { coords, isGeolocationAvailable, isGeolocationEnabled } =
-  //   useGeolocated({
-  //     positionOptions: {
-  //       enableHighAccuracy: true,
-  //       maximumAge: 0,
-  //       timeout: Infinity,
-  //     },
-  //     watchPosition: true,
-  //   });
-  const { location, cancelLocationWatch, error } =
-    useWatchLocation(geolocationOptions);
+  const { coords, isGeolocationAvailable, isGeolocationEnabled } =
+    useGeolocated({
+      positionOptions: {
+        enableHighAccuracy: false,
+        maximumAge: 0,
+        timeout: 500,
+      },
+      watchPosition: true,
+    });
+  // const { location, cancelLocationWatch, error } =
+  //   useWatchLocation(geolocationOptions);
   const preventClose = (e) => {
     e.preventDefault();
     e.returnValue = "";
   };
+
+  function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+    var R = 6371; // Radius of the earth in km
+    var dLat = deg2rad(lat2 - lat1); // deg2rad below
+    var dLon = deg2rad(lon2 - lon1);
+    var a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(deg2rad(lat1)) *
+        Math.cos(deg2rad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var d = R * c; // Distance in km
+    d = Math.round(d * 1000);
+    return d;
+  }
+
+  function deg2rad(deg) {
+    return deg * (Math.PI / 180);
+  }
 
   function getDistance(lat1, lon1, lat2, lon2) {
     if (lat1 == lat2 && lon1 == lon2) return 0;
@@ -117,6 +139,7 @@ export const Ride = () => {
   const handleBlockedNavigation = useCallback(
     (tx) => {
       if (!confirmedNavigation && tx.location.pathname !== locations.pathname) {
+        confirmNavigation();
         setOpen(true);
         setLastLocation(tx);
         return false;
@@ -130,54 +153,78 @@ export const Ride = () => {
     setWhen(false);
     setConfirmedNavigation(true);
   }, []);
+
+  const unconfirmNavigation = useCallback(() => {
+    setOpen(false);
+    setWhen(true);
+    setConfirmedNavigation(false);
+  }, []);
+  let idle = 1;
   useEffect(() => {
     // console.log("hello");
     // let i = 0.000001;
     window.addEventListener("beforeunload", preventClose);
     // let i = 0;
+    // setNowTime(0);
     const timerId = setInterval(() => {
-      if (riding && location) {
-        console.log(location);
+      if (riding && isGeolocationAvailable && isGeolocationEnabled) {
+        // console.log(error);
+        // if (riding && location) {
+        console.log("location : ", coords);
 
         const gps = {
-          lat: location.latitude,
-          lng: location.longitude,
+          lat: coords.latitude,
+          lng: coords.longitude,
         };
 
-        console.log(gps);
+        // console.log("location : ", location);
+
+        // const gps = {
+        //   lat: location.latitude,
+        //   lng: location.longitude,
+        // };
+
+        console.log("gps : ", gps);
+
         setMapData((prev) => {
           return {
             center: gps,
             latlng: [...prev.latlng, gps],
           };
         });
+
         if (mapData.latlng.length > 1) {
-          console.log(data);
-          let dis = getDistance(
+          console.log("data : ", data);
+
+          let dis = getDistanceFromLatLonInKm(
             mapData.latlng.at(-1).lat,
             mapData.latlng.at(-1).lng,
             gps.lat,
             gps.lng
           );
-          console.log("dis:", dis);
-          if (dis > 0)
+          console.log("dis: ", dis);
+          if (dis > 0) {
             setData((prev) => ({
-              topSpeed: Math.max(prev.topSpeed, dis * 3.6),
-              avgSpeed: dis * 3.6,
+              topSpeed: Math.max(prev.topSpeed, speedHandle(dis, idle)),
+              avgSpeed: speedHandle(dis, idle),
               totalDistance: prev.totalDistance + dis,
             }));
-          else
+            idle = 1;
+          } else {
+            idle = idle + 1;
             setData((prev) => ({
               topSpeed: prev.topSpeed,
               avgSpeed: prev.avgSpeed,
               totalDistance: prev.totalDistance,
             }));
+          }
         }
 
         // setI((prev) => {
-        //   return prev + 0.0001;
+        //   return prev + 0.001;
         // });
-      } else
+      } else {
+        // idle = idle + 1;
         setData((prev) => {
           return {
             topSpeed: prev.topSpeed,
@@ -185,6 +232,7 @@ export const Ride = () => {
             totalDistance: prev.totalDistance,
           };
         });
+      }
       // setI((prev) => {
       //   return prev + 0.0001;
       // });
@@ -194,7 +242,7 @@ export const Ride = () => {
 
     return () => {
       clearInterval(timerId);
-      cancelLocationWatch();
+      // cancelLocationWatch();
       window.removeEventListener("beforeunload", preventClose);
     };
   });
@@ -209,17 +257,17 @@ export const Ride = () => {
       {/* 바디 부분 */}
       <Box
         align="center"
-        justify="between"
         height="90vh"
         round={{ size: "large", corner: "top" }}
         background="#ffffff"
-        pad={{ top: "20px" }}
+        pad={{ top: "20px", bottom: "20px" }}
         border={{ color: "#ffffff", size: "small", side: "top" }}
       >
         {/* 카카오맵 */}
         <Box
-          style={{ width: "85%", height: "500px" }}
+          style={{ width: "85%", height: "40vh" }}
           onClick={() => {
+            confirmNavigation();
             setOpenMap(true);
           }}
         >
@@ -250,17 +298,28 @@ export const Ride = () => {
               align="center"
               style={{ marginLeft: "10px", marginRight: "5px" }}
             >
-              <StyledText text={data.totalDistance} size="40px" weight="bold" />
+              <StyledText
+                text={distanceHandle(data.totalDistance)}
+                size="40px"
+                weight="bold"
+              />
               <StyledText text="총 이동거리" color="#979797" size="10px" />
             </Box>
-            <StyledText text="km" color="#979797" />
+            <StyledText
+              text={data.totalDistance > 1000 ? "km" : "m"}
+              color="#979797"
+            />
           </Box>
           {/* 총 이동거리 끝 */}
           {/* 상세 데이터 시작 */}
           <Box direction="row" align="center" gap="medium">
             {/* 주행시간 */}
             <Box align="center">
-              <StyledText text={nowTime} weight="bold" size="18px" />
+              <StyledText
+                text={timeHandle(nowTime)}
+                weight="bold"
+                size="18px"
+              />
               <StyledText text="주행 시간" size="10px" />
             </Box>
             {/* 평균 속도 */}
@@ -279,54 +338,40 @@ export const Ride = () => {
         {/* 데이터 부분 끝 */}
         {/* 일시정지, 체크포인트 버튼 */}
         <Box width="90%">
-          <Box direction="row">
+          <Box direction="row" justify="center">
             {/* 일시정지 버튼 */}
-            <Button
-              children={<img src={riding ? PlayBtn : PauseBtn} />}
-              Custom
-              color="#439652"
-              textColor="white"
-              bWidth="20%"
-              bHeight="57px"
+            <PauseButton
               onClick={() => {
                 if (riding === true) setRiding(false);
                 else setRiding(true);
               }}
-            />
+            >
+              <img
+                src={riding ? PlayBtn : PauseBtn}
+                width="25px"
+                height="25px"
+              />
+              <StyledText text="일시정지" color="white" />
+            </PauseButton>
             {/* 체크 포인트 저장 버튼 */}
-            <Button
-              children="체크 포인트 저장"
-              Custom
-              color="#439652"
-              textColor="white"
-              bWidth="80%"
-              bHeight="57px"
-              fontSize="16px"
-              fontWeight="bold"
-            />
-          </Box>
-          {/* 주행 종료 버튼 */}
-          <Box direction="row">
-            <Button
-              Custom
-              color="#F29393"
-              textColor="white"
-              bWidth="100%"
-              bHeight="57px"
-              fontSize="16px"
-              fontWeight="bold"
-              children="주행 종료"
+            <ExitButton
               onClick={() => {
+                confirmNavigation();
                 setOpen(true);
               }}
-            />
+            >
+              주행 종료
+            </ExitButton>
           </Box>
+          {/* 주행 종료 버튼 */}
+          <Box direction="row"></Box>
         </Box>
       </Box>
       <MapDialog
         type="riding"
         open={openMap}
         handleClose={() => {
+          unconfirmNavigation();
           setOpenMap(false);
         }}
         handleAction={() => {
@@ -337,7 +382,17 @@ export const Ride = () => {
             center={mapData.center}
             isPanto={true}
             style={{ width: "100%", height: "100%" }}
-          ></Map>
+          >
+            {mapData.latlng && (
+              <Polyline
+                path={[mapData.latlng]}
+                strokeWeight={5} // 선의 두께 입니다
+                strokeColor={"#030ff1"} // 선의 색깔입니다
+                strokeOpacity={0.7} // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+                strokeStyle={"solid"} // 선의 스타일입니다
+              />
+            )}
+          </Map>
         }
         cancel="뒤로가기"
         accept="주행종료"
@@ -346,10 +401,10 @@ export const Ride = () => {
       <AlertDialog
         open={open}
         handleClose={() => {
+          unconfirmNavigation();
           setOpen(false);
         }}
         handleAction={() => {
-          confirmNavigation();
           // useBlocker(handleBlockedNavigation, false);
           navigate("/rideEnd", {
             state: {
