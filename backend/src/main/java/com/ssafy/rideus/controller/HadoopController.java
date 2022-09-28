@@ -22,7 +22,7 @@ public class HadoopController {
     HadoopService hadoopService;
 
 
-    @PostMapping("category/{courseid}")
+    @PostMapping("/category/{courseid}")
     public ResponseEntity<?> mapreduceCategory(@PathVariable String courseid) {
 
         log.info("Execute hadoop map reduce. courseid :" + courseid);
