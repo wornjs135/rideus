@@ -40,9 +40,9 @@ public class RideController {
     static final String SOCKET_SUBSCRIBE_BASE_URI = "/sub/ride/room/";
 
     // 그룹 라이딩 방 생성
-    @PostMapping("/room")
-    public ResponseEntity<CreateRideRoomResponse> createRideRoom(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(rideService.createRiddingRoom(member.getId()));
+    @PostMapping("/room/{courseId}")
+    public ResponseEntity<CreateRideRoomResponse> createRideRoom(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member, @PathVariable String courseId) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(rideService.createRiddingRoom(member.getId(), courseId));
     }
 
     // 그룹 주행 관련 웹소켓 기능
