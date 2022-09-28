@@ -83,9 +83,35 @@ export const CourseDetail = () => {
   const [starView, setStartView] = useState(0.0);
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [nearInfos, setNearInfos] = useState({
+    data: [
+      { key: "관광명소", arr: [] },
+      { key: "음식점", arr: [] },
+      { key: "카페", arr: [] },
+      { key: "편의점", arr: [] },
+      { key: "자전거정비", arr: [] },
+      { key: "문화시설", arr: [] },
+      { key: "공중화장실", arr: [] },
+    ],
+  });
   const navigate = useNavigate();
   useEffect(() => {
     if (loading) {
+      nearInfos.data.map((n, idx) =>
+        getCourseNearInfo(
+          { category: n.key, courseId: courseId },
+          (response) => {
+            console.log(response);
+            nearInfos.data[idx].arr = response.data;
+            setNearInfos({ ...nearInfos });
+          },
+          (fail) => {
+            console.log(fail);
+            // setLoading(false);
+          }
+        )
+      );
+
       getCourseDetail(
         courseId,
         (response) => {
@@ -93,7 +119,7 @@ export const CourseDetail = () => {
           setCourse(response.data);
           setBmk(response.data.bookmarkId !== null ? true : false);
           setStartView(parseFloat(response.data.starAvg) * 22.8);
-
+          setLoading(false);
           // getCourseAllReview(
           //   courseId,
           //   (response) => {
@@ -114,24 +140,23 @@ export const CourseDetail = () => {
           //     console.log(fail);
           //   }
           // );
-          setLoading(false);
         },
         (fail) => {
           console.log(fail);
           setLoading(false);
         }
       );
-      getCourseNearInfo(
-        { category: "편의점", courseId: courseId },
-        (response) => {
-          console.log(response);
-        },
-        (fail) => {
-          console.log(fail);
-        }
-      );
+
+      // getCourseNearInfo(
+      //   { category: "편의점", courseId: courseId },
+      //   (response) => {
+      //     console.log(response);
+      //   },
+      //   (fail) => {
+      //     console.log(fail);
+      //   }
+      // );
     }
-    z;
   }, []);
 
   const handleStarClick = (index) => {
@@ -179,6 +204,17 @@ export const CourseDetail = () => {
               isPanto={true}
               style={{ borderRadius: "25px", width: "100%", height: "100%" }}
             >
+              {nearInfos.data.map((near, idx) => {
+                return near.arr.map((info, idx) => (
+                  <MapMarker
+                    position={{
+                      lat: info.nearinfoLat,
+                      lng: info.nearinfoLng,
+                    }}
+                    key={idx}
+                  ></MapMarker>
+                ));
+              })}
               <Polyline
                 path={[course.coordinates ? course.coordinates : []]}
                 strokeWeight={5} // 선의 두께 입니다
@@ -322,13 +358,28 @@ export const CourseDetail = () => {
                 )
               }
               infoMarkers={
-                course.checkpoints &&
-                course.checkpoints.map((m, idx) => {
-                  return <MapMarker position={m} key={idx}></MapMarker>;
-                })
+                loading ? (
+                  <Spinner />
+                ) : (
+                  nearInfos.data.map((near, idx) => {
+                    return near.arr.map((info, idx) =>
+                      idx % 2 === 0 ? (
+                        <MapMarker
+                          position={{
+                            lat: info.nearinfoLat,
+                            lng: info.nearinfoLng,
+                          }}
+                          key={idx}
+                        ></MapMarker>
+                      ) : null
+                    );
+                  })
+                )
               }
             />
           }
+          bottom={true}
+          course={course}
           cancel="뒤로가기"
           accept="주행시작"
           title={course.courseName}

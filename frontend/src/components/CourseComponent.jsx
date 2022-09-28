@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import { StyledText } from "./Common.jsx";
+import { StarBox, StyledText } from "./Common.jsx";
 import Star from "../assets/images/star.png";
 import StarBlank from "../assets/images/star_blank.png";
-import { Box } from "grommet";
+import { Box, Spinner } from "grommet";
 
 const CourseBox = styled.div`
   display: flex;
@@ -37,27 +37,38 @@ const NewsDiv = styled.div`
   box-shadow: 4px 4px 4px -4px rgb(0 0 0 / 0.2);
 `;
 
+// bookmarkId: null
+// category: null
+// courseId: "6333e98361656141c1e9179e"
+// courseName: "남북"
+// distance: 80.7
+// expectedTime: 193
+// finish: "경기도 하남시 풍산동"
+// imageUrl: null
+// likeCount: 0
+// start: "경기도 하남시 풍산동"
+// tags: null
+
 export const BestCourse = ({ course }) => {
-  return (
-    <CourseBox>
-      <StyledText text="강촌길" weight="bold" color="#439652" />
-      <div>
-        <img src={Star} alt="" />
-        <img src={Star} alt="" />
-        <img src={Star} alt="" />
-        <img src={Star} alt="" />
-        <img src={StarBlank} alt="" />
-      </div>
-      <StyledText text="경강교 - 강촌유원지" color="#969696" />
-      <StyledText text="오르막길 오르다 죽을뻔.." color="#3C3C43" />
-      <StyledText text="오르막길 오르다 죽을뻔.." color="#3C3C43" />
-      <StyledText text="오르막길 오르다 죽을뻔.." color="#3C3C43" />
-      <Box align="end">
-        <StyledText text="총 코스 길이 : 21km" />
-        <StyledText text="예상 시간 : 1h 20m" />
-      </Box>
-    </CourseBox>
-  );
+  if (course)
+    return (
+      <CourseBox>
+        <StyledText text={course.courseName} weight="bold" color="#439652" />
+        <StarBox
+          score={course.starAvg}
+          starView={parseFloat(course.starAvg) * 22.8}
+        />
+        <StyledText text="경강교 - 강촌유원지" color="#969696" />
+        <StyledText text="오르막길 오르다 죽을뻔.." color="#3C3C43" />
+        <StyledText text="오르막길 오르다 죽을뻔.." color="#3C3C43" />
+        <StyledText text="오르막길 오르다 죽을뻔.." color="#3C3C43" />
+        <Box align="end">
+          <StyledText text="총 코스 길이 : 21km" />
+          <StyledText text="예상 시간 : 1h 20m" />
+        </Box>
+      </CourseBox>
+    );
+  else return <Spinner />;
 };
 
 export const NewsBox = ({ news }) => {

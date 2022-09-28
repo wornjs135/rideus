@@ -19,13 +19,15 @@ import { latlng } from "../utils/data";
 import useWatchLocation from "../hooks/watchLocationHook";
 import { distanceHandle, speedHandle, timeHandle } from "../utils/util";
 import { ExitButton, PauseButton } from "../components/Buttons";
+import SockJS from "sockjs-client";
+import * as StompJs from "@stomp/stompjs";
 
-const geolocationOptions = {
-  enableHighAccuracy: false,
-  timeout: 500, // 1 min (1000 ms * 60 sec * 1 minute = 60 000ms)
-  maximumAge: 0, // 24 hour
-};
-
+// const geolocationOptions = {
+//   enableHighAccuracy: false,
+//   timeout: 500, // 1 min (1000 ms * 60 sec * 1 minute = 60 000ms)
+//   maximumAge: 0, // 24 hour
+// };
+var client = null;
 export const Ride = () => {
   const locations = useLocation();
   const [nowTime, setNowTime] = useState(0);
@@ -41,8 +43,16 @@ export const Ride = () => {
   });
 
   // 코스 이름, 싱글 or 그룹, 추천코스 or 나만의 코스
-  const { courseName, rideType, courseType, coordinates, checkPoints } =
-    locations.state;
+  const {
+    courseName,
+    rideType,
+    courseType,
+    coordinates,
+    checkPoints,
+    recordId,
+    rideRoomId,
+  } = locations.state;
+
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [openMap, setOpenMap] = useState(false);
@@ -63,6 +73,69 @@ export const Ride = () => {
   const preventClose = (e) => {
     e.preventDefault();
     e.returnValue = "";
+  };
+
+  const subscribe = () => {
+    if (client != null) {
+      console.log("subs!!!!!!!!!");
+      //상시경매의 경우
+      client.subscribe("/sub/ride/room/" + rideRoomId, (response) => {});
+    }
+  };
+
+  const publishLocation = () => {
+    if (client != null) {
+    }
+  };
+
+  const initSocketClient = () => {
+    client = new StompJs.Client({
+      brokerURL: "wss://j7a603.p.ssafy.io/api/ws-stomp",
+      connectHeaders: {
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+      webSocketFactory: () => {
+        return SockJS("https://j7a603.p.ssafy.io/api/ws-stomp");
+      },
+      debug: (str) => {
+        console.log("stomp debug!!!", str);
+      },
+      reconnectDelay: 5000,
+      heartbeatIncoming: 4000,
+      heartbeatOutgoing: 4000,
+
+      onStompError: (frame) => {
+        // Will be invoked in case of error encountered at Broker
+        // Bad login/passcode typically will cause an error
+        // Complaint brokers will set `message` header with a brief message. Body may contain details.
+        // Compliant brokers will terminate the connection after any error
+        console.log("Broker reported error: " + frame.headers["message"]);
+        console.log("Additional details: " + frame.body);
+        // client.deactivate();
+      },
+    });
+
+    client.onConnect = (frame) => {
+      console.log("client init !!! ", frame);
+      if (client != null)
+        client.publish({
+          destination: "/pub/ride/group",
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+          body: JSON.stringify({
+            messageType: "ENTER",
+            rideRoomId: rideRoomId,
+          }),
+        });
+      subscribe();
+    };
+
+    client.activate();
+  };
+
+  const disConnect = () => {
+    if (client != null) {
+      if (client.connected) client.deactivate();
+    }
   };
 
   function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
@@ -161,6 +234,19 @@ export const Ride = () => {
     setConfirmedNavigation(false);
   }, []);
   let idle = 1;
+
+  useEffect(() => {
+    const timerId = setInterval(() => {
+      setNowTime((prev) => prev + 1);
+    }, 1000);
+
+    return () => {
+      clearInterval(timerId);
+      // cancelLocationWatch();
+      // window.removeEventListener("beforeunload", preventClose);
+    };
+  });
+
   useEffect(() => {
     // console.log("hello");
     // let i = 0.000001;
@@ -231,12 +317,7 @@ export const Ride = () => {
       console.log(mapData.latlng);
     }, 1000);
 
-    const timerId = setTimeout(() => {
-      setNowTime((prev) => prev + 1);
-    }, 1000);
-
     return () => {
-      clearTimeout(timerId);
       clearInterval(rideId);
       // cancelLocationWatch();
       window.removeEventListener("beforeunload", preventClose);
@@ -428,6 +509,7 @@ export const Ride = () => {
         }}
         handleAction={() => {
           // useBlocker(handleBlockedNavigation, false);
+
           navigate("/rideEnd", {
             state: {
               courseName: courseName,
