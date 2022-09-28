@@ -10,7 +10,7 @@ export const CLIENT_URL = "http://localhost:3000";
 
 export const AUTH_URL = API_SERVER + "/oauth2/authorize/kakao";
 
-export const OAUTH2_REDIRECT_URI = `?redirect_uri=${CLIENT_URL2}/oauth2/redirect`;
+export const OAUTH2_REDIRECT_URI = `?redirect_uri=${CLIENT_URL}/oauth2/redirect`;
 //
 // const checkToken = async (config) => {
 //     let accessToken = localStorage.getItem("accessToken");
