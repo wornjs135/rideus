@@ -13,7 +13,7 @@ public interface NearInfoService {
 
     List<NearInfo> findAllNearInfo();
 
-    List<NearInfo> findNearinfoByCategories(String courseid, List<String> categories);
+    List<NearInfo> findNearinfoByCategory(String courseId, String category);
 
     List<NearInfo> findNearinfoByCourseid(String courseid);
 }

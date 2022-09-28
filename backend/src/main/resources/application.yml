@@ -88,6 +88,11 @@ spring:
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
 
+  task:
+    scheduling:
+      pool:
+        size: 10
+
 token:
   # 일단 하루
   expiration_time: 86400000
@@ -96,14 +101,15 @@ token:
 
 oauth2:
   # 클라이언트 주소
-  authorizedRedirectUri: https://j7a603.p.ssafy.io/oauth2/redirect
+  authorizedRedirectUri: http://localhost:3000/oauth2/redirect
+#  authorizedRedirectUri: https://j7a603.p.ssafy.io/oauth2/redirect
 cloud:
   aws:
     credentials:
-      accessKey:
-      secretKey:
+      accessKey: AKIASQN6UNY6TV5Y5GEP
+      secretKey: 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
     s3:
-      bucket:
+      bucket: rideus-image
     region:
       static: ap-northeast-2
     stack:

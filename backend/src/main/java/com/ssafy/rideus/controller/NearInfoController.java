@@ -16,11 +16,10 @@ import java.util.List;
 @RestController
 public class NearInfoController {
 
-    @Autowired
-    NearInfoService nearInfoService;
+    private final NearInfoService nearInfoService;
 
     @PostMapping("/save")
-    public ResponseEntity<?> saveNearInfo(@RequestParam("courseId") String courseId) {
+    public ResponseEntity<?> saveNearInfo( @RequestParam("courseId") String courseId) {
         // 주행 코스 id
         // 코스 주변 정보 리스트
         List<NearInfo> nearInfos = nearInfoService.saveNearInfo(courseId);
@@ -29,16 +28,9 @@ public class NearInfoController {
     }
 
     @GetMapping("/find")
-    public ResponseEntity<?> findNearinfoByCategories( @RequestParam("courseid") String courseid, @RequestParam("categories") List<String> categories) {
+    public ResponseEntity<?> findNearinfoByCategory( @RequestParam("courseId") String courseId, @RequestParam("category") String category) {
         // 주행 코스 id
-        List<NearInfo> courseNearinfos = nearInfoService.findNearinfoByCategories(courseid, categories);
-        return new ResponseEntity<List<NearInfo>>(courseNearinfos, HttpStatus.OK);
-    }
-
-    @GetMapping("/findById")
-    public ResponseEntity<?> findNearinfoByCategories( @RequestParam("courseid") String courseid) {
-        // 주행 코스 id
-        List<NearInfo> courseNearinfos = nearInfoService.findNearinfoByCourseid(courseid);
+        List<NearInfo> courseNearinfos = nearInfoService.findNearinfoByCategory(courseId, category);
         return new ResponseEntity<List<NearInfo>>(courseNearinfos, HttpStatus.OK);
     }
 

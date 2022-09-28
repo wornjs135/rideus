@@ -49,4 +49,12 @@ public class Course extends BaseEntity {
 
     @OneToMany(mappedBy = "course")
     private List<CourseTag> courseTags = new ArrayList<>();
+
+    public void addBookmarkCount() {
+        this.likeCount++;
+    }
+
+    public void minusBookmarkCount() {
+        this.likeCount--;
+    }
 }
