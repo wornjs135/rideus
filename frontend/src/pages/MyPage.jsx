@@ -14,6 +14,7 @@ export const MyPage = () => {
     const user = useSelector(state => state.user.user.user);
     useEffect(() => {
         recentRide();
+        console.log(user)
     }, []);
 
     return <Box width="100vw" justify="center" margin="0 auto" gap="small">
