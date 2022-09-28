@@ -1,16 +1,16 @@
 package com.ssafy.rideus.controller;
 
+import com.ssafy.rideus.config.security.auth.CustomUserDetails;
 import com.ssafy.rideus.config.web.LoginMember;
 import com.ssafy.rideus.domain.Member;
 import com.ssafy.rideus.dto.rank.response.*;
 import com.ssafy.rideus.service.RankService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
@@ -55,21 +55,63 @@ public class RankController {
     // 개인 랭킹 시간별(+ top3)
     @GetMapping("/member/time")
     @Cacheable(value = RANK_MEMBER_TIME, key = "#member.id", unless = "#result == null", cacheManager = "cacheManager")
-    public RankMemberTimeResponseDto getRankMemberTimeWithTop3(@ApiIgnore @LoginMember Member member) {
+    public RankMemberTimeResponseDto getRankMemberTimeWithTop3(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
         return rankService.getRankMemberTimeWithTop3(member.getId());
     }
 
     // 개인 랭킹 거리별(+ top3)
     @GetMapping("/member/distance")
     @Cacheable(value = RANK_MEMBER_DISTANCE, key = "#member.id", unless = "#result == null", cacheManager = "cacheManager")
-    public RankMemberDistanceResponseDto getRankMemberDistanceWithTop3(@ApiIgnore @LoginMember Member member) {
+    public RankMemberDistanceResponseDto getRankMemberDistanceWithTop3(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
         return rankService.getRankMemberDistanceWithTop3(member.getId());
     }
 
     // 개인 랭킹 속도별(+ top3)
     @GetMapping("/member/speed")
     @Cacheable(value = RANK_MEMBER_BEST_SPEED, key = "#member.id", unless = "#result == null", cacheManager = "cacheManager")
-    public RankMemberBestSpeedResponseDto getRankMemberSpeedwithTop3(@ApiIgnore @LoginMember Member member) {
+    public RankMemberBestSpeedResponseDto getRankMemberSpeedwithTop3(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
         return rankService.getRankMemberSpeedWithTop3(member.getId());
+    }
+
+    @DeleteMapping("/total/time")
+    @CacheEvict(value = RANK_TOTAL_TIME, key = "0")
+    public ResponseEntity deleteCacheRankTotalTime() {
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/total/distance")
+    @CacheEvict(value = RANK_TOTAL_DISTANCE, key = "0")
+    public ResponseEntity deleteCacheTotalDistance() {
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/total/speed")
+    @CacheEvict(value = RANK_TOTAL_BEST_SPEED, key = "0")
+    public ResponseEntity deleteCacheTotalBestSpeed() {
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/course")
+    @CacheEvict(value = RANK_COURSE_TIME, allEntries = true)
+    public ResponseEntity deleteCacheCourseTime() {
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/member/time")
+    @CacheEvict(value = RANK_MEMBER_TIME, allEntries = true)
+    public ResponseEntity deleteCacheMemberTimeWithTop3() {
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/member/distance")
+    @CacheEvict(value = RANK_MEMBER_DISTANCE, allEntries = true)
+    public ResponseEntity deleteCacheMemberDistanceWithTop3() {
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/member/speed")
+    @CacheEvict(value = RANK_MEMBER_BEST_SPEED, allEntries = true)
+    public ResponseEntity deleteCacheMemberSpeedwithTop3() {
+        return ResponseEntity.ok().build();
     }
 }

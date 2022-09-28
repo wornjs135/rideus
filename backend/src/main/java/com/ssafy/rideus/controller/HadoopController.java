@@ -17,24 +17,22 @@ import java.util.List;
 @Slf4j
 public class HadoopController {
 
-
-    @Autowired
-    HadoopService hadoopService;
+    private final HadoopService hadoopService;
 
 
-    @PostMapping("/category/{courseid}")
-    public ResponseEntity<?> mapreduceCategory(@PathVariable String courseid) {
+    @PatchMapping("/category/{courseId}")
+    public ResponseEntity<?> mapreduceCategory(@PathVariable String courseId) {
 
-        log.info("Execute hadoop map reduce. courseid :" + courseid);
-        hadoopService.mapreduceCategory(courseid);
+        log.info("Execute hadoop map reduce. courseId :" + courseId);
+        hadoopService.mapreduceCategory(courseId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
-    @GetMapping("/setting")
+    @PatchMapping("/setting")
     public ResponseEntity<?> settingDB(@RequestParam("newCourseList") List<String> newCourseList) {
         hadoopService.settingDB(newCourseList);
-        System.out.println("end of cotroller");
+        log.info("end of controller");
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

@@ -49,7 +49,6 @@ public class NearInfoServiceImpl implements NearInfoService {
     // 코스 주변 전체 정보 조회
     @Override
     public List<NearInfo> saveNearInfo(String courseId) {
-        log.info("savenearinfo 시작");
 
         // 코스 정보 mongoDB find
         CourseCoordinate courseCoordinate =
@@ -57,7 +56,6 @@ public class NearInfoServiceImpl implements NearInfoService {
                 .findById(courseId)
                 .orElseThrow(() -> new NotFoundException("코스 상세 조회 실패"));
 
-        log.info("코스 상세 조회"+ courseCoordinate.toString());
         // mongoDB에서 체크포인트 리스트 가져오기
         List<Coordinate> checkpoints = courseCoordinate.getCheckpoints();
         log.info("get checkpoints");
@@ -123,20 +121,13 @@ public class NearInfoServiceImpl implements NearInfoService {
     }
 
     @Override
-    public List<NearInfo> findNearinfoByCategories(String courseid, List<String> categories) {
+    public List<NearInfo> findNearinfoByCategory(String courseId, String category) {
 
         List<NearInfo> possibleNearinfos = new ArrayList<>();
-        List<NearInfo> selectedInfo = new ArrayList<>();
-        Map<String, Boolean> categoryMap = new HashMap<>();
 
-        List<NearInfo> courseNearinfo = courseCoordinateRepository.findById(courseid).get().getNearInfos();
+        List<NearInfo> courseNearinfo = courseCoordinateRepository.findById(courseId).get().getNearInfos();
+        courseNearinfo.forEach(info -> {if(category.equals(info.getNearinfoCategory())) possibleNearinfos.add(info);});
 
-        categories.forEach(category -> categoryMap.put(category, true));
-
-        courseNearinfo.stream().forEach(info -> {
-            if(categoryMap.containsKey(info.getNearinfoCategory()))
-                possibleNearinfos.add(info);
-        });
         return possibleNearinfos;
     }
 

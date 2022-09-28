@@ -25,13 +25,13 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping("/me")
-    public ResponseEntity<MemberMeRes> loginMemberInformation(@ApiIgnore @AuthenticationPrincipal CustomUserDetails user) {
-        return ResponseEntity.ok(memberService.findByLoginMember(user.getId()));
+    public ResponseEntity<MemberMeRes> loginMemberInformation(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
+        return ResponseEntity.ok(memberService.findByLoginMember(member.getId()));
     }
 
     @DeleteMapping("/me")
-    public ResponseEntity<Void> deleteMemberMyself(@ApiIgnore @AuthenticationPrincipal CustomUserDetails user) {
-        memberService.deleteMember(user.getId());
+    public ResponseEntity<Void> deleteMemberMyself(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
+        memberService.deleteMember(member.getId());
         return ResponseEntity.noContent().build();
     }
 
@@ -56,12 +56,13 @@ public class MemberController {
     public ResponseEntity<List<Record>> getRecentRocrd(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
         return ResponseEntity.ok(memberService.getRecentRecord(member.getId()));
     }
-    @GetMapping("/totalRecord")
+
+    @GetMapping("/total-record")
     public ResponseEntity<RecordTotalResponse> getTotalRecord(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
         return ResponseEntity.ok(memberService.getTotalRecord(member.getId()));
     }
 
-    @GetMapping("/myTag")
+    @GetMapping("/my-tag")
     public ResponseEntity<List<MemberTagResponse>> getMyTag(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
         return ResponseEntity.ok(memberService.getMyTag(member.getId()));
     }

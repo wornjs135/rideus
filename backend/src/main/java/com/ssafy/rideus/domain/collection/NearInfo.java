@@ -7,6 +7,8 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import javax.persistence.Id;
 
+import javax.persistence.Id;
+
 @Document(collection = "near_info")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
