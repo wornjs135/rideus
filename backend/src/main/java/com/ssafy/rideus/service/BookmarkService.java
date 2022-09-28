@@ -5,6 +5,7 @@ import com.ssafy.rideus.common.exception.NotMatchException;
 import com.ssafy.rideus.domain.Bookmark;
 import com.ssafy.rideus.domain.Course;
 import com.ssafy.rideus.domain.Member;
+import com.ssafy.rideus.dto.bookmark.response.BookmarkCourseRes;
 import com.ssafy.rideus.dto.bookmark.response.CreateBookmarkResponse;
 import com.ssafy.rideus.repository.jpa.BookmarkRepository;
 import com.ssafy.rideus.repository.jpa.CourseRepository;
@@ -12,6 +13,9 @@ import com.ssafy.rideus.repository.jpa.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.ssafy.rideus.common.exception.NotFoundException.*;
 import static com.ssafy.rideus.common.exception.NotMatchException.MEMBER_BOOKMARK_NOT_MATCH;
@@ -48,5 +52,16 @@ public class BookmarkService {
 
         findBookmark.getCourse().minusBookmarkCount();
         bookmarkRepository.delete(findBookmark);
+    }
+
+    public List<BookmarkCourseRes> findBookmarkedCourses(Long memberId) {
+        List<Bookmark> top5ByMemberIdOrderByIdDesc = bookmarkRepository.findTop5ByMemberIdOrderByIdDesc(memberId);
+        List<BookmarkCourseRes> bookmarkCourses = new ArrayList<>();
+        top5ByMemberIdOrderByIdDesc.forEach(bookmark -> {
+
+            bookmarkCourses.add(BookmarkCourseRes.of(bookmark.getCourse()));
+        });
+
+        return bookmarkCourses;
     }
 }
