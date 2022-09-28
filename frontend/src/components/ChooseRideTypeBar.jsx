@@ -13,6 +13,7 @@ import GroupBtn from "../assets/images/group.png";
 import { Dialog } from "@mui/material";
 import { MdDirectionsBike, MdOutlineMap } from "react-icons/md";
 import { GrMapLocation } from "react-icons/gr";
+import { startRidding } from "../utils/api/rideApi";
 const HeaderDiv = styled.div`
   margin: 5px;
   display: flex;
@@ -61,21 +62,15 @@ export const ChooseRideTypeBar = ({ open, onDismiss }) => {
         margin={{ top: "20px", bottom: "50px" }}
       >
         <Button
-          color="#439652"
           onClick={() => {
             navigate("/courseList");
           }}
           children={
-            <Box
-              width="145px"
-              align="center"
-              background="#439652"
-              style={{ borderRadius: "8px" }}
-            >
+            <Box width="145px" align="center" style={{ borderRadius: "8px" }}>
               <img src={CourseButton} width="100px" />
               <StyledText
                 text="추천 코스"
-                color="white"
+                color="black"
                 weight="bold"
                 size="18px"
               />
@@ -84,25 +79,38 @@ export const ChooseRideTypeBar = ({ open, onDismiss }) => {
         />
         <Button
           onClick={() => {
+            // 탑승
             navigate("/ride", {
               state: {
                 courseName: "나만의 길",
                 rideType: "solo",
                 courseType: "my",
+                // recordId: response.data.recordId,
               },
             });
+            // startRidding(
+            //   (response) => {
+            //     console.log(response);
+            //     navigate("/ride", {
+            //       state: {
+            //         courseName: "나만의 길",
+            //         rideType: "solo",
+            //         courseType: "my",
+            //         recordId: response.data.recordId,
+            //       },
+            //     });
+            //   },
+            //   (fail) => {
+            //     console.log(fail);
+            //   }
+            // );
           }}
           children={
-            <Box
-              width="145px"
-              align="center"
-              background="#439652"
-              style={{ borderRadius: "8px" }}
-            >
+            <Box width="145px" align="center" style={{ borderRadius: "8px" }}>
               <img src={RideButton} width="100px" />
               <StyledText
                 text="나만의 코스"
-                color="white"
+                color="black"
                 weight="bold"
                 size="18px"
               />

@@ -2,10 +2,10 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../stores/modules/user";
+import { myInfo } from "../../utils/api/userApi";
 
 export const OAuth2RedirectHandler = (props) => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const params = new URLSearchParams(window.location.search);
   const dispatch = useDispatch();
   const accessToken = params.get("accessToken");
