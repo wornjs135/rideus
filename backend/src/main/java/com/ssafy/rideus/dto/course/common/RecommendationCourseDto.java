@@ -38,6 +38,9 @@ public class RecommendationCourseDto {
         recommendationCourseDto.start = list.getStart();
         recommendationCourseDto.finish = list.getFinish();
         recommendationCourseDto.likeCount = list.getLikeCount();
+        recommendationCourseDto.imageUrl = list.getImageUrl();
+        recommendationCourseDto.category = list.getCategory();
+        recommendationCourseDto.bookmarkId = list.getBookmarkId();
         recommendationCourseDto.tags.add(TagDto.from(list.getTagId(), list.getTagName()));
 
         return recommendationCourseDto;
