@@ -114,7 +114,13 @@ export const ChooseRideTypeBar = ({ open, onDismiss }) => {
   );
 };
 
-export const ChooseSoloGroupBar = ({ open, onDismiss, title }) => {
+export const ChooseSoloGroupBar = ({
+  open,
+  onDismiss,
+  title,
+  coordinates,
+  checkPoints,
+}) => {
   const navigate = useNavigate();
   return (
     <BottomSheet
@@ -138,6 +144,8 @@ export const ChooseSoloGroupBar = ({ open, onDismiss, title }) => {
                 courseName: title,
                 rideType: "solo",
                 courseType: "course",
+                coordinates: coordinates,
+                checkPoints: checkPoints,
               },
             });
           }}
@@ -168,6 +176,8 @@ export const ChooseSoloGroupBar = ({ open, onDismiss, title }) => {
                 courseName: title,
                 rideType: "group",
                 courseType: "course",
+                coordinates: coordinates,
+                checkPoints: checkPoints,
               },
             });
           }}
