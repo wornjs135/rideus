@@ -7,9 +7,11 @@ import {StyledHorizonTable} from "../components/HorizontalScrollBox";
 import {MyPageCourse} from "../components/MyPageCourseComponent";
 import {UserSettings} from "grommet-icons";
 import {recentRide} from "../utils/api/userApi";
+import { useSelector } from 'react-redux'
 
 export const MyPage = () => {
 
+    const user = useSelector(state => state.user.user.user);
     useEffect(() => {
         recentRide();
     }, []);

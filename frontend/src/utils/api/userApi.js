@@ -27,4 +27,9 @@ const recentRide = async (data) => {
     console.log(axiosResponse);
 };
 
-export {updateMoreInfo, checkDuplicateNickname, recentRide};
+const myInfo = async (data, success) => {
+    let axiosResponse = await instance.get("/me").then(success);
+    console.log(axiosResponse);
+};
+
+export {updateMoreInfo, checkDuplicateNickname, recentRide, myInfo};
