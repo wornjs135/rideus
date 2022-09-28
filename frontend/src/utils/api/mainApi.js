@@ -23,7 +23,11 @@ const getPopularCourses = async (success, fail) => {
 };
 
 // 현 위치 기반 추천 코스
-const getRecommendationCourseByLocation = async (lat, lng, success, fail) => {
+const getRecommendationCourseByLocation = async (
+  { lat, lng },
+  success,
+  fail
+) => {
   await authInstance.get(`/${lat}/${lng}`).then(success).catch(fail);
 };
 

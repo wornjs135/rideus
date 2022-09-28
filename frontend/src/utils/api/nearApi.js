@@ -11,4 +11,8 @@ const instance = axios.create({
 
 // 코스 주변정보 가져오기
 
+const getCourseNearInfo = async (params, success, fail) => {
+  await instance.get(`/find`, { params: params }).then(success).catch(fail);
+};
+
 export { getCourseNearInfo };
