@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.ssafy.rideus.common.exception.NotFoundException.USER_NOT_FOUND;
@@ -87,8 +88,19 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public List<Record> getMyRideRecord(Long memberId) {
+    public List<MyRideRecordRes> getMyRideRecord(Long memberId) {
 
-        return recordRepository.findMyRideRecentRecord(memberId);
+        List<MyRideRecordRes> myRideRecordResList = new ArrayList<>();
+        recordRepository.findMyRideRecentRecord(memberId).forEach(record -> {
+            // 공유된 나만의 주행
+            if (record.getCourse() != null) {
+                myRideRecordResList.add(MyRideRecordRes.sharedMyRide(record));
+            } else {
+            // 공유되지 않은 나만의 주행
+                myRideRecordResList.add(MyRideRecordRes.unSharedMyRide(record));
+            }
+        });
+
+        return myRideRecordResList;
     }
 }

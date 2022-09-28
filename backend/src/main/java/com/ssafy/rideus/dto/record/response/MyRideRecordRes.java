@@ -26,7 +26,7 @@ public class MyRideRecordRes {
 
     private boolean isShared;
 
-    public MyRideRecordRes of(Record record) {
+    public static MyRideRecordRes sharedMyRide(Record record) {
         return MyRideRecordRes.builder()
                 .recordId(record.getId())
                 .courseName(record.getCourse().getCourseName())
@@ -34,7 +34,19 @@ public class MyRideRecordRes {
                 .distance(record.getCourse().getDistance())
                 .finishedLocation(record.getCourse().getFinish())
                 .expectedTime(record.getCourse().getExpectedTime())
-                .isShared(record.getCourse() != null)
+                .isShared(true)
+                .build();
+    }
+
+    public static MyRideRecordRes unSharedMyRide(Record record) {
+        return MyRideRecordRes.builder()
+                .recordId(record.getId())
+                .courseName(record.getCreatedDate().toString())
+                .roomId(record.getRideRoom().getId())
+                .distance(record.getRecordDistance())
+                .finishedLocation(record.getCourse().getFinish())
+                .expectedTime(record.getRecordTime().intValue())
+                .isShared(false)
                 .build();
     }
 

@@ -5,6 +5,7 @@ import com.ssafy.rideus.domain.Record;
 import com.ssafy.rideus.dto.member.request.MemberMoreInfoReq;
 import com.ssafy.rideus.dto.member.request.MemberUpdateRequest;
 import com.ssafy.rideus.dto.member.response.MemberMeRes;
+import com.ssafy.rideus.dto.record.response.MyRideRecordRes;
 import com.ssafy.rideus.dto.record.response.RecordTotalResponse;
 import com.ssafy.rideus.dto.tag.response.MemberTagResponse;
 import com.ssafy.rideus.service.MemberService;
@@ -68,7 +69,7 @@ public class MemberController {
     }
 
     @GetMapping("/recent/my-ride")
-    public ResponseEntity<List<Record>> recentMyRide(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
+    public ResponseEntity<List<MyRideRecordRes>> recentMyRide(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
         return ResponseEntity.ok(memberService.getMyRideRecord(member.getId()));
     }
 }
