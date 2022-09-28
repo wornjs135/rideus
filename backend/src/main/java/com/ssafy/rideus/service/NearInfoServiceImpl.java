@@ -102,20 +102,13 @@ public class NearInfoServiceImpl implements NearInfoService {
     }
 
     @Override
-    public List<NearInfo> findNearinfoByCategories(String courseid, List<String> categories) {
+    public List<NearInfo> findNearinfoByCategory(String courseId, String category) {
 
         List<NearInfo> possibleNearinfos = new ArrayList<>();
-        List<NearInfo> selectedInfo = new ArrayList<>();
-        Map<String, Boolean> categoryMap = new HashMap<>();
 
-        List<NearInfo> courseNearinfo = courseCoordinateRepository.findById(courseid).get().getNearInfos();
+        List<NearInfo> courseNearinfo = courseCoordinateRepository.findById(courseId).get().getNearInfos();
+        courseNearinfo.forEach(info -> {if(category.equals(info.getNearinfoCategory())) possibleNearinfos.add(info);});
 
-        categories.forEach(category -> categoryMap.put(category, true));
-
-        courseNearinfo.stream().forEach(info -> {
-            if(categoryMap.containsKey(info.getNearinfoCategory()))
-                possibleNearinfos.add(info);
-        });
         return possibleNearinfos;
     }
 

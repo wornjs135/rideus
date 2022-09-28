@@ -52,7 +52,7 @@ spring:
 
   data:
     mongodb:
-      username: ssafy
+      username: ssafy4
       password: yfass1234
       authentication-database: admin
       auto-index-creation:

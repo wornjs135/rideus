@@ -28,9 +28,9 @@ public class NearInfoController {
     }
 
     @GetMapping("/find")
-    public ResponseEntity<?> findNearinfoByCategories( @RequestParam("courseId") String courseId, @RequestParam("categories") List<String> categories) {
+    public ResponseEntity<?> findNearinfoByCategory( @RequestParam("courseId") String courseId, @RequestParam("category") String category) {
         // 주행 코스 id
-        List<NearInfo> courseNearinfos = nearInfoService.findNearinfoByCategories(courseId, categories);
+        List<NearInfo> courseNearinfos = nearInfoService.findNearinfoByCategory(courseId, category);
         return new ResponseEntity<List<NearInfo>>(courseNearinfos, HttpStatus.OK);
     }
 
