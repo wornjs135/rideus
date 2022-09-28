@@ -1,5 +1,6 @@
 package com.ssafy.rideus.service;
 
+import com.ssafy.rideus.common.api.S3Upload;
 import com.ssafy.rideus.domain.Course;
 import com.ssafy.rideus.dto.course.common.RecommendationCourseDto;
 import com.ssafy.rideus.dto.course.common.RecommendationCourseDtoInterface;
@@ -44,6 +45,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -75,6 +77,7 @@ public class CourseService {
     private final RecordRepository recordRepository;
     private final MemberRepository memberRepository;
     private final MemberTagRepository memberTagRepository;
+	private final S3Upload s3Upload;
 	
 	
     public List<RecommendationCourseDto> getRecommendationCourseByTag(Long memberId) {
@@ -338,7 +341,7 @@ public class CourseService {
 	
 	
 	// 코스 추가
-	public int addCourseData(Map<String, String> inputMap, Long memberId) {
+	public int addCourseData(Map<String, String> inputMap, Long memberId, MultipartFile image) {
 		// inputMap - memberId, courseName, distance, recordId
 
 		// 기록 식별자를 받아서 좌표를 가져와서 저장
@@ -349,6 +352,7 @@ public class CourseService {
 			
 			// 기록 식별자 받아서 해당 기록 좌표를 코스 좌표로 등록
 			String recordId = inputMap.get("recordId");
+			Record originRecord = recordRepository.findById(recordId).get();
 			// 코스 좌표 리스트
 			List<Coordinate> coordinates = new ArrayList<Coordinate>();
 			coordinates = mongoRecordRepository.findById(recordId).get().getCoordinates();
@@ -365,24 +369,26 @@ public class CourseService {
 			
 	    	// (식별자(MongDB 식별자랑 동일), 코스명, 코스 길이, 시작 지점, 죵료 지점, 예상 주행 시간, 좋아요 개수, 사진 url, 회원번호, 리뷰리스트?, 코스태그)
 	        String courseName = inputMap.get("courseName");
-	        String distanceStr = inputMap.get("distance");
-	        Double distance = Double.parseDouble(distanceStr);
-	        
+	        Double distance = originRecord.getRecordDistance();
+	        String distanceStr = String.valueOf(distance);
+
 	        Coordinate startCoordinate = checkpoints.get(0);
 	        Coordinate finishCoordinate = checkpoints.get(checkpoints.size()-1);
 			String start = locAPI(startCoordinate.getLng(), startCoordinate.getLat());
 			String finish = locAPI(finishCoordinate.getLng(), finishCoordinate.getLat());
 	        
 			int expectedTime = Integer.parseInt(calExpectedTime(distanceStr));
-			
-	        // 서버 db 확인하고 member_id 값 수정하기
+
+			// 이미지 s3에 업로드
+			String imageUrl = s3Upload.uploadImageToS3(image);
+
+			// 서버 db 확인하고 member_id 값 수정하기
 			Member member = memberRepository.findById(memberId).get();
-			Course course = new Course(courseId, courseName, distance, start, finish, expectedTime, 0, null, null, member, null, null);
+			Course course = new Course(courseId, courseName, distance, start, finish, expectedTime, 0, imageUrl, null, member, null, null);
 //	        courseRepository.save(new Course(courseId, courseName, distance, start, finish, expectedTime, 0, null, null, null));
 	        courseRepository.save(course);
 
 	        // 저장한 코스를 record에 course 정보 담아서 저장(update)
-	        Record originRecord = recordRepository.findById(recordId).get();
 	        Record record = Record.findCourse(originRecord, course);
 	        recordRepository.save(record);
 	        

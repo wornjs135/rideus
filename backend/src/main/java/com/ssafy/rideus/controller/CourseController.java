@@ -21,13 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.ArrayList;
@@ -90,9 +85,9 @@ public class CourseController {
 	
 	// 코스 추가 (사용자가 탄 코스 추가하는 경우)
 	@PostMapping("/add")
-	public ResponseEntity<Integer> add(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member, @RequestBody Map<String, String> inputMap) {
-		
-		int result = courseService.addCourseData(inputMap, member.getId());
+	public ResponseEntity<Integer> add(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member,
+									   @RequestPart Map<String, String> inputMap, @RequestPart MultipartFile image) {
+		int result = courseService.addCourseData(inputMap, member.getId(), image);
 		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
 	
