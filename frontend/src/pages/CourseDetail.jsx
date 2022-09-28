@@ -20,6 +20,7 @@ import { expectTimeHandle } from "../utils/util";
 import styled from "styled-components";
 
 import BackBtn from "../assets/images/backButton.png";
+import { getCourseNearInfo } from "../utils/api/nearApi";
 
 export const BackButton = styled.button`
   background: none;
@@ -120,7 +121,17 @@ export const CourseDetail = () => {
           setLoading(false);
         }
       );
+      getCourseNearInfo(
+        { category: "편의점", courseId: courseId },
+        (response) => {
+          console.log(response);
+        },
+        (fail) => {
+          console.log(fail);
+        }
+      );
     }
+    z;
   }, []);
 
   const handleStarClick = (index) => {
