@@ -93,6 +93,7 @@ public class CourseService {
                     recommendationCourseDtos.add(RecommendationCourseDto.from(r));
                 }
             }
+
         }
 
 //        System.out.println(recommendationCourseDtos.size());
@@ -193,12 +194,16 @@ public class CourseService {
 		RecommendationCourseDto course = getSpecificCourse(memberId, courseIds).get(0);
 		
 		// 리뷰 별점 평균
-		String starInfo = courseRepository.getStarAvg(courseId);
-		String[] starInfoArr = starInfo.split("/");
-		double starSum = Double.parseDouble(starInfoArr[0]);
-		double reviewCnt = Double.parseDouble(starInfoArr[1]);
-		double starAvg = Math.round((starSum / reviewCnt)*10) / 10.0;
-		
+		double starAvg;
+		try {
+			String starInfo = courseRepository.getStarAvg(courseId);
+			String[] starInfoArr = starInfo.split("/");
+			double starSum = Double.parseDouble(starInfoArr[0]);
+			double reviewCnt = Double.parseDouble(starInfoArr[1]);
+			starAvg = Math.round((starSum / reviewCnt)*10) / 10.0;			
+		} catch (Exception e) {
+			starAvg = 0;
+		}		
 		
 		
 		// MongoDB에 있는 데이터 가져오기
