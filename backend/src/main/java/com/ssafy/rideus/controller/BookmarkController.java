@@ -1,6 +1,7 @@
 package com.ssafy.rideus.controller;
 
 import com.ssafy.rideus.config.security.auth.CustomUserDetails;
+import com.ssafy.rideus.dto.bookmark.response.BookmarkCourseRes;
 import com.ssafy.rideus.dto.bookmark.response.CreateBookmarkResponse;
 import com.ssafy.rideus.service.BookmarkService;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,4 +33,11 @@ public class BookmarkController {
 
         return ResponseEntity.ok().build();
     }
+
+    // 북마크 되어있는 코스 리스트
+    @GetMapping("/course")
+    public ResponseEntity<List<BookmarkCourseRes>> findBookmarkedCourses(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
+        return ResponseEntity.ok().body(bookmarkService.findBookmarkedCourses(member.getId()));
+    }
+
 }

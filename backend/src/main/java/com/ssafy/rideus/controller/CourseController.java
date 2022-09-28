@@ -16,6 +16,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,6 +39,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/course")
+@Slf4j
 public class CourseController {
 	
     private final CourseService courseService;
@@ -52,7 +54,7 @@ public class CourseController {
 	// 추천 코스 리스트 조회
 	@GetMapping()
 	public ResponseEntity<List<RecommendationCourseDto>> getAllCourses(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
-	
+
 		List<RecommendationCourseDto> courseList = courseService.getAllCourses(member.getId());
 		return ResponseEntity.status(HttpStatus.OK).body(courseList);
 	}
