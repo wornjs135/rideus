@@ -30,7 +30,8 @@ export const OAuth2RedirectHandler = (props) => {
       dispatch(setUser(data));
       console.log(data);
       navigate("/");
-      // window.location.href = '/';
+      // navigate("/");
+      window.location.href = '/';
     });
   }
 
