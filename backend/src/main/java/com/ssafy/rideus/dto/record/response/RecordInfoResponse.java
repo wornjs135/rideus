@@ -36,21 +36,21 @@ public class RecordInfoResponse {
     private List<Coordinate> coordinates = new ArrayList<>();
 
     public static RecordInfoResponse from(Record record, MongoRecord mongoRecord) {
-        return RecordInfoResponse.builder()
-                .recordId(record.getId())
-                .recordDistance(record.getRecordDistance())
-                .recordTime(record.getRecordTime())
-                .recordSpeedAvg(record.getRecordSpeedAvg())
-                .recordSpeedBest(record.getRecordSpeedBest())
-                .recordTimeMinute(record.getRecordTimeMinute())
-                .recordIsFinished(record.getRecordIsFinished())
-                .recordIsMine(record.getRecordIsMine())
-                .courseId(record.getCourse().getId() == null ? null : record.getCourse().getId())
-                .isCourse(record.getCourse().getId() == null ? false : true)
-                .rideRoomId(record.getRideRoom().getId())
-                .participants(mongoRecord.getParticipants())
-                .coordinates(mongoRecord.getCoordinates()).build();
+        RecordInfoResponse recordInfoResponse = new RecordInfoResponse();
+        recordInfoResponse.recordId = record.getId();
+        recordInfoResponse.recordDistance = record.getRecordDistance();
+        recordInfoResponse.recordTime = record.getRecordTime();
+        recordInfoResponse.recordSpeedAvg = record.getRecordSpeedAvg();
+        recordInfoResponse.recordSpeedBest = record.getRecordSpeedBest();
+        recordInfoResponse.recordTimeMinute = record.getRecordTimeMinute();
+        recordInfoResponse.recordIsFinished = record.getRecordIsFinished();
+        recordInfoResponse.recordIsMine = record.getRecordIsMine();
+        recordInfoResponse.courseId =record.getCourse().getId() == null ? null : record.getCourse().getId();
+        recordInfoResponse.isCourse =record.getCourse().getId() == null ? false : true;
+        recordInfoResponse.rideRoomId =record.getRideRoom().getId();
+        recordInfoResponse.participants =mongoRecord.getParticipants();
+        recordInfoResponse.coordinates =mongoRecord.getCoordinates();
 
-
+        return recordInfoResponse;
     }
 }
