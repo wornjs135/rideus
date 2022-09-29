@@ -1,5 +1,6 @@
 package com.ssafy.rideus.domain;
 
+import com.ssafy.rideus.common.api.CheckFinish;
 import com.ssafy.rideus.domain.base.BaseEntity;
 import com.ssafy.rideus.domain.base.Coordinate;
 import com.ssafy.rideus.dto.record.request.FinishRiddingRequest;
@@ -55,8 +56,17 @@ public class Record extends BaseEntity {
         record.recordTimeMinute = request.getTimeMinute();
         record.recordSpeedAvg = request.getSpeedAvg();
         record.recordSpeedBest = request.getSpeedBest();
-        record.recordIsFinished = (findCourse == null) ? true : checkFinished(myCoordinates.get(myCoordinates.size()-1), courseCoordinates.get(courseCoordinates.size()-1));
-        record.recordIsMine = (findCourse == null) ? true : false;
+        if (findCourse == null) {
+            record.recordIsFinished = true;
+            record.recordIsMine = true;
+        } else {
+            if (myCoordinates.size() == 0) {
+                record.recordIsFinished = true;
+            } else {
+                record.recordIsFinished = checkFinished(myCoordinates.get(myCoordinates.size()-1), courseCoordinates.get(courseCoordinates.size()-1));
+            }
+            record.recordIsMine = false;
+        }
         record.member = findMember;
         record.course = findCourse;
         record.rideRoom = rideRoom;
@@ -64,8 +74,8 @@ public class Record extends BaseEntity {
         return record;
     }
 
-    private static Boolean checkFinished(Coordinate myFinishCoordinate, Coordinate courseFinishCoordinate) {
-        Boolean result = null;
+    private static boolean checkFinished(Coordinate myFinishCoordinate, Coordinate courseFinishCoordinate) {
+        boolean result;
 
         double lat1 = Double.parseDouble(myFinishCoordinate.getLat());
         double lng1 = Double.parseDouble(myFinishCoordinate.getLng());
