@@ -59,24 +59,13 @@ public class CourseController {
 	
 	
 	// 추천 코스 상세 조회
-	@GetMapping("/{courseId}/{memberId}")
-	public ResponseEntity<Map<String, Object>> detail(@PathVariable Long memberId, @PathVariable String courseId) {
-	
-		Map<String, Object> course = courseService.getCourse(memberId, courseId);
-		
-		return ResponseEntity.status(HttpStatus.OK).body(course);
-//		return ResponseEntity.status(HttpStatus.OK).build();
-	}
-	/*
 	@GetMapping("/{courseId}")
 	public ResponseEntity<Map<String, Object>> detail(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member, @PathVariable String courseId) {
 	
 		Map<String, Object> course = courseService.getCourse(member.getId(), courseId);
 		
 		return ResponseEntity.status(HttpStatus.OK).body(course);
-//		return ResponseEntity.status(HttpStatus.OK).build();
 	}
-	*/
 
 	
 	// 코스 검색
