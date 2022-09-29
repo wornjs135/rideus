@@ -24,8 +24,8 @@ const recentRide = async (success, fail) => {
     await authInstance.get("/recent").then(success).catch(fail);
 };
 
-const myInfo = async (success, fail) => {
-    await authInstance.get("/me").then(success).catch(fail);
+const myInfo = async (success, fail,config) => {
+    await authInstance.get("/me",config).then(success).catch(fail);
 };
 
 const myRides = async (success, fail) => {
