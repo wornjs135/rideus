@@ -1,17 +1,33 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Avatar, Box} from "grommet";
 import {Button, TextField} from "@mui/material";
 import {useNavigate} from "react-router-dom";
-import {checkDuplicateNickname, updateMoreInfo} from "../utils/api/userApi";
+import {checkDuplicateNickname, myInfo, updateMoreInfo} from "../utils/api/userApi";
 import {StyledText} from "../components/Common";
+import {useSelector} from "react-redux";
 
 export const EditProfile = () => {
     let [inputs, setInputs] = useState({
         nickname: "",
+        email: "",
+        phone: "",
     });
+    const user = useSelector(state => state.user.user.user);
+    useEffect(() => {
+
+        myInfo((data) => {
+            const {data: value} = data;
+            console.log(value);
+            setInputs(
+                value,
+            );
+        })
+
+    }, [])
+
     const navigate = useNavigate();
 
-    const {name, phone, nickname} = inputs;
+    const {email, phone, nickname,profileImageUrl} = inputs;
 
     const [nicknameLengthError, setNicknameLengthError] = useState(true);
     const [nicknameDupError, setNicknameDupError] = useState(false);
@@ -24,17 +40,19 @@ export const EditProfile = () => {
         if (name === "nickname") {
             console.log(name);
             setNicknameLengthError(hasLengthError(value));
-            let res = checkDuplicateNickname(value);
-
-            res.then((val) => {
-                if (val === true) {
-                    console.log("닉네임 중복 " + val);
+            checkDuplicateNickname(value, (data) => {
+                console.log(data);
+                const {data: isDup} = data;
+                if (isDup === true) {
+                    console.log("닉네임 중복 " + isDup);
                     setNicknameDupError(true);
                 } else {
-                    console.log("사용 가능" + val);
+                    console.log("사용 가능 " + isDup);
                     setNicknameDupError(false);
                 }
             });
+
+
         }
         // else if (name === "phone") {
         //     const regex = /^[0-9\b -]{0,13}$/;
@@ -49,8 +67,7 @@ export const EditProfile = () => {
     };
 
     const onClick = (e) => {
-        if (name === "") {
-        }
+
 
         let status = updateMoreInfo(inputs);
         status.then((value) => {
@@ -66,7 +83,9 @@ export const EditProfile = () => {
     return (
         <Box>
             <Box pad={{left: "20px"}} style={{marginTop: "5vw"}} alignContent={"start"}>
-                <StyledText text="Back" weight="bold" size="18px"/>
+                <div onClick={() => navigate(-1)}>
+                    <StyledText text="Back" weight="bold" size="18px"/>
+                </div>
             </Box>
 
             <Box
@@ -98,7 +117,7 @@ export const EditProfile = () => {
                             marginTop: "10vw",
                             alignItems: "center"
                         }}>
-                        <Avatar src="//s.gravatar.com/avatar/b7fb138d53ba0f573212ccce38a7c43b?s=80" size={"xlarge"}/>
+                        <Avatar name="profileImageUrl" src={profileImageUrl} size={"xlarge"}/>
                     </Box>
                     <Box
                         style={{
@@ -131,9 +150,11 @@ export const EditProfile = () => {
                     >
                         <TextField
                             id="filled-basic"
+                            name="email"
                             label="E-mail"
                             variant="standard"
                             helperText=""
+                            value={email}
                             disabled
                         />
                     </Box>
