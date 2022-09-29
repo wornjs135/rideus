@@ -20,6 +20,8 @@ public class MyRideRecordRes {
 
     private double distance;
 
+    private String startedLocation;
+
     private String finishedLocation;
 
     private int expectedTime;
@@ -32,6 +34,7 @@ public class MyRideRecordRes {
                 .courseName(record.getCourse().getCourseName())
                 .roomId(record.getRideRoom().getId())
                 .distance(record.getCourse().getDistance())
+                .startedLocation(record.getCourse().getStart())
                 .finishedLocation(record.getCourse().getFinish())
                 .expectedTime(record.getCourse().getExpectedTime())
                 .isShared(true)
@@ -44,7 +47,6 @@ public class MyRideRecordRes {
                 .courseName(record.getCreatedDate().toString())
                 .roomId(record.getRideRoom().getId())
                 .distance(record.getRecordDistance())
-                .finishedLocation(record.getCourse().getFinish())
                 .expectedTime(record.getRecordTimeMinute().intValue())
                 .isShared(false)
                 .build();
