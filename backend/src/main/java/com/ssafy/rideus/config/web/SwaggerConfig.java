@@ -68,7 +68,7 @@ public class SwaggerConfig {
                 .useDefaultResponseMessages(true)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.ssafy.rideus.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.ssafy.rideus"))
                 .paths(PathSelectors.any())
                 .build()
                 .securityContexts(Arrays.asList(securityContext()))

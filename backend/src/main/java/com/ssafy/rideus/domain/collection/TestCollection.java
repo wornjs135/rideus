@@ -1,6 +1,6 @@
 package com.ssafy.rideus.domain.collection;
 
-import com.ssafy.rideus.domain.base.Point;
+import com.ssafy.rideus.domain.base.Coordinate;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -19,14 +19,14 @@ public class TestCollection {
     private int age;
     private String name;
     private List<String> favorite;
-    private List<Point> points;
+    private List<Coordinate> coordinates;
 
-    public static TestCollection create(int age, String name, List<String> favorite, List<Point> points) {
+    public static TestCollection create(int age, String name, List<String> favorite, List<Coordinate> coordinates) {
         TestCollection testCollection = new TestCollection();
         testCollection.age = age;
         testCollection.name = name;
         testCollection.favorite = favorite;
-        testCollection.points = points;
+        testCollection.coordinates = coordinates;
 
         return testCollection;
     }

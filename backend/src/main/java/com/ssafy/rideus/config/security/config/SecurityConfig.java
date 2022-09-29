@@ -3,6 +3,10 @@ package com.ssafy.rideus.config.security.config;
 import com.ssafy.rideus.config.security.filter.JwtAuthenticationFilter;
 import com.ssafy.rideus.config.security.handler.CustomAccessDeniedHandler;
 import com.ssafy.rideus.config.security.handler.CustomAuthenticationEntryPoint;
+import com.ssafy.rideus.config.security.handler.OAuth2AuthenticationFailureHandler;
+import com.ssafy.rideus.config.security.handler.OAuth2AuthenticationSuccessHandler;
+import com.ssafy.rideus.config.security.repository.CookieAuthorizationRequestRepository;
+import com.ssafy.rideus.config.security.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,9 +23,14 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private final CustomOAuth2UserService customOAuth2UserService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final OAuth2AuthenticationSuccessHandler authenticationSuccessHandler;
+    private final OAuth2AuthenticationFailureHandler authenticationFailureHandler;
     private final CustomAccessDeniedHandler accessDeniedHandler;
     private final CustomAuthenticationEntryPoint authenticationEntryPoint;
+    private final CookieAuthorizationRequestRepository cookieAuthorizationRequestRepository;
+
 
     // 로그인 필요 없는 페이지
     private static final String[] PERMIT_URL_ARRAY = {
@@ -54,8 +63,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(PERMIT_URL_ARRAY).permitAll()
-                .antMatchers("/api/ws-stomp/**", "/api/port","/actuator/health").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/users", "/api/users/login").permitAll()
+                .antMatchers("/api/ws-stomp/**", "/api/port", "/actuator/health").permitAll()
+                .antMatchers("/api/auth/**", "/api/oauth2/**").permitAll()
                 .anyRequest().permitAll()
                 //.anyRequest().hasAnyRole("USER", "ADMIN")
                 .and()
@@ -63,7 +72,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(authenticationEntryPoint)
                 .accessDeniedHandler(accessDeniedHandler)
                 .and()
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+                .oauth2Login()  // oauth2Login 설정을 시작
+                .authorizationEndpoint()
+                .baseUri("/oauth2/authorize")
+                .authorizationRequestRepository(cookieAuthorizationRequestRepository)
+                .and()
+                .redirectionEndpoint()
+                .baseUri("/oauth2/callback/*")
+                .and()
+                .userInfoEndpoint() // oauth2 로그인 성공 후 설정
+                .userService(customOAuth2UserService)
+                .and()
+                .successHandler(authenticationSuccessHandler)
+                .failureHandler(authenticationFailureHandler);
+
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean
