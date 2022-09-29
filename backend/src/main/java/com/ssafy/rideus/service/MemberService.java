@@ -83,8 +83,19 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public List<Record> getRecentRecord(Long memberId) {
-        return recordRepository.findTop5RecordsByMemberIdOrderByIdDesc(memberId);
+    public List<MyRideRecordRes> getRecentRecord(Long memberId) {
+        List<MyRideRecordRes> myRideRecordResList = new ArrayList<>();
+        recordRepository.findTop5RecordsByMemberIdOrderByIdDesc(memberId).forEach(record -> {
+            // 공유된 주행 코스 탔으면
+            if (record.getCourse() != null) {
+                myRideRecordResList.add(MyRideRecordRes.sharedMyRide(record));
+            } else {
+                // 공유되지 않은 나만의 주행
+                myRideRecordResList.add(MyRideRecordRes.unSharedMyRide(record));
+            }
+        });
+
+        return myRideRecordResList;
     }
 
     @Transactional(readOnly = true)
