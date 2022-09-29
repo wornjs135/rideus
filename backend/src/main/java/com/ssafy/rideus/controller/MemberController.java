@@ -54,7 +54,7 @@ public class MemberController {
     }
 
     @GetMapping("/recent")
-    public ResponseEntity<List<Record>> getRecentRocrd(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
+    public ResponseEntity<List<MyRideRecordRes>> getRecentRecord(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
         return ResponseEntity.ok(memberService.getRecentRecord(member.getId()));
     }
 
