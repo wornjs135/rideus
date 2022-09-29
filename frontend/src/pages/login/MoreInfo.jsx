@@ -28,9 +28,7 @@ export const MoreInfo = () => {
         if (name === "nickname") {
             console.log(name);
             setNicknameLengthError(hasLengthError(value));
-            let res = checkDuplicateNickname(value);
-
-            res.then(val => {
+            checkDuplicateNickname(value, val => {
                 if (val === true) {
                     console.log("닉네임 중복 " + val);
                     setNicknameDupError(true);
@@ -39,7 +37,8 @@ export const MoreInfo = () => {
                     setNicknameDupError(false);
                 }
 
-            })
+            });
+
         }
         // else if (name === "phone") {
         //     const regex = /^[0-9\b -]{0,13}$/;
@@ -59,8 +58,7 @@ export const MoreInfo = () => {
 
         }
 
-        let status = updateMoreInfo(inputs);
-        status.then(value => {
+        updateMoreInfo(inputs, value => {
             if (value === 200) {
                 myInfo(null, (res) => {
                     console.log(res);
@@ -70,7 +68,8 @@ export const MoreInfo = () => {
                 navigate("/");
             }
 
-        })
+        });
+
     }
     // else if (name === "phone") {
     //     const regex = /^[0-9\b -]{0,13}$/;
