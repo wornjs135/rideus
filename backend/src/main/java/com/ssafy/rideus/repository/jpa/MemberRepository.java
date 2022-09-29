@@ -87,7 +87,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             "(SELECT m.member_id, tag_id, count(*) as cnt " +
             "from member m join review r on m.member_id = r.member_id join review_tag rt on r.review_id = rt.review_id " +
             "group by member_id, tag_id " +
-            "order by cnt desc) a " +
+            "order by member_id asc, cnt desc) a " +
             ") b " +
             "where cnt_rank <= 5;", nativeQuery = true)
     List<MemberReviewTagTop5DtoInterface> getMemberReviewTagTop5();
