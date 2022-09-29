@@ -139,7 +139,6 @@ public class RideService {
         RideRoom rideRoom = null;
         if (riddingType.equals(single)) {
             rideRoom = rideRoomRepository.save(RideRoom.create(findMember)); // 싱글 주행일때는 그룹방 새로 생성해서 넣어주기
-            log.info("참가자들", mongoRecord.getParticipants());
             mongoRecord.getParticipants().add(ParticipantDto.from(findMember)); // 같이 탄 사람에 자신 혼자.
         } else if (riddingType.equals(group)) {
             RedisRideRoom findRideRoom = redisRideRoomRepository.findById(request.getRideRoomId())
