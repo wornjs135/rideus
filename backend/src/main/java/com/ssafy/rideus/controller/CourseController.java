@@ -59,6 +59,15 @@ public class CourseController {
 	
 	
 	// 추천 코스 상세 조회
+	@GetMapping("/{courseId}/{memberId}")
+	public ResponseEntity<Map<String, Object>> detail(@PathVariable Long memberId, @PathVariable String courseId) {
+	
+		Map<String, Object> course = courseService.getCourse(memberId, courseId);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(course);
+//		return ResponseEntity.status(HttpStatus.OK).build();
+	}
+	/*
 	@GetMapping("/{courseId}")
 	public ResponseEntity<Map<String, Object>> detail(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member, @PathVariable String courseId) {
 	
@@ -67,6 +76,7 @@ public class CourseController {
 		return ResponseEntity.status(HttpStatus.OK).body(course);
 //		return ResponseEntity.status(HttpStatus.OK).build();
 	}
+	*/
 
 	
 	// 코스 검색
@@ -90,12 +100,20 @@ public class CourseController {
 	
 	// 코스 추가 (사용자가 탄 코스 추가하는 경우)
 	@PostMapping("/add")
-	public ResponseEntity<Integer> add(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member, @RequestBody Map<String, String> inputMap) {
-		
-		int result = courseService.addCourseData(inputMap, member.getId());
+	public ResponseEntity<String> add(@RequestBody Map<String, String> inputMap) {
+		String memberIdStr = inputMap.get("memberId");
+		Long memberId = Long.parseLong(memberIdStr);
+		String result = courseService.addCourseData(inputMap, memberId);
 		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
-	
+	/*
+	@PostMapping("/add")
+	public ResponseEntity<String> add(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member, @RequestBody Map<String, String> inputMap) {
+		
+		String result = courseService.addCourseData(inputMap, member.getId());
+		return ResponseEntity.status(HttpStatus.OK).body(result);
+	}
+	*/
 	
 	// 추천 코스 크롤링 데이터 넣기
 	@ApiOperation(value = "크롤링한 코스 데이터 추가")

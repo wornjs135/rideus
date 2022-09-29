@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 import static com.ssafy.rideus.config.data.CacheKey.POPULARITY_TAG;
 import static com.ssafy.rideus.config.data.CacheKey.RANK_COURSE_TIME;
@@ -50,9 +51,31 @@ public class MainController {
     
 	// 현 위치 기반 코스 추천
 	@GetMapping("/{lat}/{lng}")
-	public ResponseEntity<List<RecommendationCourseDto>> recommendByLoc(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member, @PathVariable Double lat, @PathVariable Double lng) {
+	public ResponseEntity<List<Map<String, Object>>> recommendByLoc(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member, @PathVariable Double lat, @PathVariable Double lng) {
 		
-		List<RecommendationCourseDto> courseList = courseService.getAllCoursesByLoc(member.getId(), lat, lng);
+		Long memberId;
+		if(member == null) {
+			memberId = (long) 0;
+		} else {
+			memberId = member.getId();
+		}
+		List<Map<String, Object>> courseList = courseService.getAllCoursesByLoc(memberId, lat, lng);
 		return ResponseEntity.status(HttpStatus.OK).body(courseList);
 	}
+	
+	
+	/*
+	@GetMapping("/{lat}/{lng}")
+	public ResponseEntity<List<RecommendationCourseDto>> recommendByLoc(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member, @PathVariable Double lat, @PathVariable Double lng) {
+		
+		Long memberId;
+		if(member == null) {
+			memberId = (long) 0;
+		} else {
+			memberId = member.getId();
+		}
+		List<RecommendationCourseDto> courseList = courseService.getAllCoursesByLoc(memberId, lat, lng);
+		return ResponseEntity.status(HttpStatus.OK).body(courseList);
+	}
+	*/
 }
