@@ -36,7 +36,7 @@ export const OAuth2RedirectHandler = (props) => {
         }, (err) => {
             console.log(err);
             navigate("/");
-        }, {headers: {Authorization: accessToken}});
+        });
     }
 
     return null;

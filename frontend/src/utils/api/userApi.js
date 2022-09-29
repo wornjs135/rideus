@@ -10,22 +10,38 @@ const authInstance = axios.create({
     },
 });
 
-// instance.interceptors.request.use(checkToken);
+const instance = axios.create({
+    baseURL: API_SERVER_USER,
+    headers: {
+        contentType: "application/json",
+    },
+});
+
+authInstance.interceptors.request.use(function (config) {
+        const token = localStorage.getItem("accessToken");
+        if (token) {
+            config.headers["Authorization"] = 'Bearer ' + token;
+        }
+        return config;
+    },
+    function (error) {
+        return Promise.reject(error);
+    });
 
 const updateMoreInfo = async (data, success, fail) => {
     await authInstance.put("/info", data).then(success).catch(fail);
 }
 
 const checkDuplicateNickname = async (data, success, fail) => {
-    await authInstance.get(`/check/${data}`).then(success).catch(fail);
+    await instance.get(`/check/${data}`).then(success).catch(fail);
 }
 
 const recentRide = async (success, fail) => {
     await authInstance.get("/recent").then(success).catch(fail);
 };
 
-const myInfo = async (success, fail,config) => {
-    await authInstance.get("/me",config).then(success).catch(fail);
+const myInfo = async (success, fail) => {
+    await authInstance.get("/me").then(success).catch(fail);
 };
 
 const myRides = async (success, fail) => {
