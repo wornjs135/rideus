@@ -25,12 +25,12 @@ export const MyPageCourse = ({course}) => {
             <div style={{display: "flex", flexDirection: "column"}}>
                 <div style={{display: "flex", justifyContent: "flex-start"}}>
                     <div>
-                        <StyledText text="강촌길" weight="bold" size={"18px"}
+                        <StyledText text={course?.courseName} weight="bold" size={"18px"}
                                     color="#439652"/>
                     </div>
                 </div>
                 <div>
-                    <StyledText text="경강교 - 강촌유원" color="#969696"
+                    <StyledText text={`${course?.startedLocation} - ${course?.finishedLocation}`} color="#969696"
                     />
                 </div>
             </div>
@@ -39,8 +39,8 @@ export const MyPageCourse = ({course}) => {
                     <Notes/>
                 </Box>
                 <Box align={"end"}>
-                    <StyledText text="21km"/>
-                    <StyledText text="1h 20m"/>
+                    <StyledText text={`${course?.distance}km`}/>
+                    <StyledText text={`${parseInt(course?.expectedTime / 60)}h ${course?.expectedTime % 60}m`}/>
                 </Box>
             </div>
         </CourseBox>
