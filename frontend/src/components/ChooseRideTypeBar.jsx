@@ -13,7 +13,7 @@ import GroupBtn from "../assets/images/group.png";
 import { Dialog } from "@mui/material";
 import { MdDirectionsBike, MdOutlineMap } from "react-icons/md";
 import { GrMapLocation } from "react-icons/gr";
-import { startRidding } from "../utils/api/rideApi";
+import { createGroupRoom, startRidding } from "../utils/api/rideApi";
 const HeaderDiv = styled.div`
   margin: 5px;
   display: flex;
@@ -80,30 +80,38 @@ export const ChooseRideTypeBar = ({ open, onDismiss }) => {
         <Button
           onClick={() => {
             // 탑승
-            navigate("/ride", {
-              state: {
-                courseName: "나만의 길",
-                rideType: "solo",
-                courseType: "my",
-                // recordId: response.data.recordId,
-              },
-            });
-            // startRidding(
-            //   (response) => {
-            //     console.log(response);
-            //     navigate("/ride", {
-            //       state: {
-            //         courseName: "나만의 길",
-            //         rideType: "solo",
-            //         courseType: "my",
-            //         recordId: response.data.recordId,
-            //       },
-            //     });
+            // navigate("/ride", {
+            //   state: {
+            //     courseName: "나만의 길",
+            //     rideType: "single",
+            //     courseType: "my",
+            //     // recordId: response.data.recordId,
+            //     coordinates: undefined,
+            //     checkPoints: undefined,
+            //     courseId: undefined,
+            //     roomInfo: undefined,
             //   },
-            //   (fail) => {
-            //     console.log(fail);
-            //   }
-            // );
+            // });
+            startRidding(
+              (response) => {
+                console.log(response);
+                navigate("/ride", {
+                  state: {
+                    courseName: "나만의 길",
+                    rideType: "single",
+                    courseType: "my",
+                    recordId: response.data.recordId,
+                    coordinates: undefined,
+                    checkPoints: undefined,
+                    courseId: undefined,
+                    roomInfo: undefined,
+                  },
+                });
+              },
+              (fail) => {
+                console.log(fail);
+              }
+            );
           }}
           children={
             <Box width="145px" align="center" style={{ borderRadius: "8px" }}>
@@ -128,6 +136,7 @@ export const ChooseSoloGroupBar = ({
   title,
   coordinates,
   checkPoints,
+  courseId,
 }) => {
   const navigate = useNavigate();
   return (
@@ -147,15 +156,36 @@ export const ChooseSoloGroupBar = ({
         <GBtn
           color="#439652"
           onClick={() => {
-            navigate("/ride", {
-              state: {
-                courseName: title,
-                rideType: "solo",
-                courseType: "course",
-                coordinates: coordinates,
-                checkPoints: checkPoints,
+            startRidding(
+              (response) => {
+                console.log(response);
+                navigate("/ride", {
+                  state: {
+                    courseName: title,
+                    rideType: "single",
+                    courseType: "course",
+                    recordId: response.data.recordId,
+                    coordinates: coordinates,
+                    checkPoints: checkPoints,
+                    courseId: courseId,
+                    roomInfo: undefined,
+                  },
+                });
               },
-            });
+              (fail) => {
+                console.log(fail);
+              }
+            );
+            // navigate("/ride", {
+            //   state: {
+            //     courseName: title,
+            //     rideType: "single",
+            //     courseType: "course",
+            //     coordinates: coordinates,
+            //     checkPoints: checkPoints,
+            //     courseId: courseId,
+            //   },
+            // });
           }}
           children={
             <Box
@@ -179,15 +209,69 @@ export const ChooseSoloGroupBar = ({
         />
         <GBtn
           onClick={() => {
-            navigate("/ride", {
-              state: {
-                courseName: title,
-                rideType: "group",
-                courseType: "course",
-                coordinates: coordinates,
-                checkPoints: checkPoints,
+            createGroupRoom(
+              courseId,
+              (response) => {
+                console.log(response);
+                const roomInfo = {
+                  courseId: response.data.courseId,
+                  nickname: response.data.nickname,
+                  rideRoomId: response.data.rideRoomId,
+                };
+                startRidding(
+                  (response2) => {
+                    console.log(response2);
+                    navigate("/ride", {
+                      state: {
+                        courseName: title,
+                        rideType: "group",
+                        courseType: "course",
+                        recordId: response2.data.recordId,
+                        coordinates: coordinates,
+                        checkPoints: checkPoints,
+                        courseId: courseId,
+                        roomInfo: roomInfo,
+                      },
+                    });
+                  },
+                  (fail) => {
+                    console.log(fail);
+                  }
+                );
               },
-            });
+              (fail) => {
+                console.log(fail);
+              }
+            );
+            // startRidding(
+            //   (response) => {
+            //     console.log(response);
+            //     navigate("/ride", {
+            //       state: {
+            //         courseName: title,
+            //         rideType: "group",
+            //         courseType: "course",
+            //         coordinates: coordinates,
+            //         checkPoints: checkPoints,
+            //         courseId: courseId,
+            //       },
+            //     });
+            //   },
+            //   (fail) => {
+            //     console.log(fail);
+            //   }
+            // );
+
+            // navigate("/ride", {
+            //   state: {
+            //     courseName: title,
+            //     rideType: "group",
+            //     courseType: "course",
+            //     coordinates: coordinates,
+            //     checkPoints: checkPoints,
+            //     courseId: courseId,
+            //   },
+            // });
           }}
           children={
             <Box
