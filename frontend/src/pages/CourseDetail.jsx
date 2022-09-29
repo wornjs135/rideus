@@ -21,6 +21,7 @@ import styled from "styled-components";
 
 import BackBtn from "../assets/images/backButton.png";
 import { getCourseNearInfo } from "../utils/api/nearApi";
+import { getCourseAllReview } from "../utils/api/reviewApi";
 
 export const BackButton = styled.button`
   background: none;
@@ -120,26 +121,26 @@ export const CourseDetail = () => {
           setBmk(response.data.bookmarkId !== null ? true : false);
           setStartView(parseFloat(response.data.starAvg) * 22.8);
           setLoading(false);
-          // getCourseAllReview(
-          //   courseId,
-          //   (response) => {
-          //     console.log(response);
-          //     setLoading(false);
-          //   },
-          //   (fail) => {
-          //     console.log(fail);
-          //   }
-          // );
-          // getCourseRankTime(
-          //   courseId,
-          //   (response) => {
-          //     console.log(response);
-          //     setLoading(false);
-          //   },
-          //   (fail) => {
-          //     console.log(fail);
-          //   }
-          // );
+          getCourseAllReview(
+            courseId,
+            (response) => {
+              console.log(response);
+              setLoading(false);
+            },
+            (fail) => {
+              console.log(fail);
+            }
+          );
+          getCourseRankTime(
+            courseId,
+            (response) => {
+              console.log(response);
+              setLoading(false);
+            },
+            (fail) => {
+              console.log(fail);
+            }
+          );
         },
         (fail) => {
           console.log(fail);
@@ -157,6 +158,9 @@ export const CourseDetail = () => {
       //   }
       // );
     }
+    return () => {
+      setLoading(false);
+    };
   }, []);
 
   const handleStarClick = (index) => {
