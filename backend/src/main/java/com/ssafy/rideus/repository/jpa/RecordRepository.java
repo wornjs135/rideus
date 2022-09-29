@@ -40,9 +40,10 @@ public interface RecordRepository extends JpaRepository<Record, String> {
             "WHERE ranking BETWEEN :myBestSpeedRank -1 AND :myBestSpeedRank + 1", nativeQuery = true)
     List<RankBestSpeedResponseDtoInterface> searchRankMemberBestSpeedWithUpAndDown(@Param("myBestSpeedRank") Long myBestSpeedRank);
 
-    @Query("select r from Record r left outer join fetch r.course c join fetch r.member join fetch r.rideRoom")
+    @Query("select r from Record r left outer join fetch r.course c join fetch r.member join fetch r.rideRoom where r.id = :recordId")
     Optional<Record> findRecordWithCourseAndRideRoomAndMember(String recordId);
 
     @Query("select r from Record r where r.member.id = :memberId and r.recordIsMine = true order by r.createdDate desc")
     List<Record> findMyRideRecentRecord(Long memberId);
+
 }

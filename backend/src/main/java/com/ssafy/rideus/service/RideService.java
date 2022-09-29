@@ -28,6 +28,7 @@ import com.ssafy.rideus.repository.mongo.CourseCoordinateRepository;
 import com.ssafy.rideus.repository.mongo.MongoRecordRepository;
 import com.ssafy.rideus.repository.redis.RedisRideRoomRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,6 +44,7 @@ import static com.ssafy.rideus.dto.record.type.RiddingType.single;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class RideService {
 
     private final MemberRepository memberRepository;
