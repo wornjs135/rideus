@@ -22,6 +22,7 @@ import styled from "styled-components";
 import BackBtn from "../assets/images/backButton.png";
 import { getCourseNearInfo } from "../utils/api/nearApi";
 import { getCourseAllReview } from "../utils/api/reviewApi";
+import { deleteBookmark, makeBookmark } from "../utils/api/bookmarkApi";
 
 export const BackButton = styled.button`
   background: none;
@@ -83,6 +84,7 @@ export const CourseDetail = () => {
   const [clicked, setClicked] = useState([false, false, false, false, false]);
   const [starView, setStartView] = useState(0.0);
   const [reviews, setReviews] = useState([]);
+  const [ranks, setRanks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [nearInfos, setNearInfos] = useState({
     data: [
@@ -102,7 +104,7 @@ export const CourseDetail = () => {
         getCourseNearInfo(
           { category: n.key, courseId: courseId },
           (response) => {
-            console.log(response);
+            console.log(n.key + "nearInfo : ", response);
             nearInfos.data[idx].arr = response.data;
             setNearInfos({ ...nearInfos });
           },
@@ -116,15 +118,16 @@ export const CourseDetail = () => {
       getCourseDetail(
         courseId,
         (response) => {
-          console.log(response);
+          console.log("courseData : ", response);
           setCourse(response.data);
           setBmk(response.data.bookmarkId !== null ? true : false);
           setStartView(parseFloat(response.data.starAvg) * 22.8);
-          setLoading(false);
+
           getCourseAllReview(
             courseId,
             (response) => {
-              console.log(response);
+              console.log("reviews : ", response);
+              setReviews(response.data);
               setLoading(false);
             },
             (fail) => {
@@ -134,13 +137,15 @@ export const CourseDetail = () => {
           getCourseRankTime(
             courseId,
             (response) => {
-              console.log(response);
+              console.log("ranks : ", response);
+              setRanks(response.data);
               setLoading(false);
             },
             (fail) => {
               console.log(fail);
             }
           );
+          setLoading(false);
         },
         (fail) => {
           console.log(fail);
@@ -163,14 +168,48 @@ export const CourseDetail = () => {
     };
   }, []);
 
-  const handleStarClick = (index) => {
-    let clickStates = [...clicked];
-    for (let i = 0; i < 5; i++) {
-      clickStates[i] = i <= index ? true : false;
-    }
-    setClicked(clickStates);
+  const refreshCourseData = () => {
+    getCourseDetail(
+      courseId,
+      (response) => {
+        console.log("courseData : ", response);
+        setCourse(response.data);
+        setBmk(response.data.bookmarkId !== null ? true : false);
+        setStartView(parseFloat(response.data.starAvg) * 22.8);
+      },
+      (fail) => {
+        console.log(fail);
+        setLoading(false);
+      }
+    );
   };
-  const array = [0, 1, 2, 3, 4];
+
+  const handleBookmark = () => {
+    if (bmk) {
+      deleteBookmark(
+        course.bookmarkId,
+        (response) => {
+          console.log(response);
+          refreshCourseData();
+        },
+        (fail) => {
+          console.log(fail);
+        }
+      );
+    } else {
+      makeBookmark(
+        course.courseId,
+        (response) => {
+          console.log(response);
+          refreshCourseData();
+        },
+        (fail) => {
+          console.log(fail);
+        }
+      );
+    }
+  };
+
   if (loading) return <Spinner />;
   else
     return (
@@ -183,7 +222,7 @@ export const CourseDetail = () => {
         >
           <BackButton
             onClick={() => {
-              navigate(-1);
+              navigate("/courseList");
             }}
           >
             <img src={BackBtn} alt="" />
@@ -261,8 +300,7 @@ export const CourseDetail = () => {
               width="25px"
               height="25px"
               onClick={() => {
-                if (bmk === true) setBmk(false);
-                else setBmk(true);
+                handleBookmark();
               }}
             />
             <StyledText text={course.likeCount} />
@@ -293,6 +331,7 @@ export const CourseDetail = () => {
           onDismiss={() => {
             setOpen(false);
           }}
+          ranks={ranks}
           reviews={reviews}
         />
         <ChooseSoloGroupBar
@@ -314,69 +353,12 @@ export const CourseDetail = () => {
           handleAction={() => {
             setStart(true);
           }}
-          map={
-            <CourseMap
-              course={course.coordinates}
-              width={"100%"}
-              height={"100%"}
-              marker1={
-                <MapMarker
-                  position={
-                    course.coordinates
-                      ? course.coordinates[0]
-                      : { lng: 127.002158, lat: 37.512847 }
-                  }
-                >
-                  <div style={{ color: "#000" }}>시작점</div>
-                </MapMarker>
-              }
-              marker={
-                course.coordinates &&
-                course.coordinates[0].lat ===
-                  course.coordinates[course.coordinates.length - 1].lat &&
-                course.coordinates[0].lng ===
-                  course.coordinates[course.coordinates.length - 1].lng ? (
-                  <MapMarker position={course.coordinates[0]}>
-                    <div style={{ color: "#000" }}>시작, 종점</div>
-                  </MapMarker>
-                ) : (
-                  <MapMarker
-                    position={
-                      course.coordinates
-                        ? course.coordinates[course.coordinates.length - 1]
-                        : []
-                    }
-                  >
-                    <div style={{ color: "#000" }}>종점</div>
-                  </MapMarker>
-                )
-              }
-              infoMarkers={
-                loading ? (
-                  <Spinner />
-                ) : (
-                  nearInfos.data.map((near, idx) => {
-                    return near.arr.map((info, idx) =>
-                      idx % 2 === 0 ? (
-                        <MapMarker
-                          position={{
-                            lat: info.nearinfoLat,
-                            lng: info.nearinfoLng,
-                          }}
-                          key={idx}
-                        ></MapMarker>
-                      ) : null
-                    );
-                  })
-                )
-              }
-            />
-          }
           bottom={true}
           course={course}
           cancel="뒤로가기"
           accept="주행시작"
           title={course.courseName}
+          nearInfos={nearInfos}
         />
       </Box>
     );

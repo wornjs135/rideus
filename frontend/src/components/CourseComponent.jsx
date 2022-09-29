@@ -3,13 +3,14 @@ import { StarBox, StyledText } from "./Common.jsx";
 import Star from "../assets/images/star.png";
 import StarBlank from "../assets/images/star_blank.png";
 import { Box, Spinner } from "grommet";
+import { expectTimeHandle, timeHandle } from "../utils/util.js";
+import { useNavigate } from "react-router-dom";
 
 const CourseBox = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
   justify-content: space-between;
-  align-items: center;
   width: 153px;
   height: 222px;
   margin-right: 15px;
@@ -48,23 +49,40 @@ const NewsDiv = styled.div`
 // tags: null
 
 export const BestCourse = ({ course }) => {
+  const navigate = useNavigate();
   if (course)
     return (
-      <CourseBox>
-        <StyledText text={course.courseName} weight="bold" color="#439652" />
-        <StarBox
-          score={course.starAvg}
-          starView={parseFloat(course.starAvg) * 22.8}
-        />
-        <StyledText text="경강교 - 강촌유원지" color="#969696" />
-        <StyledText text="오르막길 오르다 죽을뻔.." color="#3C3C43" />
-        <StyledText text="오르막길 오르다 죽을뻔.." color="#3C3C43" />
-        <StyledText text="오르막길 오르다 죽을뻔.." color="#3C3C43" />
-        <Box align="end">
-          <StyledText text="총 코스 길이 : 21km" />
-          <StyledText text="예상 시간 : 1h 20m" />
+      <>
+        <CourseBox
+          onClick={() => {
+            navigate(`/courseDetail/${course.courseId}`);
+          }}
+        >
+          <StyledText text={course.courseName} weight="bold" color="#439652" />
+          <StarBox starView={parseFloat(course.starAvg) * 22.8} />
+          <StyledText
+            text={course.start + " - " + course.finish}
+            color="#969696"
+            style={{
+              overflow: "hidden",
+              wordBreak: "normal",
+              whiteSpace: "normal",
+            }}
+          />
+          <Box align="end">
+            <StyledText text={"총 코스 길이 : " + course.distance + "km"} />
+            <StyledText
+              text={"예상 시간 : " + expectTimeHandle(course.expectedTime)}
+            />
+          </Box>
+        </CourseBox>
+        <Box direction="row" overflow="scroll" gap="medium">
+          {course.tags &&
+            course.tags.map((tag, idx) => {
+              return <StyledText text={`#${tag.tagName}`} key={tag.tagId} />;
+            })}
         </Box>
-      </CourseBox>
+      </>
     );
   else return <Spinner />;
 };

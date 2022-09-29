@@ -154,7 +154,6 @@ export const ChooseSoloGroupBar = ({
       />
       <Box direction="row" justify="center" width="100%" pad="15px" gap="small">
         <GBtn
-          color="#439652"
           onClick={() => {
             startRidding(
               (response) => {
@@ -193,14 +192,13 @@ export const ChooseSoloGroupBar = ({
               height="140px"
               align="center"
               justify="between"
-              background="#439652"
               style={{ borderRadius: "8px" }}
               pad="small"
             >
               <img src={SoloBtn} width="100px" />
               <StyledText
                 text="혼자 타기"
-                color="white"
+                color="black"
                 weight="bold"
                 size="18px"
               />
@@ -279,14 +277,13 @@ export const ChooseSoloGroupBar = ({
               align="center"
               height="140px"
               justify="between"
-              background="#439652"
               style={{ borderRadius: "8px" }}
               pad="small"
             >
               <img src={GroupBtn} width="100px" />
               <StyledText
                 text="같이 타기"
-                color="white"
+                color="black"
                 weight="bold"
                 size="18px"
               />
