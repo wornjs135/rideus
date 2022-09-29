@@ -24,6 +24,7 @@ export const OAuth2RedirectHandler = (props) => {
     navigate("/moreinfo");
     // window.location.href = "/moreinfo";
   } else {
+    console.log(localStorage.getItem("accessToken"));
     myInfo((res) => {
       console.log(res);
       const { data } = res;
@@ -31,7 +32,10 @@ export const OAuth2RedirectHandler = (props) => {
       console.log(data);
       navigate("/");
       // navigate("/");
-      window.location.href = '/';
+      // window.location.href = '/';
+    },(err)=>{
+      console.log(err);
+      navigate("/");
     });
   }
 
