@@ -25,7 +25,7 @@ public interface CourseRepository extends JpaRepository<Course, String> {
             "(SELECT c.course_id, tag_id, count(*) as cnt " +
             "from course c join review r on c.course_id = r.course_id join review_tag rt on r.review_id = rt.review_id " +
             "group by course_id, tag_id " +
-            "order by cnt desc) a " +
+            "order by course_id asc, cnt desc) a " +
             ") b " +
             "where cnt_rank <= 5;", nativeQuery = true)
     List<CourseReviewTagTop5DtoInterface> getCourseReviewTagTop5();
