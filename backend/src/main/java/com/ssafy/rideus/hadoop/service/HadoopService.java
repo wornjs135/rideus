@@ -1,4 +1,4 @@
-package com.ssafy.rideus.service;
+package com.ssafy.rideus.hadoop.service;
 
 
 import com.jcraft.jsch.JSchException;
@@ -8,13 +8,12 @@ import com.ssafy.rideus.domain.base.Coordinate;
 import com.ssafy.rideus.domain.collection.CourseCoordinate;
 import com.ssafy.rideus.domain.collection.NearInfo;
 import com.ssafy.rideus.dto.CategoryDto;
-import com.ssafy.rideus.hadoop.Controller.SSHUtils;
+import com.ssafy.rideus.hadoop.util.SSHUtils;
 import com.ssafy.rideus.repository.jpa.CourseRepository;
 import com.ssafy.rideus.repository.mongo.CourseCoordinateRepository;
 import com.ssafy.rideus.repository.mongo.NearInfoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -27,27 +26,20 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
-import static com.ssafy.rideus.service.NearInfoServiceImpl.distance;
+import static com.ssafy.rideus.service.NearInfoService.distance;
 
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 @Transactional
-public class HadoopServiceImpl implements HadoopService{
+public class HadoopService{
 
-    @Autowired
-    SSHUtils ssh;
-    @Autowired
-    CourseRepository courseRepository;
-    @Autowired
-    NearInfoService nearInfoService;
-    @Autowired
-    NearInfoRepository nearInfoRepository;
-    @Autowired
-    CourseCoordinateRepository courseCoordinateRepository;
-    @Autowired
-    MongoTemplate mongoTemplate;
+    private final SSHUtils ssh;
+    private final  CourseRepository courseRepository;
+    private final  NearInfoRepository nearInfoRepository;
+    private final  CourseCoordinateRepository courseCoordinateRepository;
+    private final  MongoTemplate mongoTemplate;
 
     // FIXME: 배포 시 EC2 디렉토리로 변경
     private static final String LOCAL_FILE_PATH = "C:\\Users\\SSAFY\\Desktop\\input";
@@ -57,7 +49,7 @@ public class HadoopServiceImpl implements HadoopService{
     private static final String OUTPUT_FILE_NAME = "output";
     private static final String FILE_TYPE = ".txt";
 
-    static final int DISTANCE_LIMIT = 2000; // 반경 4km 안에 있는 시설 정보 조회
+    static final int DISTANCE_LIMIT = 1000; // 반경 1km 안에 있는 시설 정보 조회
 
     /*
     o 1. 코스 주변정보 mongodb에 update
@@ -67,32 +59,93 @@ public class HadoopServiceImpl implements HadoopService{
     5. 가장 많은 카테고리를 mysql 코스 카테고리로 update
      */
 
-    @Transactional
-    /* 새로 입력된 코스 주변정보 update */
-    public List<NearInfo> mapreduceCategory(String courseid) {
-
-        /* mongoDB 새로 입력된 코스 주변정보 입력 */
-        List<NearInfo> nearInfos = nearInfoService.saveNearInfo(courseid);
-
-        /* 코스 주변정보 카테고리 mapreudce 실행, 결과 MySQL Update */
-        parsingCourseCategory(nearInfos, courseid);
-
-        return nearInfos;
-    }
 
     /* 코스 주변정보 카테고리만 분류해서 txt파일로 변환 */
+    @Transactional
+    public void hadoopNearInfo() {
 
-    /**
-     * 실행 순서
-     * 1. make input.txt, course nearinfo category file
-     * 2. send input.txt file to cluster server
-     * 3. copy input.txt to hdfs
-     * 4. run mapreduce
-     * 5. read output file, MySQL Update
-     *
-     * @param courseNearinfos : 코스 주변 정보
-     * @param courseid : 코스 id
-     */
+        List<Course> courses = courseRepository.findCoruseByCategoryNull();
+        List<String> courseIds = new ArrayList<>();
+        for(Course course : courses) courseIds.add(course.getId());
+
+        // 전체 주변정보
+        List<NearInfo> allNearInfo = nearInfoRepository.findAll();
+
+        for(String courseId : courseIds) {
+            log.info("course id : " + courseId);
+
+            // 중복체크 맵
+            Map<String, NearInfo> checkedInfo = new HashMap<>();
+            // 카테고리 분류 리스트
+            Map<String, List<String>> nearInfoIds = new HashMap<>();
+
+            // 코스 정보 mongoDB find
+            CourseCoordinate courseCoordinate =
+                    courseCoordinateRepository
+                            .findById(courseId)
+                            .orElseThrow(() -> new NotFoundException("코스 상세 조회 실패"));
+
+            List<Coordinate> checkpoints = courseCoordinate.getCheckpoints();
+
+            int checkpointCounter = 0;
+            int nearInfoCounter = 0;
+            for(Coordinate checkpoint : checkpoints) {
+
+                log.info(++checkpointCounter + " " + checkpoint);
+                // 체크포인트 좌표
+                double cpLat = Double.parseDouble(checkpoint.getLat());
+                double cpLng = Double.parseDouble(checkpoint.getLng());
+
+                // 주변 정보 전체 조회
+                for (NearInfo nearInfo : allNearInfo) {
+
+                    // 이미 저장된 주변정보
+                    if (checkedInfo.containsKey(nearInfo.getId())) continue;
+
+                    // 주변 정보 위,경도 좌표
+                    double infoLat = Double.parseDouble(nearInfo.getNearinfoLat());
+                    double infoLng = Double.parseDouble(nearInfo.getNearinfoLng());
+
+                    // 제한 거리 안에 존재하는 경우
+                    if (distance(infoLat, infoLng, cpLat, cpLng) < DISTANCE_LIMIT) {
+                        checkedInfo.put(nearInfo.getId(), nearInfo);
+
+                        String category = nearInfo.getNearinfoCategory();
+
+                        if (!nearInfoIds.containsKey(category))
+                            nearInfoIds.put(category, new ArrayList<>());
+
+                        nearInfoIds.get(category).add(nearInfo.getId());
+                        nearInfoCounter++;
+                    } // end of calculate distance
+                } // end of neainfo loop
+            } // end of checkpoint
+
+//            // 중복체크 맵
+//            Map<String, NearInfo> checkedInfo = new HashMap<>();
+//            // 카테고리 분류 리스트
+//            Map<String, List<String>> nearInfoIds = new HashMap<>();
+
+            // hadoop에 넘겨줄 데이터
+            List<NearInfo> nearInfos = new ArrayList<>(checkedInfo.values());
+            log.info("near Infos size = " + nearInfos.size());
+
+            Query query = new Query().addCriteria(Criteria.where("_id").is(courseId));
+            Update update = new Update();
+            update.set("nearInfoIds", nearInfoIds);
+            mongoTemplate.updateFirst(query, update, CourseCoordinate.class);
+
+            /* 코스 주변정보 카테고리 mapreudce 실행, 결과 MySQL Update */
+            parsingCourseCategory(nearInfos, courseId);
+
+
+
+        } // end of courseId
+
+
+
+    }
+
     public void parsingCourseCategory(List<NearInfo> courseNearinfos,String courseid) {
 
         /* input 파일 생성*/
@@ -129,7 +182,6 @@ public class HadoopServiceImpl implements HadoopService{
 
     }
     @Transactional
-    @Override
     public void copyFileToHdfs(String courseid) {
 
         /* session 연결 */
@@ -210,82 +262,6 @@ public class HadoopServiceImpl implements HadoopService{
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        }
-
-
-    }
-    @Transactional
-    @Override
-    public void settingDB(List<String> newCourseList) {
-
-        List<Course> courseByCategoryNull = courseRepository.findCoruseByCategoryNull();
-        newCourseList = new ArrayList<>();
-        for(Course course : courseByCategoryNull)
-            newCourseList.add(course.getId());
-        System.out.println(Arrays.toString(newCourseList.toArray()));
-
-        List<NearInfo> allNearInfo = nearInfoRepository.findAll();
-        int count = 0;
-        for(String courseId : newCourseList) {
-
-            List<String> nearInfoIds = new ArrayList<>();
-            if(count++ == 20 )break;
-//            mapreduceCategory(courseId);
-            CourseCoordinate courseCoordinate =
-                    courseCoordinateRepository
-                            .findById(courseId)
-                            .orElseThrow(() -> new NotFoundException("코스 상세 조회 실패"));
-
-            // mongoDB에서 체크포인트 리스트 가져오기
-            List<Coordinate> checkpoints = courseCoordinate.getCheckpoints();
-            // 주변 정보 중복 체크 map
-            Map<String, NearInfo> checkedInfo = new HashMap<>();
-
-            log.info("all Near Info size = " + allNearInfo.size());
-            log.info("check point size = " + checkpoints.size());
-
-            // 체크포인트 별로 주변정보 검색
-            int checkpointCounter = 1;
-            for ( Coordinate checkPoint : checkpoints ) {
-
-                log.info(checkpointCounter++ +" "+ checkPoint);
-                // 체크포인트 좌표
-                double cpLat = Double.parseDouble(checkPoint.getLat());
-                double cpLng = Double.parseDouble(checkPoint.getLng());
-
-                // 주변 정보 전체 조회
-                for ( NearInfo nearInfo : allNearInfo ) {
-                    if(checkedInfo.containsKey(nearInfo.getId())) continue;
-
-                    // 주변 정보 위,경도 좌표
-                    double infoLat = Double.parseDouble(nearInfo.getNearinfoLat());
-                    double infoLng = Double.parseDouble(nearInfo.getNearinfoLng());
-
-                    // 제한 거리 안에 존재하는 경우
-                    if(distance(infoLat, infoLng, cpLat, cpLng) < DISTANCE_LIMIT) {
-                        checkedInfo.put(nearInfo.getId(), nearInfo);
-                        nearInfoIds.add(nearInfo.getId());
-                    }
-
-                } // end of neainfo loop
-            } // end of checkpoint loop
-
-            List<NearInfo> nearInfos = new ArrayList<>(checkedInfo.values());
-            log.info("near Infos size = " + nearInfos.size());
-
-//            courseCoordinateRepository.save( new CourseCoordinate(
-//                    courseCoordinate.getId(),
-//                    courseCoordinate.getCoordinates(),
-//                    courseCoordinate.getCheckpoints(),
-//                    nearInfos));
-            Query query = new Query().addCriteria(Criteria.where("_id").is(courseId));
-            Update update = new Update();
-            update.set("nearInfoIds", nearInfoIds);
-            mongoTemplate.updateFirst(query, update, CourseCoordinate.class);
-
-            /* 코스 주변정보 카테고리 mapreudce 실행, 결과 MySQL Update */
-            parsingCourseCategory(nearInfos, courseId);
-
         }
 
 
