@@ -36,7 +36,7 @@ public class MainController {
         if (member == null) {
             return ResponseEntity.ok(courseService.getPopularityCourseWithBookmarkWithoutBookmark());
         } else {
-            return ResponseEntity.ok(courseService.getPopularityCourseWithBookmark(1L));
+            return ResponseEntity.ok(courseService.getPopularityCourseWithBookmark(member.getId()));
         }
     }
 
