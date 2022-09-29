@@ -4,6 +4,8 @@ import com.ssafy.rideus.domain.Course;
 import com.ssafy.rideus.dto.course.common.RecommendationCourseDto;
 import com.ssafy.rideus.dto.course.common.RecommendationCourseDtoInterface;
 import com.ssafy.rideus.dto.course.response.PopularityCourseResponse;
+import com.ssafy.rideus.dto.review.ReviewStarAvgDto;
+import com.ssafy.rideus.dto.review.ReviewStarAvgDtoInterface;
 import com.ssafy.rideus.dto.tag.common.TagDto;
 import com.ssafy.rideus.repository.jpa.CourseRepository;
 import com.ssafy.rideus.repository.jpa.MemberTagRepository;
@@ -65,16 +67,19 @@ import com.ssafy.rideus.repository.jpa.RecordRepository;
 
 @Service
 @RequiredArgsConstructor
-//@Transactional(readOnly = true)
 public class CourseService {
 	
-	@Autowired
-	private CourseCoordinateRepository courseCoordinateRepository;
+	private static final String SUCCESS = "success";
+  private static final String FAIL = "fail";
+	
+	private final CourseCoordinateRepository courseCoordinateRepository;
 	private final MongoRecordRepository mongoRecordRepository;
     private final CourseRepository courseRepository;
     private final RecordRepository recordRepository;
     private final MemberRepository memberRepository;
     private final MemberTagRepository memberTagRepository;
+    
+    private static List<Coordinate> checkpoints = new ArrayList<>();
 	
 	
     public List<RecommendationCourseDto> getRecommendationCourseByTag(Long memberId) {
@@ -112,7 +117,7 @@ public class CourseService {
 
     
 	// 코스에 대한 태그들 정리
-    public Map<String, List<TagDto>> getAllCourseTagsMap(List<String> courseIds) {
+    private Map<String, List<TagDto>> getAllCourseTagsMap(List<String> courseIds) {
     	List<CourseReviewTagTop5DtoInterface> allCourseTags;
     	if(courseIds.size() == 0) {
     		allCourseTags = courseRepository.getAllCourseTags();
@@ -179,35 +184,9 @@ public class CourseService {
 	}
 	
 	
-	
-    // 코스 상세 조회
-	// 특정 코스 정보 조회 + 몽고디비 데이터 가져오기
-	public Map<String, Object> getCourse(Long memberId, String courseId) {
-		
-		// Map 혹은 Json 객체 생성해서 거기에 담아 보내기
-//		JSONObject
+	// RecommendationCourseDto -> Map (Dto + 추가 정보)
+	private Map<String, Object> convertCourseDtoIntoMap(RecommendationCourseDto course, Double starAvg) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		
-		// MySQL에 있는 코스 데이터
-		List<String> courseIds = new ArrayList<String>();
-		courseIds.add(courseId);
-		RecommendationCourseDto course = getSpecificCourse(memberId, courseIds).get(0);
-		
-		// 리뷰 별점 평균
-		double starAvg;
-		try {
-			String starInfo = courseRepository.getStarAvg(courseId);
-			String[] starInfoArr = starInfo.split("/");
-			double starSum = Double.parseDouble(starInfoArr[0]);
-			double reviewCnt = Double.parseDouble(starInfoArr[1]);
-			starAvg = Math.round((starSum / reviewCnt)*10) / 10.0;			
-		} catch (Exception e) {
-			starAvg = 0;
-		}		
-		
-		
-		// MongoDB에 있는 데이터 가져오기
-		CourseCoordinate courseCoordinate = courseCoordinateRepository.findById(courseId).get();
 		
 		// Map에 담기
 		resultMap.put("courseId", course.getCourseId());
@@ -222,6 +201,43 @@ public class CourseService {
 		resultMap.put("bookmarkId", course.getBookmarkId());
 		resultMap.put("starAvg", starAvg);
 		resultMap.put("tags", course.getTags());
+//		resultMap.put("coordinates", courseCoordinate.getCoordinates());
+//		resultMap.put("checkpoints", courseCoordinate.getCheckpoints());
+		
+		return resultMap;
+	}
+	
+	
+	
+    // 코스 상세 조회
+	// 특정 코스 정보 조회 + 몽고디비 데이터 가져오기
+	public Map<String, Object> getCourse(Long memberId, String courseId) {
+		
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		
+		// MySQL에 있는 코스 데이터
+		List<String> courseIds = new ArrayList<String>();
+		courseIds.add(courseId);
+		RecommendationCourseDto course = getSpecificCourse(memberId, courseIds).get(0);
+		
+		// 해당 코스의 리뷰 별점 통계(count, sum) 정보 가져오기
+		List<ReviewStarAvgDtoInterface> starAvgDtoInterfaceList = courseRepository.getCoursesStarAvg(courseIds);
+		
+		// 리뷰 별점 평균
+		double starAvg;
+		if(starAvgDtoInterfaceList.size() > 0) {
+			ReviewStarAvgDto starAvgDto = ReviewStarAvgDto.from(starAvgDtoInterfaceList.get(0));
+			starAvg = Math.round((starAvgDto.getSum() / starAvgDto.getCount())*10) / 10.0;
+		} else {
+			starAvg = 0;
+		}
+		
+		
+		// MongoDB에 있는 데이터 가져오기
+		CourseCoordinate courseCoordinate = courseCoordinateRepository.findById(courseId).get();
+		
+		// Map에 담기
+		resultMap = convertCourseDtoIntoMap(course, starAvg);
 		resultMap.put("coordinates", courseCoordinate.getCoordinates());
 		resultMap.put("checkpoints", courseCoordinate.getCheckpoints());
 		
@@ -252,10 +268,14 @@ public class CourseService {
 	
 
 	// 현 위치 기반 코스 추천
-	public List<RecommendationCourseDto> getAllCoursesByLoc(Long memberId, Double lat, Double lng) {
+	public List<Map<String, Object>> getAllCoursesByLoc(Long memberId, Double lat, Double lng) {
 		
-		// 전체 좌표 빼고 나머지만 가져오는 쿼리 작성해보기
+		List<Map<String, Object>> resultMapList = new ArrayList<Map<String,Object>>();
+//	public List<RecommendationCourseDto> getAllCoursesByLoc(Long memberId, Double lat, Double lng) {
+		
+		// 전체 좌표 빼고 나머지만 가져오는 쿼리 작성해보기  ★★★
 		List<CourseCoordinate> allCourseCoordinates = courseCoordinateRepository.findAll();
+		
 		
 		Map<String, Double> intervalMap = new HashMap<String, Double>();
 //		double lat1 = Double.parseDouble(lat);
@@ -296,10 +316,17 @@ public class CourseService {
 		for(int i=0; i<courseCnt; i++) {
 			courseIds.add(listEntries.get(i).getKey());
 		}
+
+		List<ReviewStarAvgDtoInterface> starAvgDtoInterfaceList = courseRepository.getCoursesStarAvg(courseIds);
+		List<ReviewStarAvgDto> starAvgList = new ArrayList<ReviewStarAvgDto>();
+		for(ReviewStarAvgDtoInterface r : starAvgDtoInterfaceList) {
+			starAvgList.add(ReviewStarAvgDto.from(r));
+		}
 		
+		
+		// DB에서 가져온 코스 정보 재정렬
 		List<RecommendationCourseDto> courseList = getSpecificCourse(memberId, courseIds);
 		List<RecommendationCourseDto> sortedCourseList = new ArrayList<RecommendationCourseDto>();
-		
 		for(int i=0; i<courseCnt; i++) {
 			String courseId = courseIds.get(i);
 			for(int clIdx=0; clIdx<courseCnt; clIdx++) {
@@ -310,15 +337,33 @@ public class CourseService {
 				}
 			}
 		}
+//		System.out.println(">>>courseIds.toString() "+courseIds.toString());
+//		System.out.println(">>>sortedCourseList.toString() "+sortedCourseList.toString());
 		
-//		System.out.println(sortedCourseList.toString());
 		
-		return sortedCourseList;
+		// 리뷰 별점 평균 return 값에 포함시키기
+		double starAvg;
+		for(int i=0; i<courseCnt; i++) {
+			starAvg = 0;
+			RecommendationCourseDto course = sortedCourseList.get(i);
+			String courseId = course.getCourseId();
+			for(int idx=0; idx<starAvgList.size(); idx++) {
+				ReviewStarAvgDto starAvgDto = starAvgList.get(idx);
+				if(courseId.equals(starAvgDto.getCourseId())) {
+					starAvg = Math.round((starAvgDto.getSum() / starAvgDto.getCount())*10) / 10.0;
+					break;
+				}
+			}
+			
+			resultMapList.add(convertCourseDtoIntoMap(course, starAvg));
+		}
+		
+		return resultMapList;
 	}
 	
 	
 	// 코스 추가
-	public int addCourseData(Map<String, String> inputMap, Long memberId) {
+	public String addCourseData(Map<String, String> inputMap, Long memberId) {
 		// inputMap - memberId, courseName, distance, recordId
 
 		// 기록 식별자를 받아서 좌표를 가져와서 저장
@@ -366,11 +411,11 @@ public class CourseService {
 	        Record record = Record.findCourse(originRecord, course);
 	        recordRepository.save(record);
 	        
-	        return 1;
+	        return SUCCESS;
 			
 		} catch (Exception e) {
 			System.out.println(">>> addCourseData() Exception: "+e);
-			return 0;
+			return FAIL;
 		}
 		
 	}
@@ -450,7 +495,7 @@ public class CourseService {
 //	            List<Coordinate> coor = addCourseCoordinates(coordinates);
 	            
 	            // 체크포인트 좌표 리스트 생성
-	            List<Coordinate> checkpoints = getCheckpoints(coordinates);
+	            getCheckpoints(coordinates);
 	            
 
 	            // 코스 좌표, 체크포인트 좌표 데이터 MongoDB에 넣기
@@ -472,6 +517,7 @@ public class CourseService {
 	    		String start = locAPI(startCoordinate.getLng(), startCoordinate.getLat());
 	    		String finish = locAPI(finishCoordinate.getLng(), finishCoordinate.getLat());
 	            
+	    		checkpoints.clear();
 	    		int expectedTime = Integer.parseInt(courseAdditionalData[3]);
 	            
 	            // 서버 db 확인하고 member_id 값 수정하기
@@ -589,9 +635,9 @@ public class CourseService {
 
 	
 	// gpx 파일의 코스 좌표로 체크포인트 리스트 생성
-	// 좌표 간 거리를 구해 4km 될 때마다 해당 좌표를 체크포인트로 추가
+	// 좌표 간 거리를 구해 특정 거리(standard) 될 때마다 해당 좌표를 체크포인트로 추가
 	private static List<Coordinate> getCheckpoints(List<Coordinate> coordinateList) {
-		List<Coordinate> checkpoints = new ArrayList<>();
+		
 		
 		// 시작 좌표를 체크포인트에 추가
 		checkpoints.add(coordinateList.get(0));
@@ -599,6 +645,8 @@ public class CourseService {
 		double distSum = 0;
 		double dist;
 		
+		// 체크 포인트 생성 기준 거리 1000m(1km)
+//		double standard = 1000;
 		int listIdx = coordinateList.size()-1;
 		for(int i=0; i<listIdx; i++) {
 			Coordinate coordinate1 = coordinateList.get(i);
@@ -608,8 +656,9 @@ public class CourseService {
 //			System.out.println(i+". dist: "+dist);
 			distSum += dist;
 //			System.out.println("distSum: "+distSum);
-			// 좌표 간 거리 합이 4000m(4km)보다 커지면 그 전 좌표를 체크포인트로 추가
-			if(distSum > 4000) {
+			
+			// 좌표 간 거리 합이 standard보다 커지면 그 전 좌표를 체크포인트로 추가
+			if(distSum > 1000) {
 				checkpoints.add(coordinate1);
 				// 초기화
 				distSum = 0;
