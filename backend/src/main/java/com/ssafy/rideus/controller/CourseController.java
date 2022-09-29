@@ -62,7 +62,6 @@ public class CourseController {
 		Map<String, Object> course = courseService.getCourse(member.getId(), courseId);
 		
 		return ResponseEntity.status(HttpStatus.OK).body(course);
-//		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
 	
@@ -87,12 +86,21 @@ public class CourseController {
 	
 	// 코스 추가 (사용자가 탄 코스 추가하는 경우)
 	@PostMapping("/add")
-	public ResponseEntity<Integer> add(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member,
+	public ResponseEntity<String> add(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member,
 									   @RequestPart Map<String, String> inputMap, @RequestPart MultipartFile image) {
-		int result = courseService.addCourseData(inputMap, member.getId(), image);
+
+		String result = courseService.addCourseData(inputMap, member.getId(), image);
+
 		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
-	
+	/*
+	@PostMapping("/add")
+	public ResponseEntity<String> add(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member, @RequestBody Map<String, String> inputMap) {
+		
+		String result = courseService.addCourseData(inputMap, member.getId());
+		return ResponseEntity.status(HttpStatus.OK).body(result);
+	}
+	*/
 	
 	// 추천 코스 크롤링 데이터 넣기
 	@ApiOperation(value = "크롤링한 코스 데이터 추가")

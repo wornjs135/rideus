@@ -3,6 +3,9 @@ package com.ssafy.rideus.repository.jpa;
 import com.ssafy.rideus.domain.Course;
 import com.ssafy.rideus.dto.course.common.CourseReviewTagTop5DtoInterface;
 import com.ssafy.rideus.dto.course.common.RecommendationCourseDtoInterface;
+import com.ssafy.rideus.dto.review.ReviewStarAvgDto;
+import com.ssafy.rideus.dto.review.ReviewStarAvgDtoInterface;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -10,6 +13,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 public interface CourseRepository extends JpaRepository<Course, String> {
 
@@ -65,11 +69,10 @@ public interface CourseRepository extends JpaRepository<Course, String> {
     @Query(value = "SELECT ct.course_id courseId, ct.tag_id tagId, t.tag_name tagName FROM course_tag ct JOIN tag t ON ct.tag_id = t.tag_id WHERE ct.course_id IN (:courseIds)", nativeQuery = true)
     List<CourseReviewTagTop5DtoInterface> getSpecificCourseTags(@Param("courseIds") List<String> courseIds);
     
-    // 특정 리뷰 평점
-    @Query(value = "SELECT CONCAT(sum, '/', count) result FROM (SELECT COUNT(*) count, SUM(score) sum FROM review WHERE course_id = :courseId) tmp", nativeQuery = true)
-    String getStarAvg(@Param("courseId") String courseId);
-    
-    
+    // 특정 코스들 리뷰 평점
+    @Query(value = "SELECT course_id courseId, COUNT(*) count, SUM(score) sum FROM review WHERE course_id IN (:courseIds) GROUP BY course_id", nativeQuery = true)
+    List<ReviewStarAvgDtoInterface> getCoursesStarAvg(@Param("courseIds") List<String> courseIds);
+        
     // keyword 포함한 코스 식별자 리스트
     @Query(value = "SELECT course_id FROM course WHERE course_name LIKE %:keyword% OR start LIKE %:keyword%", nativeQuery = true)
     List<String> getAllCourseIdsByKeyword(@Param("keyword") String keyword);

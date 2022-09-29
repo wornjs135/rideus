@@ -30,14 +30,13 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.CREATED).body(reviewService.writeReview(reviewRequestDto, user.getId(), image));
     }
     //코스 별 리뷰 목록
-    @GetMapping("/{course_id}")
-    public ResponseEntity<?> reviewAll(@PathVariable(value = "course_id") String cid) {
-        List<Review> result = reviewService.showAllReview(cid);
-        return ResponseEntity.status(HttpStatus.OK).body(result);
+    @GetMapping("/all/{course_id}")
+    public ResponseEntity<List<ReviewResponseDto>> reviewAll(@PathVariable(value = "course_id") String cid) {
+        return new ResponseEntity<List<ReviewResponseDto>>(reviewService.showAllReview(cid), HttpStatus.OK);
     }
     //리뷰 상세
-    @GetMapping("/{review_id}")
-    public ResponseEntity<?> reviewDetail(@PathVariable(value = "review_id") Long rid) {
+    @GetMapping("/detail/{review_id}")
+    public ResponseEntity<ReviewDetailResponseDto> reviewDetail(@PathVariable(value = "review_id") Long rid) {
         ReviewDetailResponseDto result = reviewService.showReviewDetail(rid);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
