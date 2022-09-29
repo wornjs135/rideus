@@ -26,6 +26,8 @@ public class PopularityCourseResponse {
     private String finish;
     private Integer expectedTime;
     private Integer likeCount;
+    private String imageUrl;
+    private String category;
     private List<TagDto> tags = new ArrayList<>();
 
 
@@ -38,6 +40,8 @@ public class PopularityCourseResponse {
         popularityCourseResponse.finish = course.getFinish();
         popularityCourseResponse.expectedTime = course.getExpectedTime();
         popularityCourseResponse.likeCount = course.getLikeCount();
+        popularityCourseResponse.imageUrl = course.getImageUrl();
+        popularityCourseResponse.category = course.getCategory();
         popularityCourseResponse.tags = course.getCourseTags().stream().map(courseTag -> TagDto.from(courseTag)).collect(Collectors.toList());
 
         return popularityCourseResponse;
