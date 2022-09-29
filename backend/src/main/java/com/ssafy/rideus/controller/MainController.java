@@ -63,19 +63,5 @@ public class MainController {
 		return ResponseEntity.status(HttpStatus.OK).body(courseList);
 	}
 	
-	
-	/*
-	@GetMapping("/{lat}/{lng}")
-	public ResponseEntity<List<RecommendationCourseDto>> recommendByLoc(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member, @PathVariable Double lat, @PathVariable Double lng) {
-		
-		Long memberId;
-		if(member == null) {
-			memberId = (long) 0;
-		} else {
-			memberId = member.getId();
-		}
-		List<RecommendationCourseDto> courseList = courseService.getAllCoursesByLoc(memberId, lat, lng);
-		return ResponseEntity.status(HttpStatus.OK).body(courseList);
-	}
-	*/
+
 }
