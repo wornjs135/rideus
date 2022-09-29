@@ -22,15 +22,15 @@ export const OAuth2RedirectHandler = (props) => {
   // 회원가입후 추가 입력 안했으면
   if (isRegister === true) {
     navigate("/moreinfo");
-    window.location.href = "/moreinfo";
+    // window.location.href = "/moreinfo";
   } else {
-    myInfo(null, (res) => {
+    myInfo((res) => {
       console.log(res);
       const { data } = res;
       dispatch(setUser(data));
       console.log(data);
       navigate("/");
-      window.location.href = '/';
+      // window.location.href = '/';
     });
   }
 
