@@ -204,17 +204,6 @@ export const CourseDetail = () => {
               isPanto={true}
               style={{ borderRadius: "25px", width: "100%", height: "100%" }}
             >
-              {nearInfos.data.map((near, idx) => {
-                return near.arr.map((info, idx) => (
-                  <MapMarker
-                    position={{
-                      lat: info.nearinfoLat,
-                      lng: info.nearinfoLng,
-                    }}
-                    key={idx}
-                  ></MapMarker>
-                ));
-              })}
               <Polyline
                 path={[course.coordinates ? course.coordinates : []]}
                 strokeWeight={5} // 선의 두께 입니다
