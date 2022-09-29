@@ -1,6 +1,7 @@
 package com.ssafy.rideus.domain;
 
 import com.ssafy.rideus.domain.base.BaseEntity;
+import com.ssafy.rideus.dto.review.ReviewLikeResDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -29,4 +30,5 @@ public class ReviewLike extends BaseEntity {
         this.member = member;
         this.review = review;
     }
+
 }
