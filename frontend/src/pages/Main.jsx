@@ -65,84 +65,88 @@ export const Main = () => {
   const User = useSelector((state) => state.user.user.user);
   // console.log(User);
   useEffect(() => {
-    if (loading) {
-      getNews(
-        (response) => {
-          console.log(response);
-          setNewses(response.data);
-        },
-        (fail) => {
-          console.log(fail);
-          setLoading(false);
-        }
-      );
-      getPopularCourses(
-        (response) => {
-          console.log(response);
-          setPopularCourses(response.data);
-        },
-        (fail) => {
-          console.log(fail);
-          setLoading(false);
-        }
-      );
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          console.log(position);
-          setLoc((prev) => ({
-            ...prev,
-            center: {
-              lat: position.coords.latitude, // 위도
-              lng: position.coords.longitude, // 경도
-            },
-          }));
+    if (User === undefined) {
+      navigate("/login");
+    } else {
+      if (loading) {
+        getNews(
+          (response) => {
+            console.log(response);
+            setNewses(response.data);
+          },
+          (fail) => {
+            console.log(fail);
+            setLoading(false);
+          }
+        );
+        getPopularCourses(
+          (response) => {
+            console.log(response);
+            setPopularCourses(response.data);
+          },
+          (fail) => {
+            console.log(fail);
+            setLoading(false);
+          }
+        );
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            console.log(position);
+            setLoc((prev) => ({
+              ...prev,
+              center: {
+                lat: position.coords.latitude, // 위도
+                lng: position.coords.longitude, // 경도
+              },
+            }));
 
-          getRecommendationCourseByLocation(
-            {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude,
-            },
-            (response) => {
-              console.log(response);
-              setNearCourses(response.data);
-              setLoading(false);
-            },
-            (fail) => {
-              console.log(fail);
-              setLoading(false);
-            }
-          );
-        },
-        (err) => {
-          setLoc((prev) => ({
-            ...prev,
-            errMsg: err.message,
-          }));
-          setLoading(false);
-        }
-      );
-      // if (isGeolocationAvailable && isGeolocationEnabled) {
-      //   const gps = {
-      //     lat: coords.latitude,
-      //     lng: coords.longitude,
-      //   };
-      //   console.log(gps);
-      //   // getRecommendationCourseByLocation(
-      //   //   {
-      //   //     lat: coords.latitude,
-      //   //     lng: coords.longitude,
-      //   //   },
-      //   //   (response) => {
-      //   //     console.log(response);
-      //   //   },
-      //   //   (fail) => {
-      //   //     console.log(fail);
-      //   //     setLoading(false);
-      //   //   }
-      //   // );
-      // }
+            getRecommendationCourseByLocation(
+              {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude,
+              },
+              (response) => {
+                console.log(response);
+                setNearCourses(response.data);
+                setLoading(false);
+              },
+              (fail) => {
+                console.log(fail);
+                setLoading(false);
+              }
+            );
+          },
+          (err) => {
+            setLoc((prev) => ({
+              ...prev,
+              errMsg: err.message,
+            }));
+            setLoading(false);
+          }
+        );
+        // if (isGeolocationAvailable && isGeolocationEnabled) {
+        //   const gps = {
+        //     lat: coords.latitude,
+        //     lng: coords.longitude,
+        //   };
+        //   console.log(gps);
+        //   // getRecommendationCourseByLocation(
+        //   //   {
+        //   //     lat: coords.latitude,
+        //   //     lng: coords.longitude,
+        //   //   },
+        //   //   (response) => {
+        //   //     console.log(response);
+        //   //   },
+        //   //   (fail) => {
+        //   //     console.log(fail);
+        //   //     setLoading(false);
+        //   //   }
+        //   // );
+        // }
 
-      setLoading(false);
+        setLoading(false);
+      }
     }
   }, []);
   if (loading) return <Spinner />;
