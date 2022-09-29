@@ -48,7 +48,7 @@ public class Member extends BaseEntity {
 
     private String refreshToken;
 
-    private Double totalDistance;
+    private double totalDistance;
     
     private String totalTime;
 

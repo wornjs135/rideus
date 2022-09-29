@@ -62,6 +62,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .profileImageUrl(userInfo.getImageUrl())
                 .role(MemberRole.ROLE_MEMBER)
                 .authProvider(authProvider)
+                .totalTime("0")
                 .build();
         return memberRepository.save(member);
     }
