@@ -15,21 +15,24 @@ public class BookmarkCourseRes {
 
     private String courseId;
 
+    private String courseName;
+
     private Double distance;
 
     private Integer expectedTime;
 
-    private String start;
+    private String startedLocation;
 
-    private String finish;
+    private String finishedLocation;
 
     public static BookmarkCourseRes of(Course course) {
         return BookmarkCourseRes.builder()
                 .courseId(course.getId())
+                .courseName(course.getCourseName())
                 .distance(course.getDistance())
                 .expectedTime(course.getExpectedTime())
-                .start(course.getStart())
-                .finish(course.getFinish())
+                .startedLocation(course.getStart())
+                .finishedLocation(course.getFinish())
                 .build();
     }
 }
