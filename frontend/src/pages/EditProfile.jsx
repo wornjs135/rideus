@@ -66,7 +66,9 @@ export const EditProfile = () => {
     return (
         <Box>
             <Box pad={{left: "20px"}} style={{marginTop: "5vw"}} alignContent={"start"}>
-                <StyledText text="Back" weight="bold" size="18px"/>
+                <div onClick={() => navigate(-1)}>
+                    <StyledText text="Back" weight="bold" size="18px"/>
+                </div>
             </Box>
 
             <Box
