@@ -71,10 +71,7 @@ public class HadoopService{
         // 전체 주변정보
         List<NearInfo> allNearInfo = nearInfoRepository.findAll();
 
-        int count = 0;
-
         for(String courseId : courseIds) {
-
             log.info("course id : " + courseId);
 
             // 중복체크 맵
