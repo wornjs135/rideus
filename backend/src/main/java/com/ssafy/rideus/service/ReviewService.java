@@ -14,7 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.ssafy.rideus.common.exception.BadRequestException.NOT_REGISTED_COURSE;
@@ -78,19 +77,18 @@ public class ReviewService {
     }
 
     @Transactional
-    public ReviewLikeCountDto likeClick(ReviewLikeRequestDto reviewLikeRequestDto, Long mid) {
-        Member member = memberRepository.findById(mid).orElseThrow(() -> new BadRequestException("유효하지 않은 회원입니다."));
-        Review review = reviewRepository.findById(reviewLikeRequestDto.getRid()).orElseThrow(() -> new BadRequestException("유효하지 않은 리뷰입니다."));
-        Optional<ReviewLike> result = reviewLikeRepository.findByReviewAndMember(review, member);
-        if (result.isPresent()) {
-            review.decreaseLike();
-            reviewLikeRepository.delete(result.get());
-        } else {
+    public ReviewLikeResDto likeClick(Long rid, Long mid) {
+//        Member member = memberRepository.findById(mid).orElseThrow(() -> new BadRequestException("유효하지 않은 회원입니다."));
+        Review review = reviewRepository.findById(rid).orElseThrow(() -> new BadRequestException("유효하지 않은 리뷰입니다."));
+        ReviewLike result = reviewLikeRepository.findReviewLikeByMemberIdAndReviewId(mid, rid);
+        if (result == null) {
             review.increaseLike();
-            reviewLikeRepository.save(new ReviewLike(member, review));
+            reviewLikeRepository.save(new ReviewLikeRequestDto.reviewLikeReq(review));
+        } else {
+            review.decreaseLike();
+            reviewLikeRepository.delete(result);
         }
-
-        return new ReviewLikeCountDto(review.getLikeCount());
+        return ReviewLikeResDto.reviewLikeRes(review);
     }
 
     private List<String> getTags(Review review) {
