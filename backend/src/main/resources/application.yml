@@ -104,8 +104,8 @@ token:
 
 oauth2:
   # 클라이언트 주소
-  authorizedRedirectUri: http://localhost:3000/oauth2/redirect
-#  authorizedRedirectUri: https://j7a603.p.ssafy.io/oauth2/redirect
+#  authorizedRedirectUri: http://localhost:3000/oauth2/redirect
+  authorizedRedirectUri: https://j7a603.p.ssafy.io/oauth2/redirect
 cloud:
   aws:
     credentials:
