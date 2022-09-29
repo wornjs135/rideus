@@ -1,5 +1,6 @@
 package com.ssafy.rideus.repository.query;
 
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -19,9 +20,13 @@ public class MemberQueryRepository {
 
 
     public RecordTotalResponse searchTotalRecord(Long id) {
-        return (RecordTotalResponse) queryFactory.select(
-                record.recordDistance.sum(),
-                record.recordTime.sum())
+        return queryFactory.select(
+                        Projections.constructor(
+                                RecordTotalResponse.class,
+                                record.recordDistance.sum(),
+                                record.recordTime.sum()
+                        )
+                )
                 .from(record)
                 .where(record.member.id.eq(id))
                 .fetchOne();
