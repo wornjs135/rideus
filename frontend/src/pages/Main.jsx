@@ -65,9 +65,9 @@ export const Main = () => {
   const User = useSelector((state) => state.user.user.user);
   // console.log(User);
   useEffect(() => {
-    // if (User === undefined) {
-    //   navigate("/login");
-    // } else {
+    if (User === undefined) {
+      navigate("/login");
+    } else {
     if (loading) {
       getNews(
         (response) => {
@@ -146,7 +146,7 @@ export const Main = () => {
       // }
 
       setLoading(false);
-      // }
+      }
     }
   }, []);
   if (loading) return <Spinner />;
