@@ -6,7 +6,7 @@ import { RankProfile } from "./RankProfile";
 import Profile from "../assets/images/profile.png";
 import { RankBox } from "./RankBox";
 import { ReviewBox } from "./ReviewBox";
-export const CourseReviewRank = ({ open, onDismiss, reviews }) => {
+export const CourseReviewRank = ({ open, onDismiss, ranks, reviews }) => {
   const [value, setValue] = useState(0);
   const [data, setData] = useState([]);
 
@@ -119,6 +119,7 @@ export const CourseReviewRank = ({ open, onDismiss, reviews }) => {
                 key={idx}
                 score={r.score}
                 starView={parseFloat(r.score * 22.8)}
+                review={r}
               />
             );
           })}

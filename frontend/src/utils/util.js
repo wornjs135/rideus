@@ -19,6 +19,28 @@ export const tags = [
   { id: 16, searchTagName: "쉴 곳 많음" },
 ];
 
+export const categorys = [
+  "전체",
+  "추천",
+  "관광명소",
+  "음식점",
+  "카페",
+  "편의점",
+  "자전거정비",
+  "문화시설",
+  "공중화장실",
+];
+
+export const markerCategorys = [
+  "관광명소",
+  "음식점",
+  "카페",
+  "편의점",
+  "자전거정비",
+  "문화시설",
+  "공중화장실",
+];
+
 export const timeHandle = (time) => {
   if (time < 60) return `${time}"`;
   else if (time < 3600) return `${parseInt(time / 60)}' ${time % 60}"`;

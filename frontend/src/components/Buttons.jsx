@@ -20,6 +20,25 @@ export const BootstrapButton = styled(Button)({
   },
 });
 
+export const RegisterButton = styled(Button)({
+  boxShadow: "none",
+  textTransform: "none",
+  fontSize: 14,
+  fontWeight: "bold",
+  padding: "6px 12px",
+  color: "white",
+  width: "75%",
+  height: "5vh",
+  margin: "10px",
+  backgroundColor: "#439652",
+  fontFamily: ["sans-serif"],
+  "&:hover": {
+    backgroundColor: "#439652",
+    boxShadow: "none",
+    color: "white",
+  },
+});
+
 export const PauseButton = styled(Button)({
   boxShadow: "none",
   textTransform: "none",

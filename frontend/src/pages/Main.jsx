@@ -19,6 +19,7 @@ import { getNews } from "../utils/api/newsApi";
 import { useSelector } from "react-redux";
 import {
   getPopularCourses,
+  getPopularTags,
   getRecommendationCourseByLocation,
 } from "../utils/api/mainApi";
 import { useGeolocated } from "react-geolocated";
@@ -47,6 +48,7 @@ export const Main = () => {
   const [open, setOpen] = useState(false);
   const [newses, setNewses] = useState([]);
   const [popularCourses, setPopularCourses] = useState([]);
+  const [tags, setTags] = useState([]);
   const [nearCourses, setNearCourses] = useState([]);
   const [loc, setLoc] = useState({
     center: {
@@ -65,9 +67,9 @@ export const Main = () => {
   const User = useSelector((state) => state.user.user.user);
   // console.log(User);
   useEffect(() => {
-    if (User === undefined) {
-      navigate("/login");
-    } else {
+    // if (User === undefined) {
+    //   navigate("/login");
+    // } else {
     if (loading) {
       getNews(
         (response) => {
@@ -89,6 +91,17 @@ export const Main = () => {
           setLoading(false);
         }
       );
+
+      getPopularTags(
+        (response) => {
+          console.log(response);
+        },
+        (fail) => {
+          console.log(fail);
+          setLoading(false);
+        }
+      );
+
       navigator.geolocation.getCurrentPosition(
         (position) => {
           console.log(position);
@@ -146,7 +159,7 @@ export const Main = () => {
       // }
 
       setLoading(false);
-      }
+      // }
     }
   }, []);
   if (loading) return <Spinner />;
@@ -262,7 +275,14 @@ export const Main = () => {
               <StyledText text="인기 태그" weight="bold" size="18px" />
             </Box>
             {/* 인기태그 리스트 */}
-            <Box direction="row" overflow="scroll"></Box>
+            <Box direction="row" overflow="scroll" gap="medium">
+              {tags &&
+                tags.map((tag, idx) => {
+                  return (
+                    <StyledText text={`#${tag.tagName}`} key={tag.tagId} />
+                  );
+                })}
+            </Box>
           </Box>
         </Box>
         <ChooseRideTypeBar open={open} onDismiss={onDismiss} />

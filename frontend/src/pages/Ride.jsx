@@ -6,6 +6,7 @@ import Button from "../components/Button";
 import { useGeolocated } from "react-geolocated";
 import PlayBtn from "../assets/images/play.png";
 import PauseBtn from "../assets/images/pause.png";
+import LinkBtn from "../assets/images/link.png";
 import TotalBike from "../assets/images/totalRideBike.png";
 import { Map, MapMarker, Polyline } from "react-kakao-maps-sdk";
 import { AlertDialog, MapDialog } from "../components/AlertDialog";
@@ -300,9 +301,11 @@ export const Ride = () => {
       ).then(
         navigate("/rideEnd", {
           state: {
-            courseName: courseName,
             courseType: courseType,
             courseData: {
+              recordId: recordId,
+              courseId: courseId,
+              courseName: courseName,
               latlng: mapData.latlng,
               topSpeed: data.topSpeed,
               avgSpeed: data.avgSpeed,
@@ -322,6 +325,15 @@ export const Ride = () => {
     setConfirmedNavigation(false);
   }, []);
   let idle = 1;
+
+  // 그룹 주행 공유하기
+  const sharePage = () => {
+    window.navigator.share({
+      title: `RideUs - ${roomInfo.nickname}님의 그룹 주행`,
+      text: `${courseName}`,
+      url: `https://j7a603.p.ssafy.io/groupRide?courseId=${courseId}&rideRoomId=${roomInfo.rideRoomId}`,
+    });
+  };
 
   // 시간 핸들 useEffect
   useEffect(() => {
@@ -436,8 +448,39 @@ export const Ride = () => {
   return (
     <Box background="#439652">
       {/* 나만의 길 */}
-      <Box align="center" margin={{ top: "30px", bottom: "12px" }}>
-        <StyledText text={courseName} color="white" weight="bold" size="24px" />
+      <Box
+        align="center"
+        margin={{ top: "30px", bottom: "12px" }}
+        direction="row"
+        justify="around"
+      >
+        <Box width="50px"></Box>
+        <Box>
+          <StyledText
+            text={courseName}
+            color="white"
+            weight="bold"
+            size="24px"
+          />
+          {rideType === "group" && (
+            <StyledText
+              text={roomInfo.nickname + "님의 그룹"}
+              color="white"
+              weight="bold"
+              size="16px"
+            />
+          )}
+        </Box>
+        <Box width="50px">
+          {rideType === "group" && (
+            <img
+              src={LinkBtn}
+              onClick={() => {
+                sharePage();
+              }}
+            />
+          )}
+        </Box>
       </Box>
       {/* 바디 부분 */}
       <Box
