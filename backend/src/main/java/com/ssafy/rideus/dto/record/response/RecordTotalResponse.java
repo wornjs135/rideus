@@ -6,8 +6,12 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class RecordTotalResponse {
     private Long total_time;
     private Double total_distance;
+
+    public RecordTotalResponse(Long total_time, Double total_distance) {
+        this.total_time = total_time;
+        this.total_distance = total_distance;
+    }
 }
