@@ -19,13 +19,16 @@ import { latlng } from "../utils/data";
 import useWatchLocation from "../hooks/watchLocationHook";
 import { distanceHandle, speedHandle, timeHandle } from "../utils/util";
 import { ExitButton, PauseButton } from "../components/Buttons";
+import SockJS from "sockjs-client";
+import * as StompJs from "@stomp/stompjs";
+import { finishRidding, saveCoordinatesDuringRide } from "../utils/api/rideApi";
 
-const geolocationOptions = {
-  enableHighAccuracy: false,
-  timeout: 500, // 1 min (1000 ms * 60 sec * 1 minute = 60 000ms)
-  maximumAge: 0, // 24 hour
-};
-
+// const geolocationOptions = {
+//   enableHighAccuracy: false,
+//   timeout: 500, // 1 min (1000 ms * 60 sec * 1 minute = 60 000ms)
+//   maximumAge: 0, // 24 hour
+// };
+var client = null;
 export const Ride = () => {
   const locations = useLocation();
   const [nowTime, setNowTime] = useState(0);
@@ -39,16 +42,26 @@ export const Ride = () => {
     avgSpeed: 0,
     totalDistance: 0,
   });
-
   // 코스 이름, 싱글 or 그룹, 추천코스 or 나만의 코스
-  const { courseName, rideType, courseType, coordinates, checkPoints } =
-    locations.state;
+  const {
+    courseName,
+    rideType,
+    courseType,
+    coordinates,
+    checkPoints,
+    recordId,
+    courseId,
+    roomInfo,
+  } = locations.state;
+
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [openMap, setOpenMap] = useState(false);
   const [riding, setRiding] = useState(true);
   const [when, setWhen] = useState(true);
+  const [rideMembers, setRideMembers] = useState({ members: [] });
   const [lastLocation, setLastLocation] = useState(null);
+  const [confirmedNavigation, setConfirmedNavigation] = useState(false);
   const { coords, isGeolocationAvailable, isGeolocationEnabled } =
     useGeolocated({
       positionOptions: {
@@ -58,13 +71,100 @@ export const Ride = () => {
       },
       watchPosition: true,
     });
-  // const { location, cancelLocationWatch, error } =
-  //   useWatchLocation(geolocationOptions);
+
+  // 닫기 방지
   const preventClose = (e) => {
     e.preventDefault();
     e.returnValue = "";
   };
 
+  // 웹소켓 구독
+  const subscribe = () => {
+    if (client != null) {
+      console.log("subs!!!!!!!!!");
+      client.subscribe("/sub/ride/room/" + roomInfo.rideRoomId, (response) => {
+        console.log(response);
+        const data = JSON.parse(response.body);
+        rideMembers.members[data.memberId] = data;
+        setRideMembers({ ...rideMembers });
+      });
+    }
+  };
+
+  //웹소켓 위치 발행
+  const publishLocation = (lat, lng) => {
+    if (client != null) {
+      client.publish({
+        destination: "/pub/ride/group",
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        },
+        body: JSON.stringify({
+          messageType: "CURRENT_POSITION",
+          rideRoomId: roomInfo.rideRoomId,
+          lat: lat,
+          lng: lng,
+        }),
+      });
+    }
+  };
+
+  //웹소켓 초기화
+  const initSocketClient = () => {
+    client = new StompJs.Client({
+      brokerURL: "wss://j7a603.p.ssafy.io/api/ws-stomp",
+      connectHeaders: {
+        Authorization: "Bearer " + localStorage.getItem("accessToken"),
+      },
+      webSocketFactory: () => {
+        return SockJS("https://j7a603.p.ssafy.io/api/ws-stomp");
+      },
+      debug: (str) => {
+        console.log("stomp debug!!!", str);
+      },
+      reconnectDelay: 5000,
+      heartbeatIncoming: 4000,
+      heartbeatOutgoing: 4000,
+
+      onStompError: (frame) => {
+        // Will be invoked in case of error encountered at Broker
+        // Bad login/passcode typically will cause an error
+        // Complaint brokers will set `message` header with a brief message. Body may contain details.
+        // Compliant brokers will terminate the connection after any error
+        console.log("Broker reported error: " + frame.headers["message"]);
+        console.log("Additional details: " + frame.body);
+        // client.deactivate();
+      },
+    });
+
+    // 웹소켓 초기 연결
+    client.onConnect = (frame) => {
+      console.log("client init !!! ", frame);
+      if (client != null)
+        client.publish({
+          destination: "/pub/ride/group",
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          },
+          body: JSON.stringify({
+            messageType: "ENTER",
+            rideRoomId: roomInfo.rideRoomId,
+          }),
+        });
+      subscribe();
+    };
+
+    client.activate();
+  };
+
+  // 웹소켓 연결해제
+  const disConnect = () => {
+    if (client != null) {
+      if (client.connected) client.deactivate();
+    }
+  };
+
+  // 두 좌표간 거리 계산
   function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
     var R = 6371; // Radius of the earth in km
     var dLat = deg2rad(lat2 - lat1); // deg2rad below
@@ -81,6 +181,7 @@ export const Ride = () => {
     return d;
   }
 
+  // 각도를 라디안으로 변환
   function deg2rad(deg) {
     return deg * (Math.PI / 180);
   }
@@ -107,6 +208,7 @@ export const Ride = () => {
   //   return dist;
   // }
 
+  // 뒤로가기 방지
   function useBlocker(blocker, when = true) {
     const { navigator } = useContext(NavigationContext);
 
@@ -133,10 +235,8 @@ export const Ride = () => {
       return unblock;
     }, [navigator, blocker]);
   }
-  const [confirmedNavigation, setConfirmedNavigation] = useState(false);
 
-  const [i, setI] = useState(0);
-
+  // 이동 방지
   const handleBlockedNavigation = useCallback(
     (tx) => {
       if (!confirmedNavigation && tx.location.pathname !== locations.pathname) {
@@ -149,24 +249,113 @@ export const Ride = () => {
     },
     [confirmedNavigation, locations.pathname]
   );
+
+  // 방지 해제
   const confirmNavigation = useCallback(() => {
     setOpen(false);
     setWhen(false);
     setConfirmedNavigation(true);
   }, []);
 
+  // 주행 종료 핸들
+  const handleRideFinish = () => {
+    saveCoordinatesDuringRide(
+      recordId,
+      {
+        coordinates: mapData.latlng,
+      },
+      (response) => {
+        console.log(response);
+      },
+      (fail) => {
+        console.log(fail);
+      }
+    ).then(
+      finishRidding(
+        rideType,
+        {
+          courseId: courseId === undefined ? null : courseId,
+          distance: data.totalDistance,
+          recordId: recordId,
+          rideRoomId: roomInfo === undefined ? null : roomInfo.rideRoomId,
+          speedAvg: data.avgSpeed,
+          speedBest: data.topSpeed,
+          time: nowTime,
+          timeMinute: parseInt(nowTime / 60),
+        },
+        (response) => {
+          console.log(response);
+          // // 나만의 코스 주행
+          // if (courseType === "my") {
+
+          // }
+          // // 추천 코스 주행
+          // else if (courseType === "course") {
+
+          // }
+        },
+        (fail) => {
+          console.log(fail);
+        }
+      ).then(
+        navigate("/rideEnd", {
+          state: {
+            courseName: courseName,
+            courseType: courseType,
+            courseData: {
+              latlng: mapData.latlng,
+              topSpeed: data.topSpeed,
+              avgSpeed: data.avgSpeed,
+              nowTime: nowTime,
+              totalDistance: data.totalDistance,
+            },
+          },
+        })
+      )
+    );
+  };
+
+  // 나가기 방지 다시 적용
   const unconfirmNavigation = useCallback(() => {
     setOpen(false);
     setWhen(true);
     setConfirmedNavigation(false);
   }, []);
   let idle = 1;
+
+  // 시간 핸들 useEffect
+  useEffect(() => {
+    const timerId = setInterval(() => {
+      setNowTime((prev) => prev + 1);
+    }, 1000);
+
+    return () => {
+      clearInterval(timerId);
+      // cancelLocationWatch();
+      // window.removeEventListener("beforeunload", preventClose);
+    };
+  });
+
+  useEffect(() => {
+    if (rideType === "group") {
+      initSocketClient();
+    }
+
+    return () => {
+      if (rideType === "group") {
+        disConnect();
+      }
+    };
+  }, []);
+
+  // 거리, 데이터 핸들 useEffect
   useEffect(() => {
     // console.log("hello");
     // let i = 0.000001;
     window.addEventListener("beforeunload", preventClose);
     // let i = 0;
     // setNowTime(0);
+
     const rideId = setInterval(() => {
       if (riding && isGeolocationAvailable && isGeolocationEnabled) {
         console.log("location : ", coords);
@@ -215,6 +404,10 @@ export const Ride = () => {
         // setI((prev) => {
         //   return prev + 0.001;
         // });
+        // 웹소켓 발행
+        if (client != null && rideType === "group") {
+          publishLocation(gps.lat, gps.lng);
+        }
       } else {
         // idle = idle + 1;
         setData((prev) => {
@@ -228,17 +421,13 @@ export const Ride = () => {
       // setI((prev) => {
       //   return prev + 0.0001;
       // });
-      console.log(mapData.latlng);
-    }, 1000);
-
-    const timerId = setTimeout(() => {
-      setNowTime((prev) => prev + 1);
+      // console.log(mapData.latlng);
     }, 1000);
 
     return () => {
-      clearTimeout(timerId);
       clearInterval(rideId);
       // cancelLocationWatch();
+
       window.removeEventListener("beforeunload", preventClose);
     };
   });
@@ -293,6 +482,18 @@ export const Ride = () => {
             {checkPoints &&
               checkPoints.map((m, idx) => {
                 return <MapMarker position={m} key={idx}></MapMarker>;
+              })}
+            {rideMembers &&
+              rideMembers.members.map((member, idx) => {
+                return (
+                  <MapMarker
+                    position={{ lat: member.lat, lng: member.lng }}
+                    key={idx}
+                  >
+                    {" "}
+                    <div style={{ color: "#000" }}>{member.nickname}</div>
+                  </MapMarker>
+                );
               })}
           </Map>
         </Box>
@@ -414,6 +615,17 @@ export const Ride = () => {
               checkPoints.map((m, idx) => {
                 return <MapMarker position={m} key={idx}></MapMarker>;
               })}
+            {rideMembers &&
+              rideMembers.members.map((member, idx) => {
+                return (
+                  <MapMarker
+                    position={{ lat: member.lat, lng: member.lng }}
+                    key={idx}
+                  >
+                    <div style={{ color: "#000" }}>{member.nickname}</div>
+                  </MapMarker>
+                );
+              })}
           </Map>
         }
         cancel="뒤로가기"
@@ -428,19 +640,7 @@ export const Ride = () => {
         }}
         handleAction={() => {
           // useBlocker(handleBlockedNavigation, false);
-          navigate("/rideEnd", {
-            state: {
-              courseName: courseName,
-              courseType: courseType,
-              courseData: {
-                latlng: mapData.latlng,
-                topSpeed: data.topSpeed,
-                avgSpeed: data.avgSpeed,
-                nowTime: nowTime,
-                totalDistance: data.totalDistance,
-              },
-            },
-          });
+          handleRideFinish();
         }}
         title="주행 종료"
         desc="주행을 종료하시겠습니까?"

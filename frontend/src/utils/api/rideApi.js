@@ -11,8 +11,8 @@ const authInstance = axios.create({
 });
 
 // 그룹라이딩 방 생성
-const createGroupRoom = async (success, fail) => {
-  await authInstance.post("/room").then(success).catch(fail);
+const createGroupRoom = async (courseId, success, fail) => {
+  await authInstance.post(`/room/${courseId}`).then(success).catch(fail);
 };
 
 // 주행 시작

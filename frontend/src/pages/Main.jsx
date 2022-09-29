@@ -63,6 +63,7 @@ export const Main = () => {
   };
   const [loading, setLoading] = useState(true);
   const User = useSelector((state) => state.user.user.user);
+  // console.log(User);
   useEffect(() => {
     if (loading) {
       getNews(
@@ -103,6 +104,8 @@ export const Main = () => {
             },
             (response) => {
               console.log(response);
+              setNearCourses(response.data);
+              setLoading(false);
             },
             (fail) => {
               console.log(fail);
@@ -160,13 +163,14 @@ export const Main = () => {
           />
           <BootstrapButton
             onClick={() => {
-              if (User === undefined) {
-                alert("로그인 하세요!");
-                navigate("/login");
-              } else {
-                // naviagate("/ride", { state: { courseName: "나만의 길" } });
-                setOpen(true);
-              }
+              // if (User === undefined) {
+              //   alert("로그인 하세요!");
+              //   navigate("/login");
+              // } else {
+
+              // naviagate("/ride", { state: { courseName: "나만의 길" } });
+              setOpen(true);
+              // }
             }}
           >
             RIDE!
@@ -197,21 +201,35 @@ export const Main = () => {
             {/* 인기코스 리스트 */}
             <Box direction="row" overflow="scroll">
               <StyledHorizonTable>
-                <div className="card">
-                  <BestCourse />
-                </div>
-                <div className="card">
-                  <BestCourse />
-                </div>
-                <div className="card">
-                  <BestCourse />
-                </div>
-                <div className="card">
-                  <BestCourse />
-                </div>
-                <div className="card">
-                  <BestCourse />
-                </div>
+                {popularCourses.length > 0
+                  ? popularCourses.map((course, idx) => {
+                      return (
+                        <div className="card" key={idx}>
+                          <BestCourse course={course} />
+                        </div>
+                      );
+                    })
+                  : "코스가 없습니다!"}
+              </StyledHorizonTable>
+            </Box>
+          </Box>
+          {/*  추천 코스 */}
+          <Box align="start" width="100%" gap="large" margin="large">
+            <Box pad={{ left: "20px" }}>
+              <StyledText text="주변 코스" weight="bold" size="18px" />
+            </Box>
+            {/* 인기코스 리스트 */}
+            <Box direction="row" overflow="scroll">
+              <StyledHorizonTable>
+                {nearCourses.length > 0
+                  ? nearCourses.map((course, idx) => {
+                      return (
+                        <div className="card" key={idx}>
+                          <BestCourse course={course} />
+                        </div>
+                      );
+                    })
+                  : "코스가 없습니다!"}
               </StyledHorizonTable>
             </Box>
           </Box>

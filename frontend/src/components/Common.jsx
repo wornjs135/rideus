@@ -128,7 +128,6 @@ const TextForm = styled.div`
   font-weight: ${(props) => props.weight || "normal"};
   font-family: "Noto Sans KR", sans-serif;
   align-items: center;
-  display: flex;
 `;
 
 //텍스트 사이즈, 컬러, 웨이트, 글자를 설정할 수 있는 컴포넌트

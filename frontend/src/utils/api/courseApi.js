@@ -12,7 +12,7 @@ const authInstance = axios.create({
 
 // 리뷰 태그 기반 코스 추천 리스트
 const getRecommendationCourses = async (success, fail) => {
-  await authInstance.get("/recommeendation").then(success).catch(fail);
+  await authInstance.get("/recommendation").then(success).catch(fail);
 };
 
 // 추천 코스 리스트 조회
