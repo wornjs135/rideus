@@ -8,9 +8,11 @@ import {MyPageCourse} from "../components/MyPageCourseComponent";
 import {UserSettings} from "grommet-icons";
 import {recentRide} from "../utils/api/userApi";
 import { useSelector } from 'react-redux'
+import {useNavigate} from "react-router-dom";
 
 export const MyPage = () => {
 
+    const navigate = useNavigate();
     const user = useSelector(state => state.user.user.user);
     useEffect(() => {
         recentRide();
@@ -22,7 +24,7 @@ export const MyPage = () => {
         <Box align="center" justify="between">
             <Box direction="row" align="center" justify="around" style={{marginTop: "5vw"}}>
                 <Box direction={"column"}>
-                    <UserSettings style={{marginBottom: "5vw"}}/>
+                    <UserSettings style={{marginBottom: "5vw"}} onClick={()=>navigate("/profile")}/>
                     <img src={bike1}/>
                 </Box>
                 <Box>
