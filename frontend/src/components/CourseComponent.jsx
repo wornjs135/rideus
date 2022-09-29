@@ -23,8 +23,6 @@ const CourseBox = styled.div`
 `;
 
 const NewsDiv = styled.div`
-  display: flex;
-  flex-direction: column;
   position: relative;
   align-items: center;
   width: 153px;
@@ -87,18 +85,18 @@ export const NewsBox = ({ news }) => {
           }}
         />
       </Box>
-      <Box justify="center" width="100%" style={{ display: "fixed" }}>
-        <StyledText
-          text={news.title}
-          weight="bold"
-          color="#439652"
-          style={{
-            width: "100%",
-            overflow: "hidden",
-            wordWrap: "break-word",
-          }}
-        />
-      </Box>
+      <StyledText
+        text={news.title}
+        weight="bold"
+        color="#439652"
+        style={{
+          width: "90%",
+          height: "80px",
+          overflow: "hidden",
+          wordBreak: "normal",
+          whiteSpace: "normal",
+        }}
+      />
     </NewsDiv>
   );
 };

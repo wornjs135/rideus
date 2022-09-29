@@ -299,6 +299,7 @@ export const CourseDetail = () => {
           title={course.courseName}
           coordinates={course.coordinates}
           checkPoints={course.checkpoints}
+          courseId={course.courseId}
         />
         <MapDialog
           type="detail"
