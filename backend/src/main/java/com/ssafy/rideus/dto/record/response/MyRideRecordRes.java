@@ -45,7 +45,7 @@ public class MyRideRecordRes {
                 .roomId(record.getRideRoom().getId())
                 .distance(record.getRecordDistance())
                 .finishedLocation(record.getCourse().getFinish())
-                .expectedTime(record.getRecordTime().intValue())
+                .expectedTime(record.getRecordTimeMinute().intValue())
                 .isShared(false)
                 .build();
     }
