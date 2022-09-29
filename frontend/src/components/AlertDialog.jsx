@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -14,7 +14,7 @@ import SoloBtn from "../assets/images/solo.png";
 import GroupBtn from "../assets/images/group.png";
 import { StyledHorizonTable } from "./HorizontalScrollBox";
 import { useNavigate } from "react-router-dom";
-import { HeaderBox } from "./ChooseRideTypeBar";
+import { ChooseSoloGroupBar, HeaderBox } from "./ChooseRideTypeBar";
 import { BootstrapButton, ExitButton, WhiteButton } from "./Buttons";
 export const AlertDialog = ({
   open,
@@ -156,7 +156,10 @@ export const MapDialog = ({
   map,
   cancel,
   accept,
+  bottom,
+  course,
 }) => {
+  const [op, setOp] = useState(false);
   return (
     <Dialog fullScreen open={open} onClose={handleClose}>
       <Box width="100vw" height="100vh" align="center">
@@ -206,13 +209,24 @@ export const MapDialog = ({
         </Box>
         {/* 하단 버튼 */}
         <BottomBtn>
-          <WhiteButton onClick={handleClose}>{cancel}</WhiteButton>
-          {accept && type === "detail" ? (
-            <BootstrapButton onClick={handleAction}>{accept}</BootstrapButton>
+          <WhiteButton onClick={handleClose} children={cancel} />
+          {/* {accept && type === "detail" ? (
+            <BootstrapButton onClick={handleAction} children={accept} />
           ) : (
-            <ExitButton onClick={handleAction}>{accept}</ExitButton>
-          )}
+            <ExitButton onClick={handleAction} children={accept} />
+          )} */}
         </BottomBtn>
+        {bottom && (
+          <ChooseSoloGroupBar
+            open={op}
+            onDismiss={() => {
+              setOp(false);
+            }}
+            title={course.courseName}
+            coordinates={course.coordinates}
+            checkPoints={course.checkpoints}
+          />
+        )}
       </Box>
     </Dialog>
   );
