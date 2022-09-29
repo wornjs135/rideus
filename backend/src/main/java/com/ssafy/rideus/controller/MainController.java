@@ -1,14 +1,9 @@
 package com.ssafy.rideus.controller;
 
 import com.ssafy.rideus.config.security.auth.CustomUserDetails;
-import com.ssafy.rideus.config.web.LoginMember;
-import com.ssafy.rideus.domain.Member;
-import com.ssafy.rideus.domain.Tag;
 import com.ssafy.rideus.dto.course.common.RecommendationCourseDto;
-import com.ssafy.rideus.dto.course.response.PopularityCourseResponse;
 import com.ssafy.rideus.dto.tag.common.TagDto;
 import com.ssafy.rideus.service.CourseService;
-import com.ssafy.rideus.service.ReviewService;
 import com.ssafy.rideus.service.ReviewTagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 import static com.ssafy.rideus.config.data.CacheKey.POPULARITY_TAG;
-import static com.ssafy.rideus.config.data.CacheKey.RANK_COURSE_TIME;
 
 @RestController
 @RequiredArgsConstructor
