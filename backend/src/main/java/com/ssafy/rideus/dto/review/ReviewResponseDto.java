@@ -1,13 +1,13 @@
 package com.ssafy.rideus.dto.review;
 
-import com.ssafy.rideus.domain.Course;
-import com.ssafy.rideus.domain.Member;
-import com.ssafy.rideus.domain.Tag;
+import com.ssafy.rideus.domain.*;
+import com.ssafy.rideus.dto.ReviewTagDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -15,11 +15,26 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class ReviewResponseDto {
-    private Member member;
-    private Course course;
+    private Long memberId;
     private int score;
     private String content;
     private String imageUrl;
-    private List<Tag> tags;
+    private List<ReviewTagDto> tags;
     private int likeCount;
+
+    public static ReviewResponseDto reviewRes(Review review) {
+        List<ReviewTag> reviewTags = review.getReviewTags();
+        List<ReviewTagDto> result = new ArrayList<>();
+        for (ReviewTag reviewTag : reviewTags) {
+            result.add(ReviewTagDto.reviewTagRes(reviewTag));
+        }
+        return ReviewResponseDto.builder()
+                .memberId(review.getMember().getId())
+                .score(review.getScore())
+                .content(review.getContent())
+                .imageUrl(review.getImageUrl())
+                .tags(result)
+                .likeCount(review.getLikeCount())
+                .build();
+    }
 }
