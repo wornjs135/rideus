@@ -1,21 +1,101 @@
 package com.ssafy.rideus.service;
 
-import com.ssafy.rideus.domain.Review;
+import com.ssafy.rideus.common.api.S3Upload;
+import com.ssafy.rideus.common.exception.BadRequestException;
+import com.ssafy.rideus.common.exception.NotFoundException;
+import com.ssafy.rideus.domain.*;
 import com.ssafy.rideus.dto.review.*;
+import com.ssafy.rideus.repository.jpa.*;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-public interface ReviewService {
-    //mid 회원 번호, cid 코스 식별자, rid 리뷰 식별자
+import static com.ssafy.rideus.common.exception.BadRequestException.NOT_REGISTED_COURSE;
+import static com.ssafy.rideus.common.exception.NotFoundException.RECORD_NOT_FOUND;
+import static com.ssafy.rideus.common.exception.NotFoundException.TAG_NOT_FOUND;
 
-    //리뷰 작성
-    WriteReviewResponse writeReview(ReviewRequestDto reviewRequestDto, Long mid, MultipartFile image);
-    //코스 별 리뷰 전체 목록
-    List<Review> showAllReview(String cid);
-    //리뷰 상세
-    ReviewDetailResponseDto showReviewDetail(Long rid);
-    //리뷰 좋아요
-    ReviewLikeCountDto likeClick(ReviewLikeRequestDto reviewLikeRequestDto, Long mid);
+@Service
+@RequiredArgsConstructor
+@Slf4j
+@Transactional(readOnly = true)
+public class ReviewService {
+    private final ReviewRepository reviewRepository;
+    private final ReviewLikeRepository reviewLikeRepository;
+    private final ReviewTagRepository reviewTagRepository;
+    private final MemberRepository memberRepository;
+    private final RecordRepository recordRepository;
+    private final S3Upload s3Upload;
+    private final TagRepository tagRepository;
 
+    @Transactional
+    public WriteReviewResponse writeReview(ReviewRequestDto reviewRequestDto, Long mid, MultipartFile image) {
+
+        Record findRecord = recordRepository.findRecordWithCourseAndRideRoomAndMember(reviewRequestDto.getRecordId())
+                .orElseThrow(() -> new NotFoundException(RECORD_NOT_FOUND));
+
+        // 에러 처리
+        if (findRecord.getCourse() == null) {
+            throw new BadRequestException(NOT_REGISTED_COURSE);
+        }
+
+        Member findMember = memberRepository.findById(mid).orElseThrow(() -> new BadRequestException("유효하지 않은 회원입니다."));
+
+        Review saveReview = reviewRepository.save(Review.createReview(reviewRequestDto, findMember, s3Upload.uploadImageToS3(image), findRecord));
+
+        List<ReviewTagRequest> tags = reviewRequestDto.getTags();
+        List<ReviewTag> reviewTags = new ArrayList<>();
+        for (ReviewTagRequest tag : tags) {
+            Tag findTag = tagRepository.findById(tag.getId())
+                    .orElseThrow(() -> new NotFoundException(TAG_NOT_FOUND));
+            reviewTags.add(ReviewTag.createReviewTag(saveReview, findTag));
+        }
+        reviewTagRepository.saveAll(reviewTags);
+
+        return WriteReviewResponse.from(saveReview.getId());
+    }
+
+    @Transactional
+    public List<Review> showAllReview(String cid) {
+        List<Review> reviews = reviewRepository.findAllByCourseId(cid);
+        return reviews;
+    }
+
+    @Transactional
+    public ReviewDetailResponseDto showReviewDetail(Long rid) {
+        Review review = reviewRepository.findById(rid).orElseThrow(() -> new BadRequestException("유효하지 않은 리뷰입니다."));
+
+        return ReviewDetailResponseDto.builder()
+                .mid(review.getMember().getId())
+                .content(review.getContent())
+                .tags(getTags(review))
+                .build();
+    }
+
+    @Transactional
+    public ReviewLikeCountDto likeClick(ReviewLikeRequestDto reviewLikeRequestDto, Long mid) {
+        Member member = memberRepository.findById(mid).orElseThrow(() -> new BadRequestException("유효하지 않은 회원입니다."));
+        Review review = reviewRepository.findById(reviewLikeRequestDto.getRid()).orElseThrow(() -> new BadRequestException("유효하지 않은 리뷰입니다."));
+        Optional<ReviewLike> result = reviewLikeRepository.findByReviewAndMember(review, member);
+        if (result.isPresent()) {
+            review.decreaseLike();
+            reviewLikeRepository.delete(result.get());
+        } else {
+            review.increaseLike();
+            reviewLikeRepository.save(new ReviewLike(member, review));
+        }
+
+        return new ReviewLikeCountDto(review.getLikeCount());
+    }
+
+    private List<String> getTags(Review review) {
+        List<Tag> tags = reviewTagRepository.findReviewTagsByReview(review);
+        return tags.stream().map(Tag -> Tag.getTagName()).collect(Collectors.toList());
+    }
 }
