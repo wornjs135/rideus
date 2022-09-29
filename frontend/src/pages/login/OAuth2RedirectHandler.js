@@ -29,8 +29,8 @@ export const OAuth2RedirectHandler = (props) => {
       const { data } = res;
       dispatch(setUser(data));
       console.log(data);
+      navigate("/");
       window.location.href = '/';
-      // navigate("/");
     });
   }
 
