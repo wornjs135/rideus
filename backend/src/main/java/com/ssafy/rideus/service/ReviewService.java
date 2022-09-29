@@ -62,20 +62,19 @@ public class ReviewService {
     }
 
     @Transactional
-    public List<Review> showAllReview(String cid) {
+    public List<ReviewResponseDto> showAllReview(String cid) {
+        List<ReviewResponseDto> result = new ArrayList<>();
         List<Review> reviews = reviewRepository.findAllByCourseId(cid);
-        return reviews;
+        for (Review review : reviews) {
+            result.add(ReviewResponseDto.reviewRes(review));
+        }
+        return result;
     }
 
     @Transactional
     public ReviewDetailResponseDto showReviewDetail(Long rid) {
         Review review = reviewRepository.findById(rid).orElseThrow(() -> new BadRequestException("유효하지 않은 리뷰입니다."));
-
-        return ReviewDetailResponseDto.builder()
-                .mid(review.getMember().getId())
-                .content(review.getContent())
-                .tags(getTags(review))
-                .build();
+        return ReviewDetailResponseDto.reviewDetailRes(review);
     }
 
     @Transactional
