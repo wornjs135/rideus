@@ -27,6 +27,7 @@
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
     "react-spring-bottom-sheet": "^3.4.1",
+    "redux": "^4.2.0",
     "redux-actions": "^2.6.5",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.4.1",
