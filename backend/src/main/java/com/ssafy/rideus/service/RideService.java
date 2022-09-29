@@ -28,6 +28,7 @@ import com.ssafy.rideus.repository.mongo.CourseCoordinateRepository;
 import com.ssafy.rideus.repository.mongo.MongoRecordRepository;
 import com.ssafy.rideus.repository.redis.RedisRideRoomRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,6 +44,7 @@ import static com.ssafy.rideus.dto.record.type.RiddingType.single;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class RideService {
 
     private final MemberRepository memberRepository;
@@ -137,6 +139,7 @@ public class RideService {
         RideRoom rideRoom = null;
         if (riddingType.equals(single)) {
             rideRoom = rideRoomRepository.save(RideRoom.create(findMember)); // 싱글 주행일때는 그룹방 새로 생성해서 넣어주기
+            log.info("참가자들", mongoRecord.getParticipants());
             mongoRecord.getParticipants().add(ParticipantDto.from(findMember)); // 같이 탄 사람에 자신 혼자.
         } else if (riddingType.equals(group)) {
             RedisRideRoom findRideRoom = redisRideRoomRepository.findById(request.getRideRoomId())
