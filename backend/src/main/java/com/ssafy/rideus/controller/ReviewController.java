@@ -1,9 +1,7 @@
 package com.ssafy.rideus.controller;
 
 import com.ssafy.rideus.config.security.auth.CustomUserDetails;
-import com.ssafy.rideus.domain.Review;
 import com.ssafy.rideus.dto.review.*;
-import com.ssafy.rideus.service.MemberService;
 import com.ssafy.rideus.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,8 +41,11 @@ public class ReviewController {
 
     //리뷰 좋아요
     @PostMapping("/click")
-    public ResponseEntity<?> likeClick(@RequestBody ReviewLikeRequestDto reviewLikeRequestDto, @ApiIgnore @AuthenticationPrincipal CustomUserDetails user) {
-        ReviewLikeCountDto result = reviewService.likeClick(reviewLikeRequestDto, user.getId());
+    //@RequestBody ReviewLikeRequestDto reviewLikeRequestDto
+    //, @ApiIgnore @AuthenticationPrincipal CustomUserDetails user
+    //user.getId()
+    public ResponseEntity<?> likeClick(Long rid, Long mid) {
+        ReviewLikeResDto result = reviewService.likeClick(rid, 4L);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 }

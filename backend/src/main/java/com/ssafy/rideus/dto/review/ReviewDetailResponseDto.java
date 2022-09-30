@@ -18,8 +18,11 @@ import java.util.List;
 @Builder
 public class ReviewDetailResponseDto {
     private Long mid;
+    private int score;
     private String content;
+    private String imageUrl;
     private List<ReviewTagDto> tags;
+    private int likeCount;
 
     public static ReviewDetailResponseDto reviewDetailRes(Review review) {
         List<ReviewTag> reviewTags = review.getReviewTags();
@@ -29,8 +32,11 @@ public class ReviewDetailResponseDto {
         }
         return ReviewDetailResponseDto.builder()
                 .mid(review.getMember().getId())
+                .score(review.getScore())
                 .content(review.getContent())
+                .imageUrl(review.getImageUrl())
                 .tags(result)
+                .likeCount(review.getLikeCount())
                 .build();
     }
 

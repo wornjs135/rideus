@@ -78,19 +78,18 @@ public class ReviewService {
     }
 
     @Transactional
-    public ReviewLikeCountDto likeClick(ReviewLikeRequestDto reviewLikeRequestDto, Long mid) {
+    public ReviewLikeResDto likeClick(Long rid, Long mid) {
         Member member = memberRepository.findById(mid).orElseThrow(() -> new BadRequestException("유효하지 않은 회원입니다."));
-        Review review = reviewRepository.findById(reviewLikeRequestDto.getRid()).orElseThrow(() -> new BadRequestException("유효하지 않은 리뷰입니다."));
-        Optional<ReviewLike> result = reviewLikeRepository.findByReviewAndMember(review, member);
-        if (result.isPresent()) {
-            review.decreaseLike();
-            reviewLikeRepository.delete(result.get());
-        } else {
+        Review review = reviewRepository.findById(rid).orElseThrow(() -> new BadRequestException("유효하지 않은 리뷰입니다."));
+        Optional<ReviewLike> result = reviewLikeRepository.findByMemberIdAndReviewId(mid, rid);
+        if (!result.isPresent()) {
             review.increaseLike();
             reviewLikeRepository.save(new ReviewLike(member, review));
+        } else {
+            review.decreaseLike();
+            reviewLikeRepository.delete(result.get());
         }
-
-        return new ReviewLikeCountDto(review.getLikeCount());
+        return ReviewLikeResDto.reviewLikeRes(review);
     }
 
     private List<String> getTags(Review review) {
