@@ -11,9 +11,27 @@ import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import DensitySmallIcon from "@mui/icons-material/DensitySmall";
+import RecommendIcon from "@mui/icons-material/Recommend";
 import { useNavigate } from "react-router-dom";
 import { getAllCourse } from "../utils/api/courseApi";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { categorys } from "../utils/util";
 
+const theme = createTheme({
+  status: {
+    danger: "#e53e3e",
+  },
+  palette: {
+    deactive: {
+      main: "#000000",
+      contrastText: "#053e85",
+    },
+    active: {
+      main: "#439652",
+      contrastText: "#fff",
+    },
+  },
+});
 // 코스 구조
 // {
 //   "bookmarkId": "string",
@@ -38,6 +56,7 @@ export const CourseList = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState(0);
+  const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
   useEffect(() => {
     if (loading) {
@@ -75,6 +94,9 @@ export const CourseList = () => {
                 sx={{ ml: 1, flex: 1 }}
                 placeholder="코스 검색"
                 inputProps={{ "aria-label": "코스 검색" }}
+                onChange={(event) => {
+                  setSearchTerm(event.target.value);
+                }}
               />
               <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
                 <SearchIcon />
@@ -85,37 +107,136 @@ export const CourseList = () => {
         {/* 카테고리 버튼 */}
         <Box width="100%" align="center">
           <Box direction="row" justify="start" overflow="scroll">
-            <StyledHorizonTable>
-              <IconButton type="button">
-                <DensitySmallIcon />
-                전체
-              </IconButton>
-              <Button>추천</Button>
-              <Button>관광명소</Button>
-              <Button>음식점</Button>
-              <Button>카페</Button>
-              <Button>편의점</Button>
-              <Button>화장실</Button>
-              <Button>문화시설</Button>
-              <Button>자전거수리</Button>
-            </StyledHorizonTable>
+            <ThemeProvider theme={theme}>
+              <StyledHorizonTable>
+                <IconButton
+                  type="button"
+                  color={selected === 0 ? "active" : "deactive"}
+                  onClick={() => {
+                    setSelected(0);
+                  }}
+                >
+                  <DensitySmallIcon />
+                  전체
+                </IconButton>
+                <IconButton
+                  type="button"
+                  color={selected === 1 ? "active" : "deactive"}
+                  onClick={() => {
+                    setSelected(1);
+                  }}
+                >
+                  <RecommendIcon />
+                  추천
+                </IconButton>
+                <IconButton
+                  type="button"
+                  color={selected === 2 ? "active" : "deactive"}
+                  onClick={() => {
+                    setSelected(2);
+                  }}
+                >
+                  관광명소
+                </IconButton>
+                <IconButton
+                  type="button"
+                  color={selected === 3 ? "active" : "deactive"}
+                  onClick={() => {
+                    setSelected(3);
+                  }}
+                >
+                  음식점
+                </IconButton>
+                <IconButton
+                  type="button"
+                  color={selected === 4 ? "active" : "deactive"}
+                  onClick={() => {
+                    setSelected(4);
+                  }}
+                >
+                  카페
+                </IconButton>
+                <IconButton
+                  type="button"
+                  color={selected === 5 ? "active" : "deactive"}
+                  onClick={() => {
+                    setSelected(5);
+                  }}
+                >
+                  편의점
+                </IconButton>
+                <IconButton
+                  type="button"
+                  color={selected === 6 ? "active" : "deactive"}
+                  onClick={() => {
+                    setSelected(6);
+                  }}
+                >
+                  화장실
+                </IconButton>
+                <IconButton
+                  type="button"
+                  color={selected === 7 ? "active" : "deactive"}
+                  onClick={() => {
+                    setSelected(7);
+                  }}
+                >
+                  문화시설
+                </IconButton>
+                <IconButton
+                  type="button"
+                  color={selected === 8 ? "active" : "deactive"}
+                  onClick={() => {
+                    setSelected(8);
+                  }}
+                >
+                  자전거수리
+                </IconButton>
+              </StyledHorizonTable>
+            </ThemeProvider>
           </Box>
         </Box>
         {/* 리스트 */}
         <Box>
           {courses &&
-            courses.map((course, idx) => {
-              return <CourseBox loading={loading} course={course} key={idx} />;
-            })}
+            courses
+              .filter((course) => {
+                if (selected === 0 || selected === 1) {
+                  if (searchTerm === "") {
+                    return course;
+                  } else if (course.courseName.includes(searchTerm)) {
+                    return course;
+                  }
+                } else {
+                  if (
+                    searchTerm === "" &&
+                    course.category !== null &&
+                    course.category.includes(categorys[selected])
+                  ) {
+                    return course;
+                  } else if (
+                    course.courseName.includes(searchTerm) &&
+                    course.category !== null &&
+                    course.category.includes(categorys[selected])
+                  ) {
+                    return course;
+                  }
+                }
+              })
+              .map((course, idx) => {
+                return (
+                  <CourseBox loading={loading} course={course} key={idx} />
+                );
+              })}
         </Box>
-        <Button
+        {/* <Button
           children="코스 상세"
           onClick={() => {
             navigate(`/courseDetail/${18}`, {
               state: { courseName: "마포-정서점" },
             });
           }}
-        />
+        /> */}
       </Box>
     );
 };

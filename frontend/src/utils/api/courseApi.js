@@ -32,7 +32,7 @@ const searchCourse = async (keyword, success, fail) => {
 
 // 코스 추가 (사용자가 탄 코스 추가하는 경우)
 const addCourse = async (data, success, fail) => {
-  await authInstance.put("/add", data).then(success).catch(fail);
+  await authInstance.post("/add", data).then(success).catch(fail);
 };
 
 export {

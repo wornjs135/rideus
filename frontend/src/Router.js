@@ -19,6 +19,7 @@ import { EditProfile } from "./pages/EditProfile";
 import "./App.css";
 import { CourseList } from "./pages/CourseList.jsx";
 import { CourseRegister } from "./pages/CourseRegister.jsx";
+import { GroupEnter } from "./pages/GroupEnter.jsx";
 const Layout = () => {
   return (
     <div className="rootRoute">
@@ -92,6 +93,7 @@ export const Router = () => {
         <Route path="/rideEnd" element={<RideEnd />} />
         <Route path="/registerReview" element={<ReviewRegister />} />
         <Route path="/registerCourse" element={<CourseRegister />} />
+        <Route path="/groupRide" element={<GroupEnter />} />
       </Route>
       <Route path="/" element={<NoHeaderLayout />}>
         <Route path="/mypage" element={<MyPage />} />
