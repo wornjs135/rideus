@@ -17,7 +17,7 @@ const StyledButton = styled.button`
       border: 0px;
       font-size: 18px;
       color: white;
-      background: #439652;
+      background: #64ccbe;
       width: 80vw;
     `}
 
@@ -53,7 +53,7 @@ const StyledButton = styled.button`
     css`
       border: 0px;
       color: white;
-      background: #439652;
+      background: #64ccbe;
       width: 40vw;
     `}
 
@@ -62,7 +62,7 @@ const StyledButton = styled.button`
     css`
       border: 0px;
       color: white;
-      background: #439652;
+      background: #64ccbe;
       width: 20vw;
     `}
 
@@ -71,27 +71,27 @@ const StyledButton = styled.button`
     css`
       height: 59px;
       font-size: 18px;
-      border: 1px solid #439652;
+      border: 1px solid #64ccbe;
       background: white;
-      color: #439652;
+      color: #64ccbe;
       width: 80vw;
     `}
 
     ${(props) =>
     props.MediumWhite &&
     css`
-      border: 1px solid #439652;
+      border: 1px solid #64ccbe;
       background: white;
-      color: #439652;
+      color: #64ccbe;
       width: 40vw;
     `}
 
     ${(props) =>
     props.SmallWhite &&
     css`
-      border: 1px solid #439652;
+      border: 1px solid #64ccbe;
       background: white;
-      color: #439652;
+      color: #64ccbe;
       width: 20vw;
     `}
 
@@ -133,7 +133,7 @@ const StyledButton = styled.button`
     props.TagGreen &&
     css`
       color: white;
-      background-color: #439652;
+      background-color: #64ccbe;
       padding: 8px;
       font-size: 12px;
       margin: 0px 8px 12px 0px;

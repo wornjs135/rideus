@@ -54,45 +54,81 @@ export const CourseBox = ({
           navigate(`/courseDetail/${courseId}`);
         }}
         style={{
-          borderRadius: "5px",
+          borderRadius: "10px",
           boxShadow: "4px 4px 4px -4px rgb(0 0 0 / 0.2)",
+          width: "283px",
+          height: "143px",
         }}
+        background="white"
         pad="medium"
-        margin="small"
-        width="95vw"
+        margin={{ top: "20px" }}
       >
         {/* 코스 박스 */}
-        <Box direction="row" width="100%" align="center" gap="medium">
-          {/* 사진 */}
+        <Box width="100%" align="center">
+          {/* 제목, 북마크 버튼 */}
+          <Box direction="row" justify="between" width="100%">
+            <StyledText text={courseName} weight="bold" size="18px" />
+            <Box direction="row" align="start">
+              <img
+                src={bm ? Bookmark : BookmarkBlank}
+                width="18px"
+                height="20px"
+              />
+              {likeCount}
+            </Box>
+          </Box>
+          {/* 코스 데이터, 사진 */}
           <Box
-            width="40%"
-            border={{ color: "#439652", size: "medium", side: "all" }}
+            direction="row"
+            width="100%"
+            justify="start"
+            gap="large"
+            align="center"
           >
-            <img src={imageUrl ? imageUrl : NoImage} />
+            <Box gap="small">
+              <StyledText
+                text={"코스 길이 : " + distance + "km"}
+                style={{
+                  backgroundColor: "#BDE0EF",
+                  borderRadius: "10px",
+                  // margin: "3px",
+                  fontSize: "12px",
+                  paddingLeft: "10px",
+                  paddingRight: "10px",
+                }}
+                weight="bold"
+              />
+              <StyledText
+                text={"예상 시간 : " + expectTimeHandle(expectedTime)}
+                style={{
+                  backgroundColor: "#F8F38F",
+                  borderRadius: "10px",
+                  fontSize: "12px",
+                  paddingLeft: "10px",
+                  paddingRight: "10px",
+                }}
+                weight="bold"
+              />
+              <StyledText
+                text={start.split(" ")[0] + " " + start.split(" ")[1]}
+                style={{
+                  backgroundColor: "#F4D4D4",
+                  borderRadius: "10px",
+                  fontSize: "12px",
+                  paddingLeft: "10px",
+                  paddingRight: "10px",
+                }}
+                weight="bold"
+              />
+            </Box>
+            <Box>
+              <img
+                src={imageUrl ? imageUrl : NoImage}
+                style={{ borderRadius: "10px" }}
+              />
+            </Box>
           </Box>
-          {/* 데이터들 */}
-          <Box width="100%">
-            {/* 제목, 북마크 버튼 */}
-            <Box direction="row" justify="between" align="center">
-              <StyledText text={courseName} weight="bold" size="20px" />
-              <img src={bm ? Bookmark : BookmarkBlank} width="20vw" />
-            </Box>
-            {/* 여정 */}
-            <Box width="40vw" align="center" margin={{ left: "5vw" }}>
-              <StyledText text={start + " - " + finish} color="lightgray" />
-            </Box>
-            {/* 거리, 예상 시간 */}
-            <Box direction="row" gap="medium" justify="end">
-              <Box direction="row" align="end" gap="small">
-                <StyledText text="거리 : " weight="bold" size="16px" />
-                <StyledText text={`${distance} km`} />
-              </Box>
-              <Box direction="row" align="end" gap="small">
-                <StyledText text="예상 시간 : " weight="bold" size="16px" />
-                <StyledText text={expectTimeHandle(expectedTime)} />
-              </Box>
-            </Box>
-          </Box>
+          {/* 사진 */}
         </Box>
         {/* 태그 */}
         <Box direction="row">

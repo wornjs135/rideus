@@ -10,24 +10,23 @@ import InputBase from "@mui/material/InputBase";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
-import DensitySmallIcon from "@mui/icons-material/DensitySmall";
-import RecommendIcon from "@mui/icons-material/Recommend";
+
 import { useNavigate } from "react-router-dom";
 import { getAllCourse } from "../utils/api/courseApi";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { categorys } from "../utils/util";
 
-const theme = createTheme({
+export const theme = createTheme({
   status: {
     danger: "#e53e3e",
   },
   palette: {
     deactive: {
-      main: "#000000",
-      contrastText: "#053e85",
+      main: "#E0F7F4",
+      contrastText: "#000000",
     },
     active: {
-      main: "#439652",
+      main: "#64CCBE",
       contrastText: "#fff",
     },
   },
@@ -106,128 +105,116 @@ export const CourseList = () => {
         </Box>
         {/* 카테고리 버튼 */}
         <Box width="100%" align="center">
-          <Box direction="row" justify="start" overflow="scroll">
+          <Box
+            direction="row"
+            justify="start"
+            overflow="scroll"
+            margin="medium"
+            height="70px"
+          >
             <ThemeProvider theme={theme}>
               <StyledHorizonTable>
-                <IconButton
-                  type="button"
-                  color={selected === 0 ? "active" : "deactive"}
-                  onClick={() => {
-                    setSelected(0);
-                  }}
-                >
-                  <DensitySmallIcon />
-                  전체
-                </IconButton>
-                <IconButton
-                  type="button"
-                  color={selected === 1 ? "active" : "deactive"}
-                  onClick={() => {
-                    setSelected(1);
-                  }}
-                >
-                  <RecommendIcon />
-                  추천
-                </IconButton>
-                <IconButton
-                  type="button"
-                  color={selected === 2 ? "active" : "deactive"}
-                  onClick={() => {
-                    setSelected(2);
-                  }}
-                >
-                  관광명소
-                </IconButton>
-                <IconButton
-                  type="button"
-                  color={selected === 3 ? "active" : "deactive"}
-                  onClick={() => {
-                    setSelected(3);
-                  }}
-                >
-                  음식점
-                </IconButton>
-                <IconButton
-                  type="button"
-                  color={selected === 4 ? "active" : "deactive"}
-                  onClick={() => {
-                    setSelected(4);
-                  }}
-                >
-                  카페
-                </IconButton>
-                <IconButton
-                  type="button"
-                  color={selected === 5 ? "active" : "deactive"}
-                  onClick={() => {
-                    setSelected(5);
-                  }}
-                >
-                  편의점
-                </IconButton>
-                <IconButton
-                  type="button"
-                  color={selected === 6 ? "active" : "deactive"}
-                  onClick={() => {
-                    setSelected(6);
-                  }}
-                >
-                  화장실
-                </IconButton>
-                <IconButton
-                  type="button"
-                  color={selected === 7 ? "active" : "deactive"}
-                  onClick={() => {
-                    setSelected(7);
-                  }}
-                >
-                  문화시설
-                </IconButton>
-                <IconButton
-                  type="button"
-                  color={selected === 8 ? "active" : "deactive"}
-                  onClick={() => {
-                    setSelected(8);
-                  }}
-                >
-                  자전거수리
-                </IconButton>
+                {categorys.map((cat, idx) => {
+                  return (
+                    <Button
+                      key={idx}
+                      variant="contained"
+                      color={selected === idx ? "active" : "deactive"}
+                      onClick={() => {
+                        setSelected(idx);
+                      }}
+                      style={{
+                        fontWeight: "bold",
+                        width: "55px",
+                        height: "55px",
+                        borderRadius: "10px",
+                        marginRight: "10px",
+                      }}
+                    >
+                      <Box align="center">
+                        {cat.icon}
+                        {cat.name}
+                      </Box>
+                    </Button>
+                  );
+                })}
               </StyledHorizonTable>
             </ThemeProvider>
           </Box>
         </Box>
         {/* 리스트 */}
-        <Box>
-          {courses &&
-            courses
-              .filter((course) => {
-                if (selected === 0 || selected === 1) {
-                  if (searchTerm === "") {
-                    return course;
-                  } else if (course.courseName.includes(searchTerm)) {
-                    return course;
-                  }
-                } else {
-                  if (
-                    searchTerm === "" &&
-                    course.category !== null &&
-                    course.category.includes(categorys[selected])
-                  ) {
-                    return course;
-                  } else if (
-                    course.courseName.includes(searchTerm) &&
-                    course.category !== null &&
-                    course.category.includes(categorys[selected])
-                  ) {
-                    return course;
-                  }
+        <Box
+          align="center"
+          round={{ corner: "top", size: "large" }}
+          background="#E0F7F4"
+          gap="medium"
+          height={{ min: "80vh" }}
+        >
+          {courses ? (
+            courses.filter((course) => {
+              if (selected === 0 || selected === 1) {
+                if (searchTerm === "") {
+                  return course;
+                } else if (course.courseName.includes(searchTerm)) {
+                  return course;
                 }
-              })
-              .map((course, idx) => {
-                return (
-                  <CourseBox loading={loading} course={course} key={idx} />
-                );
-              })}
+              } else {
+                if (
+                  searchTerm === "" &&
+                  course.category !== null &&
+                  course.category.includes(categorys[selected].name)
+                ) {
+                  return course;
+                } else if (
+                  course.courseName.includes(searchTerm) &&
+                  course.category !== null &&
+                  course.category.includes(categorys[selected].name)
+                ) {
+                  return course;
+                }
+              }
+            }).length > 0 ? (
+              courses
+                .filter((course) => {
+                  if (selected === 0 || selected === 1) {
+                    if (searchTerm === "") {
+                      return course;
+                    } else if (course.courseName.includes(searchTerm)) {
+                      return course;
+                    }
+                  } else {
+                    if (
+                      searchTerm === "" &&
+                      course.category !== null &&
+                      course.category.includes(categorys[selected].name)
+                    ) {
+                      return course;
+                    } else if (
+                      course.courseName.includes(searchTerm) &&
+                      course.category !== null &&
+                      course.category.includes(categorys[selected].name)
+                    ) {
+                      return course;
+                    }
+                  }
+                })
+                .map((course, idx) => {
+                  return (
+                    <CourseBox loading={loading} course={course} key={idx} />
+                  );
+                })
+            ) : (
+              <Box margin={{ top: "30px" }}>
+                <StyledText
+                  text="해당하는 코스가 없습니다!"
+                  size="16px"
+                  weight="bold"
+                />
+              </Box>
+            )
+          ) : (
+            <Spinner />
+          )}
         </Box>
         {/* <Button
           children="코스 상세"

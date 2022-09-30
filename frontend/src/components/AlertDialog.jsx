@@ -6,6 +6,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Button from "./Button";
 import { Button as GBtn } from "grommet";
+import { Button as MBtn, ThemeProvider } from "@mui/material";
 import { Box } from "grommet";
 import styled from "styled-components";
 import { CourseMap, StarBox, StyledText } from "./Common";
@@ -19,6 +20,7 @@ import { BootstrapButton, ExitButton, WhiteButton } from "./Buttons";
 import { Map, MapMarker, Polyline, useMap } from "react-kakao-maps-sdk";
 import { categorys, markerCategorys } from "../utils/util";
 import { NearInfoDialog } from "./NearInfoDialog";
+import { theme } from "../pages/CourseList";
 export const AlertDialog = ({
   open,
   handleClose,
@@ -73,7 +75,7 @@ export const RideDialog = ({ open, handleClose, title }) => {
     >
       <Box direction="row" justify="center" width="100%" pad="15px" gap="small">
         <GBtn
-          color="#439652"
+          color="#64CCBE"
           onClick={() => {
             navigate("/ride", {
               state: {
@@ -89,7 +91,7 @@ export const RideDialog = ({ open, handleClose, title }) => {
               height="140px"
               align="center"
               justify="between"
-              background="#439652"
+              background="#64CCBE"
               style={{ borderRadius: "8px" }}
               pad="small"
             >
@@ -119,7 +121,7 @@ export const RideDialog = ({ open, handleClose, title }) => {
               align="center"
               height="140px"
               justify="between"
-              background="#439652"
+              background="#64CCBE"
               style={{ borderRadius: "8px" }}
               pad="small"
             >
@@ -181,9 +183,9 @@ export const MapDialog = ({
           position={position} // 마커를 표시할 위치
           // @ts-ignore
           image={{
-            src: `/icons/marker${
-              markerCategorys.indexOf(info.nearinfoCategory) + 1
-            }.svg`,
+            src: `/icons/marker${markerCategorys.findIndex(
+              (i) => i.name === info.nearinfoCategory
+            )}.svg`,
             size: {
               width: 29,
               height: 41,
@@ -260,7 +262,7 @@ export const MapDialog = ({
               .filter((near) => {
                 if (selected === 0) {
                   return near;
-                } else if (near.key.includes(markerCategorys[selected - 1])) {
+                } else if (near.key.includes(markerCategorys[selected].name)) {
                   return near;
                 }
               })
@@ -300,7 +302,7 @@ export const MapDialog = ({
               round={{ size: "small" }}
               width="90%"
               height="43px"
-              background={"rgb(67, 150, 82)"}
+              background={"#64CCBE"}
               align="center"
               justify="center"
             >
@@ -308,73 +310,41 @@ export const MapDialog = ({
             </Box>
             {type === "detail" && (
               <Box width="100%" align="center">
-                <Box direction="row" justify="start" overflow="scroll">
-                  <StyledHorizonTable>
-                    <Button
-                      InfoSelect={selected === 0}
-                      Info={selected !== 0}
-                      children="전체"
-                      onClick={() => {
-                        setSelected(0);
-                      }}
-                    />
-                    <Button
-                      InfoSelect={selected === 1}
-                      Info={selected !== 1}
-                      children="관광명소"
-                      onClick={() => {
-                        setSelected(1);
-                      }}
-                    />
-                    <Button
-                      InfoSelect={selected === 2}
-                      Info={selected !== 2}
-                      children="음식점"
-                      onClick={() => {
-                        setSelected(2);
-                      }}
-                    />
-                    <Button
-                      InfoSelect={selected === 3}
-                      Info={selected !== 3}
-                      children="카페"
-                      onClick={() => {
-                        setSelected(3);
-                      }}
-                    />
-                    <Button
-                      InfoSelect={selected === 4}
-                      Info={selected !== 4}
-                      children="편의점"
-                      onClick={() => {
-                        setSelected(4);
-                      }}
-                    />
-                    <Button
-                      InfoSelect={selected === 5}
-                      Info={selected !== 5}
-                      children="화장실"
-                      onClick={() => {
-                        setSelected(5);
-                      }}
-                    />
-                    <Button
-                      InfoSelect={selected === 6}
-                      Info={selected !== 6}
-                      children="문화시설"
-                      onClick={() => {
-                        setSelected(6);
-                      }}
-                    />
-                    <Button
-                      InfoSelect={selected === 7}
-                      Info={selected !== 7}
-                      children="자전거수리"
-                      onClick={() => {
-                        setSelected(7);
-                      }}
-                    />
-                  </StyledHorizonTable>
+                <Box
+                  direction="row"
+                  justify="start"
+                  overflow="scroll"
+                  margin="medium"
+                  height="70px"
+                >
+                  <ThemeProvider theme={theme}>
+                    <StyledHorizonTable>
+                      {markerCategorys.map((cat, idx) => {
+                        return (
+                          <MBtn
+                            key={idx}
+                            variant="contained"
+                            color={selected === idx ? "active" : "deactive"}
+                            onClick={() => {
+                              setSelected(idx);
+                            }}
+                            style={{
+                              fontWeight: "bold",
+                              width: "55px",
+                              height: "55px",
+                              borderRadius: "10px",
+                              marginRight: "10px",
+                            }}
+                          >
+                            <Box align="center">
+                              {cat.icon}
+                              {cat.name}
+                            </Box>
+                          </MBtn>
+                        );
+                      })}
+                    </StyledHorizonTable>
+                  </ThemeProvider>
                 </Box>
                 <img width="50px" src={WeatherBtn} onClick={() => {}} />
               </Box>

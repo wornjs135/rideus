@@ -1,5 +1,12 @@
-const util = () => {};
-
+import DensitySmallIcon from "@mui/icons-material/DensitySmall";
+import RecommendIcon from "@mui/icons-material/Recommend";
+import RestaurantIcon from "@mui/icons-material/Restaurant";
+import LocalCafeIcon from "@mui/icons-material/LocalCafe";
+import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
+import MuseumIcon from "@mui/icons-material/Museum";
+import TourIcon from "@mui/icons-material/Tour";
+import WcIcon from "@mui/icons-material/Wc";
+import LocalConvenienceStoreIcon from "@mui/icons-material/LocalConvenienceStore";
 export const tags = [
   { id: 1, searchTagName: "평지" },
   { id: 2, searchTagName: "업힐" },
@@ -20,25 +27,26 @@ export const tags = [
 ];
 
 export const categorys = [
-  "전체",
-  "추천",
-  "관광명소",
-  "음식점",
-  "카페",
-  "편의점",
-  "자전거정비",
-  "문화시설",
-  "공중화장실",
+  { name: "전체", icon: <DensitySmallIcon /> },
+  { name: "추천", icon: <RecommendIcon /> },
+  { name: "관광명소", icon: <TourIcon /> },
+  { name: "음식점", icon: <RestaurantIcon /> },
+  { name: "카페", icon: <LocalCafeIcon /> },
+  { name: "편의점", icon: <LocalConvenienceStoreIcon /> },
+  { name: "자전거정비", icon: <SettingsOutlinedIcon /> },
+  { name: "문화시설", icon: <MuseumIcon /> },
+  { name: "공중화장실", icon: <WcIcon /> },
 ];
 
 export const markerCategorys = [
-  "관광명소",
-  "음식점",
-  "카페",
-  "편의점",
-  "자전거정비",
-  "문화시설",
-  "공중화장실",
+  { name: "전체", icon: <DensitySmallIcon /> },
+  { name: "관광명소", icon: <TourIcon /> },
+  { name: "음식점", icon: <RestaurantIcon /> },
+  { name: "카페", icon: <LocalCafeIcon /> },
+  { name: "편의점", icon: <LocalConvenienceStoreIcon /> },
+  { name: "자전거정비", icon: <SettingsOutlinedIcon /> },
+  { name: "문화시설", icon: <MuseumIcon /> },
+  { name: "공중화장실", icon: <WcIcon /> },
 ];
 
 export const timeHandle = (time) => {

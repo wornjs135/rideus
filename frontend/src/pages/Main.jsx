@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Spinner } from "grommet";
-import bike1 from "../assets/images/bicycle.png";
+import MainBike from "../assets/images/main_bike.png";
 import bike2 from "../assets/images/bicycle2.png";
 // import Button from "../components/Button";
 // import { Button, styled } from "@material-ui/core";
@@ -95,6 +95,7 @@ export const Main = () => {
       getPopularTags(
         (response) => {
           console.log(response);
+          setTags(response.data);
         },
         (fail) => {
           console.log(fail);
@@ -167,10 +168,14 @@ export const Main = () => {
     return (
       <Box width="100vw" justify="center" background="#fffff">
         {/* 자전거사진, 멘트, 버튼 */}
-        <Box align="center" justify="between" gap="medium">
+        <Box
+          align="center"
+          justify="between"
+          gap="medium"
+          margin={{ top: "15px", bottom: "15px" }}
+        >
           <Box direction="row" align="center">
-            <img src={bike1} />
-            <img src={bike2} />
+            <img src={MainBike} />
             {/* <img src={test1} /> */}
           </Box>
           <StyledText
@@ -181,19 +186,20 @@ export const Main = () => {
           />
           <Button
             style={{
-              boxShadow: "none",
+              boxShadow: "4px 4px 4px -4px rgb(0 0 0 / 0.2)",
               textTransform: "none",
               fontSize: 14,
               fontWeight: "bold",
               padding: "6px 12px",
               color: "white",
-              width: "50%",
-              height: "5vh",
+              width: "240px",
+              height: "40px",
               margin: "10px",
-              backgroundColor: "#65e27a",
+              backgroundColor: "#64CCBE",
+              borderRadius: "10px",
               fontFamily: ["sans-serif"],
               "&:hover": {
-                backgroundColor: "#65e27b",
+                backgroundColor: "#64CCBE",
                 boxShadow: "none",
                 color: "white",
               },
@@ -226,11 +232,11 @@ export const Main = () => {
           align="center"
           justify="between"
           round={{ corner: "top", size: "large" }}
-          background="#f5feec"
-          border={{ color: "#F3F3F3", size: "small", side: "all" }}
+          background="#E0F7F4"
+          border={{ color: "#E0F7F4", size: "small", side: "all" }}
         >
           {/* 인기코스 */}
-          <Box align="start" width="100%" gap="large" margin="large">
+          <Box align="start" width="100%" margin={{ top: "large" }}>
             <Box pad={{ left: "20px" }}>
               <StyledText text="인기 코스" weight="bold" size="18px" />
             </Box>
@@ -250,7 +256,7 @@ export const Main = () => {
             </Box>
           </Box>
           {/*  추천 코스 */}
-          <Box align="start" width="100%" gap="large" margin="large">
+          <Box align="start" width="100%" margin={{ top: "large" }}>
             <Box pad={{ left: "20px" }}>
               <StyledText text="주변 코스" weight="bold" size="18px" />
             </Box>
@@ -270,7 +276,7 @@ export const Main = () => {
             </Box>
           </Box>
           {/* 월간자전거 */}
-          <Box align="start" width="100%" gap="large" margin="large">
+          <Box align="start" width="100%" margin={{ top: "large" }}>
             <Box pad={{ left: "20px" }}>
               <StyledText text="자전거 소식" weight="bold" size="18px" />
             </Box>
@@ -289,16 +295,27 @@ export const Main = () => {
             </Box>
           </Box>
           {/* 인기태그 */}
-          <Box align="start" width="100%" gap="large" margin="large">
+          <Box align="start" width="100%" margin={{ top: "large" }}>
             <Box pad={{ left: "20px" }}>
               <StyledText text="인기 태그" weight="bold" size="18px" />
             </Box>
             {/* 인기태그 리스트 */}
-            <Box direction="row" overflow="scroll" gap="medium">
+            <Box
+              direction="row"
+              overflow="scroll"
+              margin="medium"
+              pad={{ left: "20px" }}
+            >
               {tags &&
                 tags.map((tag, idx) => {
                   return (
-                    <StyledText text={`#${tag.tagName}`} key={tag.tagId} />
+                    <StyledText
+                      text={`#${tag.tagName}`}
+                      key={tag.tagId}
+                      color="#64CCBE"
+                      weight="bold"
+                      style={{ marginRight: "10px" }}
+                    />
                   );
                 })}
             </Box>

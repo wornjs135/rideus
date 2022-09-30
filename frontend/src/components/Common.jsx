@@ -21,7 +21,7 @@ import { Map, Polyline } from "react-kakao-maps-sdk";
 
 // Header
 const Header = styled.div`
-  background-color: #439652;
+  background-color: white;
   max-width: 32vw;
   min-width: 32vw;
   padding: 2vw 34vw;
@@ -225,13 +225,12 @@ export const StarBox = ({ score, starView }) => {
   return (
     <Box direction="row" align="center">
       {score && <StyledText text={score} weight="bold" size="19px" />}
-      <Box style={{ position: "relative", marginTop: "10px" }}>
+      <Box style={{ position: "relative" }}>
         <div
           // align="center"
           style={{
             width: starView,
-            marginLeft: "15px",
-            height: "28px",
+            height: "25px",
             overflow: "hidden",
           }}
         >
@@ -240,8 +239,8 @@ export const StarBox = ({ score, starView }) => {
             alt="별"
             src={Stars}
             style={{
-              height: "28px",
-              width: "114px",
+              height: "25px",
+              width: "100px",
             }}
           />
         </div>
@@ -251,9 +250,8 @@ export const StarBox = ({ score, starView }) => {
           src={StarsBlank}
           style={{
             position: "absolute",
-            marginLeft: "15px",
-            width: "114px",
-            height: "28px",
+            width: "100px",
+            height: "25px",
           }}
         />
       </Box>

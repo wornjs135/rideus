@@ -67,7 +67,7 @@ export const ChooseRideTypeBar = ({ open, onDismiss }) => {
           }}
           children={
             <Box width="145px" align="center" style={{ borderRadius: "8px" }}>
-              <img src={CourseButton} width="100px" />
+              <img src={CourseButton} />
               <StyledText
                 text="추천 코스"
                 color="black"
@@ -116,7 +116,7 @@ export const ChooseRideTypeBar = ({ open, onDismiss }) => {
           }}
           children={
             <Box width="145px" align="center" style={{ borderRadius: "8px" }}>
-              <img src={RideButton} width="100px" />
+              <img src={RideButton} />
               <StyledText
                 text="나만의 코스"
                 color="black"
