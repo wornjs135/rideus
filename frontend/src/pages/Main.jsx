@@ -165,20 +165,39 @@ export const Main = () => {
   if (loading) return <Spinner />;
   else
     return (
-      <Box width="100vw" justify="center" gap="small">
+      <Box width="100vw" justify="center" background="#fffff">
         {/* 자전거사진, 멘트, 버튼 */}
-        <Box align="center" justify="between">
+        <Box align="center" justify="between" gap="medium">
           <Box direction="row" align="center">
             <img src={bike1} />
             <img src={bike2} />
+            {/* <img src={test1} /> */}
           </Box>
           <StyledText
-            color="#4B4B4B"
+            color="#FFFFF"
             text="즐거운 자전거 여행, 달려볼까요?"
             weight="bold"
             size="18px"
           />
-          <BootstrapButton
+          <Button
+            style={{
+              boxShadow: "none",
+              textTransform: "none",
+              fontSize: 14,
+              fontWeight: "bold",
+              padding: "6px 12px",
+              color: "white",
+              width: "50%",
+              height: "5vh",
+              margin: "10px",
+              backgroundColor: "#65e27a",
+              fontFamily: ["sans-serif"],
+              "&:hover": {
+                backgroundColor: "#65e27b",
+                boxShadow: "none",
+                color: "white",
+              },
+            }}
             onClick={() => {
               // if (User === undefined) {
               //   alert("로그인 하세요!");
@@ -191,7 +210,7 @@ export const Main = () => {
             }}
           >
             RIDE!
-          </BootstrapButton>
+          </Button>
           {/* <Button
           variant="contained"
           size="large"
@@ -206,8 +225,8 @@ export const Main = () => {
         <Box
           align="center"
           justify="between"
-          round
-          background="#F3F3F3"
+          round={{ corner: "top", size: "large" }}
+          background="#f5feec"
           border={{ color: "#F3F3F3", size: "small", side: "all" }}
         >
           {/* 인기코스 */}
@@ -253,7 +272,7 @@ export const Main = () => {
           {/* 월간자전거 */}
           <Box align="start" width="100%" gap="large" margin="large">
             <Box pad={{ left: "20px" }}>
-              <StyledText text="월간 자전거" weight="bold" size="18px" />
+              <StyledText text="자전거 소식" weight="bold" size="18px" />
             </Box>
             {/* 월간자전거 리스트 */}
             <Box direction="row" overflow="scroll">

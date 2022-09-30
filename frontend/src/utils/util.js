@@ -48,8 +48,8 @@ export const timeHandle = (time) => {
 };
 
 export const expectTimeHandle = (time) => {
-  if (time < 60) return `${time}m`;
-  else return `${parseInt(time / 60)}h ${parseInt(time % 60)}m`;
+  if (time < 60) return `${time}분`;
+  else return `${parseInt(time / 60)}시간 ${parseInt(time % 60)}분`;
 };
 
 export const distanceHandle = (dis) => {

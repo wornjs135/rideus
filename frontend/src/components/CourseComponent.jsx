@@ -12,7 +12,6 @@ const CourseBox = styled.div`
   position: relative;
   justify-content: space-between;
   width: 153px;
-  height: 222px;
   margin-right: 15px;
   margin-bottom: 10px;
   margin-top: 5px;
@@ -58,9 +57,9 @@ export const BestCourse = ({ course }) => {
             navigate(`/courseDetail/${course.courseId}`);
           }}
         >
-          <StyledText text={course.courseName} weight="bold" color="#439652" />
+          <StyledText text={course.courseName} weight="bold" color="#000000" />
           <StarBox starView={parseFloat(course.starAvg) * 22.8} />
-          <StyledText
+          {/* <StyledText
             text={course.start + " - " + course.finish}
             color="#969696"
             style={{
@@ -68,20 +67,36 @@ export const BestCourse = ({ course }) => {
               wordBreak: "normal",
               whiteSpace: "normal",
             }}
-          />
+          /> */}
+          &nbsp;
           <Box align="end">
-            <StyledText text={"총 코스 길이 : " + course.distance + "km"} />
+            <StyledText
+              text={"코스 길이 : " + course.distance + "km"}
+              style={{
+                backgroundColor: "#BDFFAD",
+                borderRadius: "5px 5px 5px 5px",
+                // margin: "3px",
+                fontSize: "12px",
+              }}
+              weight="bold"
+            />
             <StyledText
               text={"예상 시간 : " + expectTimeHandle(course.expectedTime)}
+              style={{
+                backgroundColor: "#F7FA60",
+                borderRadius: "5px 5px 5px 5px",
+                fontSize: "12px",
+              }}
+              weight="bold"
             />
           </Box>
         </CourseBox>
-        <Box direction="row" overflow="scroll" gap="medium">
+        {/* <Box direction="row" overflow="scroll" gap="medium">
           {course.tags &&
             course.tags.map((tag, idx) => {
               return <StyledText text={`#${tag.tagName}`} key={tag.tagId} />;
             })}
-        </Box>
+        </Box> */}
       </>
     );
   else return <Spinner />;

@@ -17,7 +17,7 @@ const getRecommendationCourses = async (success, fail) => {
 
 // 추천 코스 리스트 조회
 const getAllCourse = async (success, fail) => {
-  await authInstance.get("/").then(success).catch(fail);
+  await authInstance.get("").then(success).catch(fail);
 };
 
 // 추천 코스 상세 조회

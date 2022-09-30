@@ -128,7 +128,6 @@ export const CourseDetail = () => {
             (response) => {
               console.log("reviews : ", response);
               setReviews(response.data);
-              setLoading(false);
             },
             (fail) => {
               console.log(fail);
@@ -139,7 +138,6 @@ export const CourseDetail = () => {
             (response) => {
               console.log("ranks : ", response);
               setRanks(response.data);
-              setLoading(false);
             },
             (fail) => {
               console.log(fail);
@@ -326,14 +324,17 @@ export const CourseDetail = () => {
           주행 시작
         </BootstrapButton>
 
-        <CourseReviewRank
-          open={open}
-          onDismiss={() => {
-            setOpen(false);
-          }}
-          ranks={ranks}
-          reviews={reviews}
-        />
+        {ranks.length > 0 && reviews.length > 0 && (
+          <CourseReviewRank
+            open={open}
+            onDismiss={() => {
+              setOpen(false);
+            }}
+            ranks={ranks}
+            reviews={reviews}
+            courseName={course.courseName}
+          />
+        )}
         <ChooseSoloGroupBar
           open={start}
           onDismiss={() => {
@@ -343,6 +344,7 @@ export const CourseDetail = () => {
           coordinates={course.coordinates}
           checkPoints={course.checkpoints}
           courseId={course.courseId}
+          course={course}
         />
         <MapDialog
           type="detail"

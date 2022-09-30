@@ -6,15 +6,19 @@ export const RankBox = ({ record }) => {
   return (
     <Box direction="row" justify="between" gap="small">
       <Box width="10%" justify="center">
-        <StyledText text={record.rank} />
+        <StyledText text={record.ranking} />
       </Box>
 
       <Box direction="row" width="40%">
-        <Avatar src={record.profile === undefined ? Profile : record.profile} />
-        <StyledText text={record.name} />
+        <Avatar
+          src={
+            record.profileImageUrl === null ? Profile : record.profileImageUrl
+          }
+        />
+        <StyledText text={record.nickname} />
       </Box>
       <Box width="20%" justify="center">
-        <StyledText text={record.time} />
+        <StyledText text={record.timeMinute} />
       </Box>
     </Box>
   );

@@ -378,38 +378,40 @@ export const Ride = () => {
         };
 
         console.log("gps : ", gps);
+        // 이전이랑 위치가 같을 때
+        if (
+          mapData.latlng.length > 0 &&
+          mapData.latlng.at(-1).lat === gps.lat &&
+          mapData.latlng.at(-1).lng === gps.lng
+        ) {
+          idle = idle + 1;
+        } else {
+          setMapData((prev) => {
+            return {
+              center: gps,
+              latlng: [...prev.latlng, gps],
+            };
+          });
+          // 위치가 1개 초과로 저장되었을 때 거리 계산
+          if (mapData.latlng.length > 1) {
+            console.log("data : ", data);
 
-        setMapData((prev) => {
-          return {
-            center: gps,
-            latlng: [...prev.latlng, gps],
-          };
-        });
-
-        if (mapData.latlng.length > 1) {
-          console.log("data : ", data);
-
-          let dis = getDistanceFromLatLonInKm(
-            mapData.latlng.at(-1).lat,
-            mapData.latlng.at(-1).lng,
-            gps.lat,
-            gps.lng
-          );
-          console.log("dis: ", dis);
-          if (dis > 0) {
-            setData((prev) => ({
-              topSpeed: Math.max(prev.topSpeed, speedHandle(dis, idle)),
-              avgSpeed: (prev.avgSpeed + speedHandle(dis, idle)) / 2,
-              totalDistance: prev.totalDistance + dis,
-            }));
-            idle = 1;
-          } else {
-            idle = idle + 1;
-            setData((prev) => ({
-              topSpeed: prev.topSpeed,
-              avgSpeed: prev.avgSpeed,
-              totalDistance: prev.totalDistance,
-            }));
+            let dis = getDistanceFromLatLonInKm(
+              mapData.latlng.at(-1).lat,
+              mapData.latlng.at(-1).lng,
+              gps.lat,
+              gps.lng
+            );
+            console.log("dis: ", dis);
+            if (dis > 0) {
+              setData((prev) => ({
+                topSpeed: Math.max(prev.topSpeed, speedHandle(dis, idle)),
+                avgSpeed: (prev.avgSpeed + speedHandle(dis, idle)) / 2,
+                totalDistance: prev.totalDistance + dis,
+              }));
+              idle = 1;
+            }
+            // idle = 1;
           }
         }
 

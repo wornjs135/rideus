@@ -34,7 +34,6 @@ const Layout = () => {
 const LayoutNoFooter = () => {
   return (
     <div className="rootRoute">
-      <LogoHeader />
       <Outlet />
       <NavBar />
     </div>
@@ -44,7 +43,6 @@ const LayoutNoFooter = () => {
 const LayoutLogo = () => {
   return (
     <div className="rootRoute">
-      <LogoHeader />
       <Outlet />
     </div>
   );
@@ -74,8 +72,7 @@ export const Router = () => {
       <Route path="/" element={<Layout />}>
         {/* <Route index element={<MapTest />}></Route> */}
         <Route index element={<Main />} />
-        <Route path="/courseList" element={<CourseList />} />
-        <Route path="/rank" element={<Rank />} />
+
         <Route path="/gpsTest" element={<GpsTest />} />
       </Route>
       {/* 로고, 내브바 */}
@@ -96,6 +93,8 @@ export const Router = () => {
         <Route path="/groupRide" element={<GroupEnter />} />
       </Route>
       <Route path="/" element={<NoHeaderLayout />}>
+        <Route path="/courseList" element={<CourseList />} />
+        <Route path="/rank" element={<Rank />} />
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/recent" element={<RecentRide />} />
         <Route path="/profile" element={<EditProfile />} />
