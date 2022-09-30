@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class ReviewResponseDto {
-    private Long memberId;
+    private String memberNickname;
     private int score;
     private String content;
     private String imageUrl;
@@ -29,7 +29,7 @@ public class ReviewResponseDto {
             result.add(ReviewTagDto.reviewTagRes(reviewTag));
         }
         return ReviewResponseDto.builder()
-                .memberId(review.getMember().getId())
+                .memberNickname(review.getMember().getNickname())
                 .score(review.getScore())
                 .content(review.getContent())
                 .imageUrl(review.getImageUrl())
