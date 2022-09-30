@@ -29,11 +29,12 @@ export const MoreInfo = () => {
             console.log(name);
             setNicknameLengthError(hasLengthError(value));
             checkDuplicateNickname(value, val => {
-                if (val === true) {
-                    console.log("닉네임 중복 " + val);
+                const {data} = val;
+                if (data === true) {
+                    console.log("닉네임 중복 " + data);
                     setNicknameDupError(true);
                 } else {
-                    console.log("사용 가능" + val);
+                    console.log("사용 가능 " + data);
                     setNicknameDupError(false);
                 }
 
@@ -59,13 +60,16 @@ export const MoreInfo = () => {
         }
 
         updateMoreInfo(inputs, value => {
-            if (value === 200) {
-                myInfo(null, (res) => {
+            const {status} = value;
+            if (status === 200) {
+                myInfo((res) => {
                     console.log(res);
                     const {data} = res;
                     dispatch(setUser(data));
+                    navigate("/");
+
                 });
-                navigate("/");
+
             }
 
         });
