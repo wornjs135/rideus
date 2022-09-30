@@ -39,13 +39,10 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
-    //리뷰 좋아요
+    //리뷰 좋아요 - 이미 좋아요 누른 경우는 좋아요 삭제, 처음 누르는 경우는 좋아요 추가
     @PostMapping("/click")
-    //@RequestBody ReviewLikeRequestDto reviewLikeRequestDto
-    //, @ApiIgnore @AuthenticationPrincipal CustomUserDetails user
-    //user.getId()
-    public ResponseEntity<?> likeClick(Long rid, Long mid) {
-        ReviewLikeResDto result = reviewService.likeClick(rid, 4L);
+    public ResponseEntity<?> likeClick(Long rid, @ApiIgnore @AuthenticationPrincipal CustomUserDetails user) {
+        ReviewLikeResDto result = reviewService.likeClick(rid, user.getId());
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 }
