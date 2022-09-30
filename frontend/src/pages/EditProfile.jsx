@@ -4,7 +4,8 @@ import {Button, TextField} from "@mui/material";
 import {useNavigate} from "react-router-dom";
 import {checkDuplicateNickname, myInfo, updateMoreInfo} from "../utils/api/userApi";
 import {StyledText} from "../components/Common";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {setUser} from "../stores/modules/user";
 
 export const EditProfile = () => {
     let [inputs, setInputs] = useState({
@@ -12,6 +13,7 @@ export const EditProfile = () => {
         email: "",
         phone: "",
     });
+    const dispatch = useDispatch();
     const user = useSelector(state => state.user.user.user);
     useEffect(() => {
 
@@ -69,11 +71,17 @@ export const EditProfile = () => {
     const onClick = (e) => {
 
 
-        let status = updateMoreInfo(inputs);
-        status.then((value) => {
-            if (value === 200) {
-                navigate("/");
+        updateMoreInfo(inputs, value => {
+            const {status} = value;
+            if (status === 200) {
+                myInfo((res) => {
+                    console.log(res);
+                    const {data} = res;
+                    dispatch(setUser(data));
+                });
+
             }
+
         });
     };
 
