@@ -17,4 +17,5 @@ public class ReviewLikeResDto {
                 .count(review.getLikeCount())
                 .build();
     }
+
 }
