@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Logo from "../assets/images/logo.png";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import CourseIcon from "../assets/images/course.png";
-import ActiveCourseIcon from "../assets/images/course_active.png";
-import HomeIcon from "../assets/images/home.png";
+import { ReactComponent as CourseIcon } from "../assets/icons/course.svg";
+// import ActiveCourseIcon from "../assets/icons/course_active.svg";
+import { ReactComponent as HomeIcon } from "../assets/icons/home.svg";
 import ActiveHomeIcon from "../assets/images/home_active.png";
-import RankIcon from "../assets/images/rank.png";
+import { ReactComponent as RankIcon } from "../assets/icons/rank.svg";
 import ActiveRankIcon from "../assets/images/rank_active.png";
-import MypageIcon from "../assets/images/mypage.png";
+import { ReactComponent as MypageIcon } from "../assets/icons/mypage.svg";
 import ActiveMypageIcon from "../assets/images/mypage_active.png";
 import { PrivateTerms } from "./PrivateTerms";
 import { ServiceTerms } from "./ServiceTerms";
@@ -20,17 +20,21 @@ import { Map, Polyline } from "react-kakao-maps-sdk";
 // ex) 버튼, 레이아웃, 틀
 
 // Header
-const Header = styled.img`
-  /* background-color: #1f1d1d; */
+const Header = styled.div`
+  background-color: #439652;
   max-width: 32vw;
   min-width: 32vw;
-  padding: 0vw 34vw;
+  padding: 2vw 34vw;
   max-height: 10vh;
-  margin-top: 10px;
 `;
+
 export function LogoHeader() {
   const navigate = useNavigate();
-  return <Header alt="logo" src={Logo} onClick={() => navigate("/")}></Header>;
+  return (
+    <Header>
+      <img alt="logo" src={Logo} onClick={() => navigate("/")} />
+    </Header>
+  );
 }
 
 //NavBar
@@ -90,31 +94,24 @@ export function NavBar() {
     <NavBarDiv isShow={show} opacity={opacity}>
       <div style={IconButtonStyle}>
         <Link to="/">
-          <img alt="홈" src={pathname === "/" ? ActiveHomeIcon : HomeIcon} />
+          <HomeIcon stroke={pathname === "/" ? "#64CCBE" : "#444444"} />
         </Link>
       </div>
       <div style={IconButtonStyle}>
         <Link to="/courseList">
-          <img
-            alt="코스"
-            src={pathname === "/courseList" ? ActiveCourseIcon : CourseIcon}
+          <CourseIcon
+            fill={pathname === "/courseList" ? "#64CCBE" : "#444444"}
           />
         </Link>
       </div>
       <div style={IconButtonStyle}>
         <Link to="/rank">
-          <img
-            alt="랭킹"
-            src={pathname === "/rank" ? ActiveRankIcon : RankIcon}
-          />
+          <RankIcon stroke={pathname === "/rank" ? "#64CCBE" : "#444444"} />
         </Link>
       </div>
       <div style={IconButtonStyle}>
         <Link to="/mypage">
-          <img
-            alt="마이페이지"
-            src={pathname === "/mypage" ? ActiveMypageIcon : MypageIcon}
-          />
+          <MypageIcon stroke={pathname === "/mypage" ? "#64CCBE" : "#444444"} />
         </Link>
       </div>
     </NavBarDiv>

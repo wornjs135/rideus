@@ -8,9 +8,9 @@ import RideButton from "../assets/images/myride.png";
 import { useNavigate } from "react-router-dom";
 import { Box, Button } from "grommet";
 import { Button as GBtn } from "grommet";
-import SoloBtn from "../assets/images/solo.png";
+import SoloBtn from "../assets/images/single.png";
 import GroupBtn from "../assets/images/group.png";
-import { Dialog } from "@mui/material";
+import { Dialog, Divider } from "@mui/material";
 import { MdDirectionsBike, MdOutlineMap } from "react-icons/md";
 import { GrMapLocation } from "react-icons/gr";
 import { createGroupRoom, startRidding } from "../utils/api/rideApi";
@@ -77,6 +77,7 @@ export const ChooseRideTypeBar = ({ open, onDismiss }) => {
             </Box>
           }
         />
+        <Divider orientation="vertical" variant="middle" flexItem />
         <Button
           onClick={() => {
             // 탑승
@@ -137,6 +138,7 @@ export const ChooseSoloGroupBar = ({
   coordinates,
   checkPoints,
   courseId,
+  course,
 }) => {
   const navigate = useNavigate();
   return (
@@ -152,7 +154,14 @@ export const ChooseSoloGroupBar = ({
           onDismiss();
         }}
       />
-      <Box direction="row" justify="center" width="100%" pad="15px" gap="small">
+      <Box
+        direction="row"
+        justify="center"
+        width="100%"
+        pad="15px"
+        margin={{ bottom: "20px" }}
+        gap="small"
+      >
         <GBtn
           onClick={() => {
             startRidding(
@@ -188,14 +197,12 @@ export const ChooseSoloGroupBar = ({
           }}
           children={
             <Box
-              width="145px"
-              height="140px"
               align="center"
               justify="between"
               style={{ borderRadius: "8px" }}
               pad="small"
             >
-              <img src={SoloBtn} width="100px" />
+              <img src={SoloBtn} />
               <StyledText
                 text="혼자 타기"
                 color="black"
@@ -205,6 +212,7 @@ export const ChooseSoloGroupBar = ({
             </Box>
           }
         />
+        <Divider orientation="vertical" variant="middle" flexItem />
         <GBtn
           onClick={() => {
             createGroupRoom(
@@ -273,14 +281,12 @@ export const ChooseSoloGroupBar = ({
           }}
           children={
             <Box
-              width="145px"
               align="center"
-              height="140px"
               justify="between"
               style={{ borderRadius: "8px" }}
               pad="small"
             >
-              <img src={GroupBtn} width="100px" />
+              <img src={GroupBtn} />
               <StyledText
                 text="같이 타기"
                 color="black"

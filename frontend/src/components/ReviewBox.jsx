@@ -7,7 +7,7 @@ import Stars from "../assets/images/stars.png";
 import StarsBlank from "../assets/images/stars_blank.png";
 import { latlng } from "../utils/data";
 import { ReviewDialog } from "./AlertDialog";
-export const ReviewBox = ({ review, score, starView }) => {
+export const ReviewBox = ({ review, score, starView, courseName }) => {
   const [open, setOpen] = useState(false);
   if (review)
     return (
@@ -48,8 +48,9 @@ export const ReviewBox = ({ review, score, starView }) => {
           handleClose={() => {
             setOpen(false);
           }}
-          title="마포점-정서진 코스"
+          title={courseName}
           desc={review.content}
+          img={review.imageUrl}
           course={latlng}
           cancel={"닫기"}
           score={score}

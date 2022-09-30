@@ -16,8 +16,9 @@ import { StyledHorizonTable } from "./HorizontalScrollBox";
 import { useNavigate } from "react-router-dom";
 import { ChooseSoloGroupBar, HeaderBox } from "./ChooseRideTypeBar";
 import { BootstrapButton, ExitButton, WhiteButton } from "./Buttons";
-import { MapMarker } from "react-kakao-maps-sdk";
+import { Map, MapMarker, Polyline, useMap } from "react-kakao-maps-sdk";
 import { categorys, markerCategorys } from "../utils/util";
+import { NearInfoDialog } from "./NearInfoDialog";
 export const AlertDialog = ({
   open,
   handleClose,
@@ -170,15 +171,63 @@ export const MapDialog = ({
 }) => {
   const [op, setOp] = useState(false);
   const [selected, setSelected] = useState(0);
+  const EventMarkerContainer = ({ position, content, info }) => {
+    const map = useMap();
+    const [isVisible, setIsVisible] = useState(false);
 
+    return (
+      <>
+        <MapMarker
+          position={position} // 마커를 표시할 위치
+          // @ts-ignore
+          image={{
+            src: `/icons/marker${
+              markerCategorys.indexOf(info.nearinfoCategory) + 1
+            }.svg`,
+            size: {
+              width: 29,
+              height: 41,
+            }, // 마커이미지의 크기입니다
+          }}
+          onClick={(marker) => {
+            map.panTo(marker.getPosition());
+            setTimeout(function () {
+              setIsVisible(true);
+            }, 200);
+          }}
+        ></MapMarker>
+        {isVisible && (
+          <NearInfoDialog
+            handleClose={() => {
+              setIsVisible(false);
+            }}
+            info={info}
+            open={isVisible}
+          />
+        )}
+      </>
+    );
+  };
   return (
     <Dialog fullScreen open={open} onClose={handleClose}>
       <Box width="100vw" height="100vh" align="center">
-        <CourseMap
-          course={course.coordinates}
-          width={"100%"}
-          height={"100%"}
-          marker1={
+        {map ? (
+          map
+        ) : (
+          <Map
+            center={course.coordinates[0]}
+            isPanto={true}
+            style={{ borderRadius: "25px", width: "100%", height: "100%" }}
+          >
+            {course.coordinates && (
+              <Polyline
+                path={[course.coordinates ? course.coordinates : []]}
+                strokeWeight={5} // 선의 두께 입니다
+                strokeColor={"#030ff1"} // 선의 색깔입니다
+                strokeOpacity={0.7} // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+                strokeStyle={"solid"} // 선의 스타일입니다
+              />
+            )}
             <MapMarker
               position={
                 course.coordinates
@@ -188,9 +237,7 @@ export const MapDialog = ({
             >
               <div style={{ color: "#000" }}>시작점</div>
             </MapMarker>
-          }
-          marker={
-            course.coordinates &&
+            {course.coordinates &&
             course.coordinates[0].lat ===
               course.coordinates[course.coordinates.length - 1].lat &&
             course.coordinates[0].lng ===
@@ -208,40 +255,33 @@ export const MapDialog = ({
               >
                 <div style={{ color: "#000" }}>종점</div>
               </MapMarker>
-            )
-          }
-          infoMarkers={nearInfos.data
-            .filter((near) => {
-              if (selected === 0) {
-                return near;
-              } else if (near.key.includes(markerCategorys[selected - 1])) {
-                return near;
-              }
-            })
-            .map((near, idxCat) => {
-              if (near.arr.length > 0)
-                return near.arr.map((info, idx) =>
-                  idx % 2 === 0 ? (
-                    <MapMarker
-                      position={{
-                        lat: info.nearinfoLat,
-                        lng: info.nearinfoLng,
-                      }}
-                      key={idx}
-                      image={{
-                        src: `/icons/marker${
-                          markerCategorys.indexOf(info.nearinfoCategory) + 1
-                        }.svg`,
-                        size: {
-                          width: 29,
-                          height: 41,
-                        }, // 마커이미지의 크기입니다
-                      }}
-                    ></MapMarker>
-                  ) : null
-                );
-            })}
-        />
+            )}
+            {nearInfos.data
+              .filter((near) => {
+                if (selected === 0) {
+                  return near;
+                } else if (near.key.includes(markerCategorys[selected - 1])) {
+                  return near;
+                }
+              })
+              .map((near, idxCat) => {
+                if (near.arr.length > 0)
+                  return near.arr.map((info, idx) =>
+                    idx % 2 === 0 ? (
+                      <EventMarkerContainer
+                        position={{
+                          lat: info.nearinfoLat,
+                          lng: info.nearinfoLng,
+                        }}
+                        key={idx}
+                        info={info}
+                      ></EventMarkerContainer>
+                    ) : null
+                  );
+              })}
+          </Map>
+        )}
+
         {/* 상단 바 */}
         <Box
           align="center"
@@ -376,13 +416,17 @@ export const ReviewDialog = ({
   score,
   starView,
   tags,
+  img,
 }) => {
   return (
     <Dialog open={open} onClose={handleClose}>
       <Box width="85vw" align="center" pad="small">
+        <HeaderBox goBack={handleClose} title={course.courseName} />
         <Box width="75%" justify="around" align="center">
           {/* 제목 */}
           <StyledText text={title} size="20px" weight="bold" />
+          {/* 사진 */}
+          {img && <img src={img} width="75%" />}
           {/* 별점 */}
           <StarBox score={score} starView={starView} />
           {/* 내용 */}
@@ -396,7 +440,7 @@ export const ReviewDialog = ({
           </Box>
           <CourseMap course={course} width="100%" height="40vh" />
           {/* 하단 버튼 */}
-          <ExitButton onClick={handleClose}>{cancel}</ExitButton>
+          {/* <ExitButton onClick={handleClose}>{cancel}</ExitButton> */}
         </Box>
       </Box>
     </Dialog>

@@ -6,7 +6,13 @@ import { RankProfile } from "./RankProfile";
 import Profile from "../assets/images/profile.png";
 import { RankBox } from "./RankBox";
 import { ReviewBox } from "./ReviewBox";
-export const CourseReviewRank = ({ open, onDismiss, ranks, reviews }) => {
+export const CourseReviewRank = ({
+  open,
+  onDismiss,
+  ranks,
+  reviews,
+  courseName,
+}) => {
   const [value, setValue] = useState(0);
   const [data, setData] = useState([]);
 
@@ -81,30 +87,33 @@ export const CourseReviewRank = ({ open, onDismiss, ranks, reviews }) => {
         }}
         height={{ min: "30vh", max: "50vh" }}
       >
-        <Box
-          width="90%"
-          align="center"
-          pad="small"
-          style={{ display: value === 0 ? "block" : "none" }}
-          height="95%"
-        >
-          <StyledText text="시간별 순위" weight="bold" size="16px" />
-          <Box direction="row" justify="center" align="end">
-            <RankProfile record={data[1]} />
-            <RankProfile record={data[0]} />
-            <RankProfile record={data[2]} />
-          </Box>
-          <div
-            style={{
-              height: "35vh",
-              overflow: "scroll",
-            }}
+        {ranks && (
+          <Box
+            width="90%"
+            align="center"
+            pad="small"
+            style={{ display: value === 0 ? "block" : "none" }}
+            height="95%"
           >
-            {data.map((d, idx) => {
-              return <RankBox record={d} key={idx} />;
-            })}
-          </div>
-        </Box>
+            <StyledText text="시간별 순위" weight="bold" size="16px" />
+            <Box direction="row" justify="center" align="end">
+              {ranks && <RankProfile record={ranks[1]} />}
+              {ranks && <RankProfile record={ranks[0]} />}
+              {ranks && <RankProfile record={ranks[2]} />}
+            </Box>
+            <div
+              style={{
+                height: "35vh",
+                overflow: "scroll",
+              }}
+            >
+              {ranks &&
+                ranks.map((d, idx) => {
+                  return <RankBox record={d} key={idx} />;
+                })}
+            </div>
+          </Box>
+        )}
         <Box
           style={{ display: value === 1 ? "block" : "none" }}
           width="90%"
@@ -120,6 +129,7 @@ export const CourseReviewRank = ({ open, onDismiss, ranks, reviews }) => {
                 score={r.score}
                 starView={parseFloat(r.score * 22.8)}
                 review={r}
+                courseName={courseName}
               />
             );
           })}
