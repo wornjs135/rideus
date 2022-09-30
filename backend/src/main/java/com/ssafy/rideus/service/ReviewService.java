@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.ssafy.rideus.common.exception.BadRequestException.NOT_REGISTED_COURSE;
@@ -78,15 +79,15 @@ public class ReviewService {
 
     @Transactional
     public ReviewLikeResDto likeClick(Long rid, Long mid) {
-//        Member member = memberRepository.findById(mid).orElseThrow(() -> new BadRequestException("유효하지 않은 회원입니다."));
+        Member member = memberRepository.findById(mid).orElseThrow(() -> new BadRequestException("유효하지 않은 회원입니다."));
         Review review = reviewRepository.findById(rid).orElseThrow(() -> new BadRequestException("유효하지 않은 리뷰입니다."));
-        ReviewLike result = reviewLikeRepository.findReviewLikeByMemberIdAndReviewId(mid, rid);
-        if (result == null) {
+        Optional<ReviewLike> result = reviewLikeRepository.findByMemberIdAndReviewId(mid, rid);
+        if (!result.isPresent()) {
             review.increaseLike();
-            reviewLikeRepository.save(new ReviewLikeRequestDto.reviewLikeReq(review));
+            reviewLikeRepository.save(new ReviewLike(member, review));
         } else {
             review.decreaseLike();
-            reviewLikeRepository.delete(result);
+            reviewLikeRepository.delete(result.get());
         }
         return ReviewLikeResDto.reviewLikeRes(review);
     }
