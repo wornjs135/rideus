@@ -32,7 +32,7 @@ const writeReview = async (formData, success, fail) => {
 
 // 코스별 리뷰 목록
 const getCourseAllReview = async (courseId, success, fail) => {
-  await instance.get(`/${courseId}`).then(success).catch(fail);
+  await instance.get(`/all/${courseId}`).then(success).catch(fail);
 };
 
 // 리뷰 상세(courseId는 없어도 될거같긴함. 백엔드에서 수정해야함.)

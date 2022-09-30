@@ -17,7 +17,20 @@ export const RideEnd = () => {
   //   nowTime: data.nowTime,
   //   totalDistance: data.totalDistance,
   // },
-  const { courseName, courseType, courseData } = location.state;
+
+  // state: {
+  //   courseName: courseName,
+  //   courseType: courseType,
+  //   courseData: {
+  //   courseName: courseName,
+  //     latlng: mapData.latlng,
+  //     topSpeed: data.topSpeed,
+  //     avgSpeed: data.avgSpeed,
+  //     nowTime: nowTime,
+  //     totalDistance: data.totalDistance,
+  //   },
+  // },
+  const { courseType, courseData } = location.state;
   const [data, setData] = useState(courseData);
   const [mapData, setMapData] = useState({
     latlng: [],
@@ -26,7 +39,7 @@ export const RideEnd = () => {
   return (
     <Box background="#439652" align="center" justify="around">
       <StyledText
-        text={courseName}
+        text={courseData.courseName}
         color="white"
         size="20px"
         weight="bold"
@@ -136,7 +149,13 @@ export const RideEnd = () => {
                 courseType === "my" ? "나만의 길 공유하기" : "리뷰 쓰기"
               }
               onClick={() => {
-                navigate("/registerReview");
+                courseType === "my"
+                  ? navigate("/registerCourse", {
+                      state: { courseData: courseData },
+                    })
+                  : navigate("/registerReview", {
+                      state: { courseData: courseData },
+                    });
               }}
             />
             <Button
