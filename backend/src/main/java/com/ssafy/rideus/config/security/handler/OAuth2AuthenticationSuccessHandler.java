@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Enumeration;
 import java.util.Optional;
 
 import static com.ssafy.rideus.common.exception.NotFoundException.USER_NOT_FOUND;
@@ -53,9 +54,19 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         Optional<String> redirectUri = CookieUtil.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
                 .map(Cookie::getValue);
 
-        if (redirectUri.isPresent() && !isAuthorizedRedirectUri(redirectUri.get())) {
-            throw new BadRequestException("redirect URIs are not matched");
-        }
+//        Enumeration<String> parameterNames = request.getParameterNames();
+//        while (parameterNames.hasMoreElements()) {
+//            String paramName = parameterNames.nextElement();
+//            String requestParameter = request.getParameter(paramName);
+//            log.info("request {} : {}", paramName, requestParameter);
+//        }
+
+        log.info("req = {}", redirectUri.get());
+
+        // 테스트 도중 주석으로 바꿈 -> 다른 사이트에서 로그인 시도해도 가능해짐
+//        if (redirectUri.isPresent() && !isAuthorizedRedirectUri(redirectUri.get())) {
+//            throw new BadRequestException("redirect URIs are not matched");
+//        }
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
 
         // JWT 생성
