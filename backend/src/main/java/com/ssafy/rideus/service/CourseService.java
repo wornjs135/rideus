@@ -5,6 +5,8 @@ import com.ssafy.rideus.domain.Course;
 import com.ssafy.rideus.dto.course.common.RecommendationCourseDto;
 import com.ssafy.rideus.dto.course.common.RecommendationCourseDtoInterface;
 import com.ssafy.rideus.dto.course.response.PopularityCourseResponse;
+import com.ssafy.rideus.dto.coursecoordinate.CourseCheckpointDto;
+import com.ssafy.rideus.dto.coursecoordinate.CourseCoordinateDto;
 import com.ssafy.rideus.dto.review.ReviewStarAvgDto;
 import com.ssafy.rideus.dto.review.ReviewStarAvgDtoInterface;
 import com.ssafy.rideus.dto.tag.common.TagDto;
@@ -38,7 +40,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -72,7 +74,7 @@ import com.ssafy.rideus.repository.jpa.RecordRepository;
 public class CourseService {
 	
 	private static final String SUCCESS = "success";
-  private static final String FAIL = "fail";
+	private static final String FAIL = "fail";
 	
 	private final CourseCoordinateRepository courseCoordinateRepository;
 	private final MongoRecordRepository mongoRecordRepository;
@@ -80,6 +82,9 @@ public class CourseService {
     private final RecordRepository recordRepository;
     private final MemberRepository memberRepository;
     private final MemberTagRepository memberTagRepository;
+    
+    private final MongoTemplate mongoTemplate;
+
 
 	private final S3Upload s3Upload;
     private static List<Coordinate> checkpoints = new ArrayList<>();
@@ -224,8 +229,6 @@ public class CourseService {
 		resultMap.put("bookmarkId", course.getBookmarkId());
 		resultMap.put("starAvg", starAvg);
 		resultMap.put("tags", course.getTags());
-//		resultMap.put("coordinates", courseCoordinate.getCoordinates());
-//		resultMap.put("checkpoints", courseCoordinate.getCheckpoints());
 		
 		return resultMap;
 	}
@@ -257,7 +260,7 @@ public class CourseService {
 		
 		
 		// MongoDB에 있는 데이터 가져오기
-		CourseCoordinate courseCoordinate = courseCoordinateRepository.findById(courseId).get();
+		CourseCoordinateDto courseCoordinate = mongoTemplate.findById(courseId, CourseCoordinateDto.class, "course_coordinate");
 		
 		// Map에 담기
 		resultMap = convertCourseDtoIntoMap(course, starAvg);
@@ -294,21 +297,17 @@ public class CourseService {
 	public List<Map<String, Object>> getAllCoursesByLoc(Long memberId, Double lat, Double lng) {
 		
 		List<Map<String, Object>> resultMapList = new ArrayList<Map<String,Object>>();
-//	public List<RecommendationCourseDto> getAllCoursesByLoc(Long memberId, Double lat, Double lng) {
 		
-		// 전체 좌표 빼고 나머지만 가져오는 쿼리 작성해보기  ★★★
-		List<CourseCoordinate> allCourseCoordinates = courseCoordinateRepository.findAll();
-		
+//		List<CourseCoordinate> allCourseCoordinates = courseCoordinateRepository.findAll();
+		List<CourseCheckpointDto> allCourseCheckpoints = mongoTemplate.findAll(CourseCheckpointDto.class, "course_coordinate");
 		
 		Map<String, Double> intervalMap = new HashMap<String, Double>();
-//		double lat1 = Double.parseDouble(lat);
-//		double lon1 = Double.parseDouble(lng);
 		double lat1 = lat;
 		double lon1 = lng;
-		for(CourseCoordinate courseCoordinate : allCourseCoordinates) {
-			double lat2 = Double.parseDouble(courseCoordinate.getCheckpoints().get(0).getLat());
-			double lon2 = Double.parseDouble(courseCoordinate.getCheckpoints().get(0).getLng());
-			intervalMap.put(courseCoordinate.getId(), intervalMeter(lat1, lon1, lat2, lon2));
+		for(CourseCheckpointDto courseCheckpoint : allCourseCheckpoints) {
+			double lat2 = Double.parseDouble(courseCheckpoint.getCheckpoints().get(0).getLat());
+			double lon2 = Double.parseDouble(courseCheckpoint.getCheckpoints().get(0).getLng());
+			intervalMap.put(courseCheckpoint.getId(), intervalMeter(lat1, lon1, lat2, lon2));
 		}
 		
 		// intervalMeter 기준 오름차순 정렬
