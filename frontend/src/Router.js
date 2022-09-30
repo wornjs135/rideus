@@ -43,6 +43,7 @@ const LayoutNoFooter = () => {
 const LayoutLogo = () => {
   return (
     <div className="rootRoute">
+      <LogoHeader />
       <Outlet />
     </div>
   );

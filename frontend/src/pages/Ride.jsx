@@ -448,7 +448,7 @@ export const Ride = () => {
   useBlocker(handleBlockedNavigation, when);
 
   return (
-    <Box background="#439652">
+    <Box background="#64CCBE">
       {/* 나만의 길 */}
       <Box
         align="center"

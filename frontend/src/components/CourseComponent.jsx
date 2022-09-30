@@ -10,8 +10,8 @@ const CourseBox = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
-  justify-content: space-between;
-  width: 153px;
+  width: 141px;
+  height: 133px;
   margin-right: 15px;
   margin-bottom: 10px;
   margin-top: 5px;
@@ -26,6 +26,7 @@ const NewsDiv = styled.div`
   position: relative;
   align-items: center;
   width: 153px;
+  text-align: center;
   height: 222px;
   margin-right: 15px;
   margin-bottom: 10px;
@@ -58,34 +59,41 @@ export const BestCourse = ({ course }) => {
           }}
         >
           <StyledText text={course.courseName} weight="bold" color="#000000" />
-          <StarBox starView={parseFloat(course.starAvg) * 22.8} />
-          {/* <StyledText
-            text={course.start + " - " + course.finish}
-            color="#969696"
-            style={{
-              overflow: "hidden",
-              wordBreak: "normal",
-              whiteSpace: "normal",
-            }}
-          /> */}
-          &nbsp;
-          <Box align="end">
+          <StarBox starView={parseFloat(course.starAvg) * 20} />
+          <Box align="end" gap="small" margin={{ top: "25px" }}>
             <StyledText
               text={"코스 길이 : " + course.distance + "km"}
               style={{
-                backgroundColor: "#BDFFAD",
-                borderRadius: "5px 5px 5px 5px",
+                backgroundColor: "#BDE0EF",
+                borderRadius: "10px",
                 // margin: "3px",
                 fontSize: "12px",
+                paddingLeft: "10px",
+                paddingRight: "10px",
               }}
               weight="bold"
             />
             <StyledText
               text={"예상 시간 : " + expectTimeHandle(course.expectedTime)}
               style={{
-                backgroundColor: "#F7FA60",
-                borderRadius: "5px 5px 5px 5px",
+                backgroundColor: "#F8F38F",
+                borderRadius: "10px",
                 fontSize: "12px",
+                paddingLeft: "10px",
+                paddingRight: "10px",
+              }}
+              weight="bold"
+            />
+            <StyledText
+              text={
+                course.start.split(" ")[0] + " " + course.start.split(" ")[1]
+              }
+              style={{
+                backgroundColor: "#F4D4D4",
+                borderRadius: "10px",
+                fontSize: "12px",
+                paddingLeft: "10px",
+                paddingRight: "10px",
               }}
               weight="bold"
             />
@@ -118,18 +126,19 @@ export const NewsBox = ({ news }) => {
           }}
         />
       </Box>
-      <StyledText
-        text={news.title}
-        weight="bold"
-        color="#439652"
-        style={{
-          width: "90%",
-          height: "80px",
-          overflow: "hidden",
-          wordBreak: "normal",
-          whiteSpace: "normal",
-        }}
-      />
+      <Box align="center">
+        <StyledText
+          text={news.title}
+          weight="bold"
+          color="black"
+          style={{
+            width: "90%",
+            height: "40px",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        />
+      </Box>
     </NewsDiv>
   );
 };

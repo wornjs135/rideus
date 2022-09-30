@@ -50,7 +50,7 @@ export const CourseReviewRank = ({
             border={false}
             justify="center"
             align="center"
-            background={value === 0 ? "#439652" : "white"}
+            background={value === 0 ? "#64CCBE" : "white"}
             width="50%"
             height="4vh"
             focusIndicator={false}
@@ -64,7 +64,7 @@ export const CourseReviewRank = ({
             border={false}
             justify="center"
             align="center"
-            background={value === 1 ? "#439652" : "white"}
+            background={value === 1 ? "#64CCBE" : "white"}
             width="50%"
             height="4vh"
             focusIndicator={false}

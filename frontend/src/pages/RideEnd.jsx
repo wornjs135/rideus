@@ -37,7 +37,7 @@ export const RideEnd = () => {
     center: { lng: 127.002158, lat: 37.512847 },
   });
   return (
-    <Box background="#439652" align="center" justify="around">
+    <Box background="#64CCBE" align="center" justify="around">
       <StyledText
         text={courseData.courseName}
         color="white"
@@ -45,33 +45,39 @@ export const RideEnd = () => {
         weight="bold"
         style={{ marginTop: "20px" }}
       />
-      {/* 카카오맵 */}
-      <Box width="80vw" height="40vh" margin={{ top: "20px", bottom: "20px" }}>
-        <Map
-          center={courseData.latlng[0]}
-          isPanto={true}
-          style={{ borderRadius: "25px", width: "100%", height: "100%" }}
-        >
-          {courseData.latlng && (
-            <Polyline
-              path={[courseData.latlng]}
-              strokeWeight={5} // 선의 두께 입니다
-              strokeColor={"#030ff1"} // 선의 색깔입니다
-              strokeOpacity={0.7} // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
-              strokeStyle={"solid"} // 선의 스타일입니다
-            />
-          )}
-        </Map>
-      </Box>
-      {/* 하단 데이터 부분 */}
       <Box
         align="center"
         justify="between"
         width="100%"
+        height="90vh"
         round={{ size: "large", corner: "top" }}
-        background="#FFBB00"
-        border={{ color: "#FFBB00", size: "small", side: "top" }}
+        background="#ffffff"
+        border={{ color: "#ffffff", size: "small", side: "top" }}
       >
+        {/* 카카오맵 */}
+        <Box
+          width="80vw"
+          height="40vh"
+          margin={{ top: "20px", bottom: "20px" }}
+        >
+          <Map
+            center={courseData.latlng[0]}
+            isPanto={true}
+            style={{ borderRadius: "25px", width: "100%", height: "100%" }}
+          >
+            {courseData.latlng && (
+              <Polyline
+                path={[courseData.latlng]}
+                strokeWeight={5} // 선의 두께 입니다
+                strokeColor={"#030ff1"} // 선의 색깔입니다
+                strokeOpacity={0.7} // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+                strokeStyle={"solid"} // 선의 스타일입니다
+              />
+            )}
+          </Map>
+        </Box>
+        {/* 하단 데이터 부분 */}
+
         {/* 주행 기록 데이터 */}
         <Box direction="row" justify="between" width="85%">
           {/* 총 이동거리 시작 */}
