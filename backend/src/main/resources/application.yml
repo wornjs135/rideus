@@ -10,11 +10,11 @@ spring:
     type: redis
   redis:
     # 로컬 환경
-    host: localhost
-    # 도커 환경
-    #    host: ex)172.17.0.3
-
+#    host: localhost
+    # 배포 환경
+    host: j7a603.p.ssafy.io
     port: 6379
+    password: yfass1234
 
   servlet:
     multipart:
