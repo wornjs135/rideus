@@ -6,6 +6,7 @@ import com.ssafy.rideus.dto.record.request.FinishRiddingRequest;
 import com.ssafy.rideus.dto.record.request.SaveCoordinatesRequest;
 import com.ssafy.rideus.dto.record.response.CreateRecordResponse;
 import com.ssafy.rideus.dto.record.type.RiddingType;
+import com.ssafy.rideus.dto.rideroom.common.ParticipantDto;
 import com.ssafy.rideus.dto.rideroom.request.GroupRiddingRequest;
 import com.ssafy.rideus.dto.rideroom.response.CreateRideRoomResponse;
 import com.ssafy.rideus.dto.rideroom.response.GroupRiddingResponse;
@@ -21,6 +22,8 @@ import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+
+import java.util.List;
 
 import static com.ssafy.rideus.dto.rideroom.type.SocketMessageType.CURRENT_POSITION;
 import static com.ssafy.rideus.dto.rideroom.type.SocketMessageType.ENTER;
@@ -85,4 +88,9 @@ public class RideController {
         return ResponseEntity.ok().build();
     }
 
+    // 그룹방 현재 참가자 리스트 불러오기
+    @GetMapping("/room/participants/{rideRoomId}")
+    public ResponseEntity<List<ParticipantDto>> getRoomParticipants(@PathVariable Long rideRoomId) {
+        return ResponseEntity.ok(rideService.getRoomParticipants(rideRoomId));
+    }
 }
