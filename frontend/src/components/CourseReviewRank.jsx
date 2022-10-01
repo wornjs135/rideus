@@ -87,33 +87,38 @@ export const CourseReviewRank = ({
         }}
         height={{ min: "30vh", max: "50vh" }}
       >
-        {ranks && (
-          <Box
-            width="90%"
-            align="center"
-            pad="small"
-            style={{ display: value === 0 ? "block" : "none" }}
-            height="95%"
-          >
-            <StyledText text="시간별 순위" weight="bold" size="16px" />
-            <Box direction="row" justify="center" align="end">
-              {ranks && <RankProfile record={ranks[1]} />}
-              {ranks && <RankProfile record={ranks[0]} />}
-              {ranks && <RankProfile record={ranks[2]} />}
-            </Box>
-            <div
-              style={{
-                height: "35vh",
-                overflow: "scroll",
-              }}
-            >
-              {ranks &&
-                ranks.map((d, idx) => {
-                  return <RankBox record={d} key={idx} />;
-                })}
-            </div>
-          </Box>
-        )}
+        <Box
+          width="90%"
+          align="center"
+          pad="small"
+          style={{ display: value === 0 ? "block" : "none" }}
+          height="95%"
+        >
+          {ranks.length > 0 ? (
+            <>
+              <StyledText text="시간별 순위" weight="bold" size="16px" />
+              <Box direction="row" justify="center" align="end">
+                {ranks.length > 1 && <RankProfile record={ranks[1]} />}
+                {ranks.length > 0 && <RankProfile record={ranks[0]} />}
+                {ranks.length > 2 && <RankProfile record={ranks[2]} />}
+              </Box>
+              <div
+                style={{
+                  height: "35vh",
+                  overflow: "scroll",
+                }}
+              >
+                {ranks &&
+                  ranks.map((d, idx) => {
+                    return <RankBox record={d} key={idx} />;
+                  })}
+              </div>
+            </>
+          ) : (
+            <StyledText text="랭킹이 없습니다." />
+          )}
+        </Box>
+
         <Box
           style={{ display: value === 1 ? "block" : "none" }}
           width="90%"
@@ -122,17 +127,21 @@ export const CourseReviewRank = ({
           overflow="scroll"
           height="95%"
         >
-          {reviews.map((r, idx) => {
-            return (
-              <ReviewBox
-                key={idx}
-                score={r.score}
-                starView={parseFloat(r.score * 22.8)}
-                review={r}
-                courseName={courseName}
-              />
-            );
-          })}
+          {reviews.length > 0 ? (
+            reviews.map((r, idx) => {
+              return (
+                <ReviewBox
+                  key={idx}
+                  score={r.score}
+                  starView={parseFloat(r.score * 22.8)}
+                  review={r}
+                  courseName={courseName}
+                />
+              );
+            })
+          ) : (
+            <StyledText text="리뷰가 없습니다." />
+          )}
         </Box>
       </Box>
     </BottomSheet>

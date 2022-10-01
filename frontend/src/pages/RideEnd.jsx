@@ -43,7 +43,7 @@ export const RideEnd = () => {
         color="white"
         size="20px"
         weight="bold"
-        style={{ marginTop: "20px" }}
+        style={{ marginTop: "20px", marginBottom: "20px" }}
       />
       <Box
         align="center"
@@ -92,13 +92,13 @@ export const RideEnd = () => {
                 text={distanceHandle(data.totalDistance)}
                 size="40px"
                 weight="bold"
-                color="white"
+                color="black"
               />
-              <StyledText text="총 이동거리" size="10px" color="white" />
+              <StyledText text="총 이동거리" size="10px" color="black" />
             </Box>
             <StyledText
               text={data.totalDistance > 1000 ? "km" : "m"}
-              color="white"
+              color="black"
             />
           </Box>
           {/* 총 이동거리 끝 */}
@@ -110,9 +110,9 @@ export const RideEnd = () => {
                 text={timeHandle(data.nowTime)}
                 weight="bold"
                 size="18px"
-                color="white"
+                color="black"
               />
-              <StyledText text="주행 시간" size="10px" color="white" />
+              <StyledText text="주행 시간" size="10px" color="black" />
             </Box>
             {/* 평균 속도 */}
             <Box align="center">
@@ -120,9 +120,9 @@ export const RideEnd = () => {
                 text={data.avgSpeed}
                 weight="bold"
                 size="18px"
-                color="white"
+                color="black"
               />
-              <StyledText text="평균 속도" size="10px" color="white" />
+              <StyledText text="평균 속도" size="10px" color="black" />
             </Box>
             {/* 최고 속도 */}
             <Box align="center">
@@ -130,9 +130,9 @@ export const RideEnd = () => {
                 text={data.topSpeed}
                 weight="bold"
                 size="18px"
-                color="white"
+                color="black"
               />
-              <StyledText text="최고 속도" size="10px" color="white" />
+              <StyledText text="최고 속도" size="10px" color="black" />
             </Box>
           </Box>
           {/* 상세데이터 끝 */}

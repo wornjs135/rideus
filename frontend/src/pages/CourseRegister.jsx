@@ -21,6 +21,7 @@ const HeaderDiv = styled.div`
   justify-content: space-between;
   border-bottom: 1px solid black;
   padding: 5px;
+  width: 100%;
 `;
 
 const BackButton = styled.button`
@@ -67,9 +68,9 @@ export const CourseRegister = () => {
   const [notValid, setNotValid] = useState(false);
   const [image, setImage] = useState();
   const { courseData } = location.state;
-
+  const [exit, setExit] = useState(false);
   const isValied = () => {
-    if (courseTitle === "" || image === "") return false;
+    if (courseTitle === "" || image === undefined) return false;
     else return true;
   };
 
@@ -111,18 +112,18 @@ export const CourseRegister = () => {
     setTags(initTags);
   }, []);
   return (
-    <Box>
+    <Box width="100%" align="center">
       {/* 헤더 박스 */}
       <HeaderBox
         goBack={() => {
-          navigate("/");
+          setExit(true);
         }}
       />
       {/* 바디 */}
-      <Box align="center" margin={{ top: "20px" }}>
+      <Box width="90%" align="center" margin={{ top: "20px" }}>
         {/* 지도, 코스 이름, 데이터 */}
-        <Box direction="row" gap="small">
-          <Box justify="around">
+        <Box width="100%" direction="row" gap="small">
+          <Box width="100%" justify="around">
             {/* 기록 날짜 시작*/}
             <Box align="center" margin={{ bottom: "20px" }}>
               <StyledText text="나만의 코스" size="18px" />
@@ -134,7 +135,7 @@ export const CourseRegister = () => {
               center={courseData.latlng[parseInt(courseData.latlng.length / 2)]}
               isPanto={true}
               level={9}
-              style={{ borderRadius: "10px", width: "240px", height: "380px" }}
+              style={{ borderRadius: "10px", width: "100%", height: "380px" }}
             >
               <Polyline
                 path={[courseData.latlng]}
@@ -169,8 +170,8 @@ export const CourseRegister = () => {
             <ImageBtn src={ImInput} />
             <StyledText
               size="10px"
-              color="lightgray"
-              text="최대 1장"
+              color={image ? "black" : "lightgray"}
+              text={image ? "첨부 완료" : "최대 1장"}
               alignSelf="end"
             />
           </label>
@@ -228,6 +229,19 @@ export const CourseRegister = () => {
           }}
           title="리뷰 등록"
           desc="모든 정보를 입력하세요!"
+          cancel="닫기"
+        />
+        <AlertDialog
+          open={exit}
+          handleClose={() => {
+            setExit(false);
+          }}
+          handleAction={() => {
+            navigate("/");
+          }}
+          title="등록 취소"
+          desc="코스 등록을 취소하시겠습니까?"
+          accept="나가기"
           cancel="닫기"
         />
       </Box>

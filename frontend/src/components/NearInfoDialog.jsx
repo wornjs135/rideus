@@ -1,11 +1,13 @@
 import { Dialog } from "@mui/material";
 import { Box } from "grommet";
 import React from "react";
+import { useState } from "react";
 import { Roadview } from "react-kakao-maps-sdk";
 import { HeaderBox } from "./ChooseRideTypeBar";
 import { StyledText } from "./Common";
-
+import KakaoMap from "../assets/images/kakaomap.png";
 export const NearInfoDialog = ({ open, info, handleClose }) => {
+  const [show, setShow] = useState(true);
   return (
     <Dialog open={open} onClose={handleClose}>
       <Box align="center" pad="small">
@@ -29,14 +31,17 @@ export const NearInfoDialog = ({ open, info, handleClose }) => {
               // 지도의 크기
               width: "300px",
               height: "300px",
+              display: show ? "block" : "none",
             }}
+            onErrorGetNearestPanoId={() => setShow(false)}
           />
+
           <StyledText text={info.nearinfoName} />
 
           {/* <StyledText text={info.nearinfoCategory} /> */}
           <StyledText text={info.nearinfoTel} />
           <a href={info.nearinfoURL} target="_blank">
-            링크
+            <img src={KakaoMap} width="100px" />
           </a>
           {/* 태그 */}
           {/* 하단 버튼 */}

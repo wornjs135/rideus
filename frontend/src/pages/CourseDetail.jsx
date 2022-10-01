@@ -23,6 +23,7 @@ import BackBtn from "../assets/images/backButton.png";
 import { getCourseNearInfo } from "../utils/api/nearApi";
 import { getCourseAllReview } from "../utils/api/reviewApi";
 import { deleteBookmark, makeBookmark } from "../utils/api/bookmarkApi";
+import { getWeather } from "../utils/api/weatherApi";
 
 export const BackButton = styled.button`
   background: none;
@@ -75,7 +76,6 @@ export const CourseDetail = () => {
   const [start, setStart] = useState(false);
   const [openMap, setOpenMap] = useState(false);
   const [bmk, setBmk] = useState(false);
-  const [score, setScore] = useState("5");
   const [course, setCourse] = useState({});
   const [mapData, setMapData] = useState({
     latlng: [],
@@ -86,6 +86,7 @@ export const CourseDetail = () => {
   const [reviews, setReviews] = useState([]);
   const [ranks, setRanks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [weather, setWeather] = useState();
   const [nearInfos, setNearInfos] = useState({
     data: [
       { key: "관광명소", arr: [] },
@@ -117,11 +118,11 @@ export const CourseDetail = () => {
 
       getCourseDetail(
         courseId,
-        (response) => {
-          console.log("courseData : ", response);
-          setCourse(response.data);
-          setBmk(response.data.bookmarkId !== null ? true : false);
-          setStartView(parseFloat(response.data.starAvg) * 22.8);
+        (responseCourse) => {
+          console.log("courseData : ", responseCourse);
+          setCourse(responseCourse.data);
+          setBmk(responseCourse.data.bookmarkId !== null ? true : false);
+          setStartView(parseFloat(responseCourse.data.starAvg) * 20);
 
           getCourseAllReview(
             courseId,
@@ -141,6 +142,21 @@ export const CourseDetail = () => {
             },
             (fail) => {
               console.log(fail);
+            }
+          );
+
+          getWeather(
+            {
+              lat: responseCourse.data.coordinates[0].lat,
+              lon: responseCourse.data.coordinates[0].lng,
+            },
+            (response) => {
+              console.log("weather : ", response);
+              setWeather(response.data);
+            },
+            (fail) => {
+              console.log(fail);
+              setLoading(false);
             }
           );
           setLoading(false);
@@ -211,11 +227,11 @@ export const CourseDetail = () => {
   if (loading) return <Spinner />;
   else
     return (
-      <Box align="center" width="100%" height="86%">
+      <Box align="center" width="100%" height="86%" alignSelf="center">
         <Box
           direction="row"
           justify="between"
-          width="100%"
+          width="90%"
           margin={{ bottom: "10px" }}
         >
           <BackButton
@@ -305,16 +321,41 @@ export const CourseDetail = () => {
           </Box>
         </Box>
 
-        <Box>
-          <StyledText text={course.start + " - " + course.finish} />
-          <Box direction="row" align="end" gap="small">
-            <StyledText text="거리 : " weight="bold" size="16px" />
-            <StyledText text={`${course.distance} km`} />
-          </Box>
-          <Box direction="row" align="end" gap="small">
-            <StyledText text="예상 시간 : " weight="bold" size="16px" />
-            <StyledText text={expectTimeHandle(course.expectedTime)} />
-          </Box>
+        <Box gap="small" align="end" width="90%">
+          <StyledText
+            text={"코스 길이 : " + course.distance + "km"}
+            style={{
+              backgroundColor: "#BDE0EF",
+              borderRadius: "10px",
+              // margin: "3px",
+              fontSize: "12px",
+              paddingLeft: "10px",
+              paddingRight: "10px",
+            }}
+            weight="bold"
+          />
+          <StyledText
+            text={"예상 시간 : " + expectTimeHandle(course.expectedTime)}
+            style={{
+              backgroundColor: "#F8F38F",
+              borderRadius: "10px",
+              fontSize: "12px",
+              paddingLeft: "10px",
+              paddingRight: "10px",
+            }}
+            weight="bold"
+          />
+          <StyledText
+            text={course.start.split(" ")[0] + " " + course.start.split(" ")[1]}
+            style={{
+              backgroundColor: "#F4D4D4",
+              borderRadius: "10px",
+              fontSize: "12px",
+              paddingLeft: "10px",
+              paddingRight: "10px",
+            }}
+            weight="bold"
+          />
         </Box>
         <BootstrapButton
           onClick={() => {
@@ -324,7 +365,7 @@ export const CourseDetail = () => {
           주행 시작
         </BootstrapButton>
 
-        {ranks.length > 0 && reviews.length > 0 && (
+        {
           <CourseReviewRank
             open={open}
             onDismiss={() => {
@@ -334,7 +375,7 @@ export const CourseDetail = () => {
             reviews={reviews}
             courseName={course.courseName}
           />
-        )}
+        }
         <ChooseSoloGroupBar
           open={start}
           onDismiss={() => {
@@ -355,6 +396,7 @@ export const CourseDetail = () => {
           handleAction={() => {
             setStart(true);
           }}
+          weather={weather}
           bottom={true}
           course={course}
           cancel="뒤로가기"
