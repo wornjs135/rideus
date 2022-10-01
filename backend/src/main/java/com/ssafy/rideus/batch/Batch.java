@@ -2,6 +2,7 @@ package com.ssafy.rideus.batch;
 
 import com.ssafy.rideus.domain.Course;
 import com.ssafy.rideus.domain.Member;
+import com.ssafy.rideus.hadoop.service.HadoopService;
 import com.ssafy.rideus.repository.jpa.CourseRepository;
 import com.ssafy.rideus.repository.jpa.MemberRepository;
 import com.ssafy.rideus.service.BatchCourseService;
@@ -22,6 +23,7 @@ public class Batch {
 
     private final MemberRepository memberRepository;
     private final CourseRepository courseRepository;
+    private final HadoopService hadoopService;
 
     private static String host = "http://localhost:8080/api";
     private static String totalTime = "/total/time";
@@ -32,6 +34,12 @@ public class Batch {
     private static String memberDistance = "/member/distance";
     private static String memberSpeed = "/member/speed";
 
+//    hadoop 3시에 새로운 코스 업데이트
+//    @Scheduled(cron = "0 0 3 * * *") // 매일 오전 3시
+//    public void setNewCourseHadoop() {
+//        hadoopService.hadoopNearInfo();
+//        log.info("새로운 코스 hadoop 갱신 완료");
+//    }
 //    // 코스 리뷰 뒤져서 상위 5개 저장하기(배치)
 //    @Scheduled(cron = "0 0 3 * * *") // 매일 오전 3시
 //    public void setCourseReviewTop5() {
