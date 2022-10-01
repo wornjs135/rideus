@@ -26,6 +26,8 @@ const BackButton = styled.button`
   font-family: Noto Sans KR, sans-serif;
   border: 0px;
   width: 10vw;
+  display: flex;
+  align-items: center;
 `;
 
 export const HeaderBox = ({ goBack, title }) => {

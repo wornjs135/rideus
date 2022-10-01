@@ -8,6 +8,7 @@ import PlayBtn from "../assets/images/play.png";
 import PauseBtn from "../assets/images/pause.png";
 import LinkBtn from "../assets/images/link.png";
 import TotalBike from "../assets/images/totalRideBike.png";
+import GroupBike from "../assets/images/groupBike.png";
 import { Map, MapMarker, Polyline } from "react-kakao-maps-sdk";
 import { AlertDialog, MapDialog } from "../components/AlertDialog";
 import {
@@ -23,6 +24,8 @@ import { ExitButton, PauseButton } from "../components/Buttons";
 import SockJS from "sockjs-client";
 import * as StompJs from "@stomp/stompjs";
 import { finishRidding, saveCoordinatesDuringRide } from "../utils/api/rideApi";
+import { TextField, ThemeProvider } from "@mui/material";
+import { theme } from "./CourseList";
 
 // const geolocationOptions = {
 //   enableHighAccuracy: false,
@@ -331,7 +334,7 @@ export const Ride = () => {
     window.navigator.share({
       title: `RideUs - ${roomInfo.nickname}님의 그룹 주행`,
       text: `${courseName}`,
-      url: `https://j7a603.p.ssafy.io/groupRide?courseId=${courseId}&rideRoomId=${roomInfo.rideRoomId}`,
+      url: `https://j7a603.p.ssafy.io/groupRide?courseId=${courseId}&rideRoomId=${roomInfo.rideRoomId}&nickname=${roomInfo.nickname}`,
     });
   };
 
@@ -464,19 +467,13 @@ export const Ride = () => {
             weight="bold"
             size="24px"
           />
-          {rideType === "group" && (
-            <StyledText
-              text={roomInfo.nickname + "님의 그룹"}
-              color="white"
-              weight="bold"
-              size="16px"
-            />
-          )}
         </Box>
         <Box width="50px">
           {rideType === "group" && (
             <img
               src={LinkBtn}
+              width="29px"
+              height="29px"
               onClick={() => {
                 sharePage();
               }}
@@ -484,6 +481,17 @@ export const Ride = () => {
           )}
         </Box>
       </Box>
+      {rideType === "group" && (
+        <Box align="center" margin={{ bottom: "12px" }}>
+          <StyledText
+            text={roomInfo.nickname + "님의 그룹"}
+            color="white"
+            weight="bold"
+            size="16px"
+          />
+        </Box>
+      )}
+
       {/* 바디 부분 */}
       <Box
         align="center"
@@ -547,7 +555,7 @@ export const Ride = () => {
           {/* 총 이동거리 시작 */}
           <Box direction="row" align="center">
             {/* 자전거 이미지 */}
-            <img src={TotalBike} alt="" />
+            <img src={rideType === "single" ? TotalBike : GroupBike} alt="" />
             {/* 총 이동거리 텍스트 */}
             <Box
               align="center"
@@ -591,6 +599,37 @@ export const Ride = () => {
           {/* 상세데이터 끝 */}
         </Box>
         {/* 데이터 부분 끝 */}
+        {/* 주행 중인 사람들 */}
+        {rideType === "group" && (
+          <Box
+            width="90%"
+            pad="medium"
+            margin={{ top: "20px", bottom: "10px" }}
+            style={{
+              borderRadius: "10px",
+              border: "2px solid #64CCBE",
+              fontWeight: "bold",
+              position: "relative",
+            }}
+          >
+            <StyledText
+              text={roomInfo.nickname + "님의 그룹"}
+              weight="bold"
+              style={{
+                background: "white",
+                position: "absolute",
+                zIndex: 500,
+                top: -14,
+                padding: "0 5px",
+              }}
+            />
+            {rideMembers.members
+              .map((m) => {
+                return m.nickname;
+              })
+              .join(" ")}
+          </Box>
+        )}
         {/* 일시정지, 체크포인트 버튼 */}
         <Box width="90%">
           <Box direction="row" justify="center">

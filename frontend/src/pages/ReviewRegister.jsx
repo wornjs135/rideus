@@ -76,6 +76,7 @@ export const ReviewRegister = () => {
   const { courseData } = location.state;
   const [open, setOpen] = useState(false);
   const [notValid, setNotValid] = useState(false);
+  const [exit, setExit] = useState(false);
   const handleStarClick = (index) => {
     let clickStates = [...clicked];
     for (let i = 0; i < 5; i++) {
@@ -102,7 +103,7 @@ export const ReviewRegister = () => {
 
   const isValied = () => {
     let score = clicked.filter(Boolean).length;
-    if (score === 0 || image === "" || tags === "") return false;
+    if (score === 0 || image === undefined || tags === []) return false;
     else return true;
   };
 
@@ -114,6 +115,7 @@ export const ReviewRegister = () => {
       content: reviewDesc,
       tags: select,
     };
+    console.log(request);
     const formData = new FormData();
     formData.append("image", image);
     const blob = new Blob([JSON.stringify(request)], {
@@ -136,7 +138,7 @@ export const ReviewRegister = () => {
       {/* 헤더 박스 */}
       <HeaderBox
         goBack={() => {
-          navigate("/");
+          setExit(true);
         }}
       />
       {/* 바디 */}
@@ -291,6 +293,19 @@ export const ReviewRegister = () => {
           }}
           title="리뷰 등록"
           desc="모든 정보를 입력하세요!"
+          cancel="닫기"
+        />
+        <AlertDialog
+          open={exit}
+          handleClose={() => {
+            setExit(false);
+          }}
+          handleAction={() => {
+            navigate("/");
+          }}
+          title="등록 취소"
+          desc="리뷰 등록을 취소하시겠습니까?"
+          accept="나가기"
           cancel="닫기"
         />
       </Box>

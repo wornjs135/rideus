@@ -22,12 +22,48 @@ export const theme = createTheme({
   },
   palette: {
     deactive: {
-      main: "#E0F7F4",
+      main: "#fff",
       contrastText: "#000000",
     },
     active: {
       main: "#64CCBE",
       contrastText: "#fff",
+    },
+    전체: {
+      main: "#64CCBE",
+      contrastText: "#000",
+    },
+    관광명소: {
+      main: "#D6FFAD",
+      contrastText: "#000",
+    },
+    음식점: {
+      main: "#C0E7EC",
+      contrastText: "#000",
+    },
+    카페: {
+      main: "#FFC95F",
+      contrastText: "#000",
+    },
+    편의점: {
+      main: "#FFFA85",
+      contrastText: "#000",
+    },
+    자전거정비: {
+      main: "#FF9999",
+      contrastText: "#000",
+    },
+    문화시설: {
+      main: "#6499FF",
+      contrastText: "#000",
+    },
+    공중화장실: {
+      main: "#B7B7B7",
+      contrastText: "#000",
+    },
+    group: {
+      main: "#64CCBE",
+      contrastText: "#000",
     },
   },
 });

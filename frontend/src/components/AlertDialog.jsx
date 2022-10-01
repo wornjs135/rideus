@@ -5,7 +5,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Button from "./Button";
-import { Button as GBtn } from "grommet";
+import { Button as GBtn, Spinner } from "grommet";
 import { Button as MBtn, ThemeProvider } from "@mui/material";
 import { Box } from "grommet";
 import styled from "styled-components";
@@ -18,9 +18,12 @@ import { useNavigate } from "react-router-dom";
 import { ChooseSoloGroupBar, HeaderBox } from "./ChooseRideTypeBar";
 import { BootstrapButton, ExitButton, WhiteButton } from "./Buttons";
 import { Map, MapMarker, Polyline, useMap } from "react-kakao-maps-sdk";
-import { categorys, markerCategorys } from "../utils/util";
+import { categorys, markerCategorys, weathers } from "../utils/util";
 import { NearInfoDialog } from "./NearInfoDialog";
 import { theme } from "../pages/CourseList";
+import { useEffect } from "react";
+import { getWeather } from "../utils/api/weatherApi";
+import { ResponsiveLine } from "@nivo/line";
 export const AlertDialog = ({
   open,
   handleClose,
@@ -170,8 +173,10 @@ export const MapDialog = ({
   bottom,
   course,
   nearInfos,
+  weather,
 }) => {
   const [op, setOp] = useState(false);
+  const [opWeather, setOpWeather] = useState(false);
   const [selected, setSelected] = useState(0);
   const EventMarkerContainer = ({ position, content, info }) => {
     const map = useMap();
@@ -306,7 +311,17 @@ export const MapDialog = ({
               align="center"
               justify="center"
             >
-              <StyledText text={title} color="white" size="20px" />
+              <StyledText
+                text={title}
+                color="white"
+                size="20px"
+                style={{
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  display: "block",
+                }}
+              />
             </Box>
             {type === "detail" && (
               <Box width="100%" align="center">
@@ -324,7 +339,7 @@ export const MapDialog = ({
                           <MBtn
                             key={idx}
                             variant="contained"
-                            color={selected === idx ? "active" : "deactive"}
+                            color={selected === idx ? cat.name : "deactive"}
                             onClick={() => {
                               setSelected(idx);
                             }}
@@ -346,7 +361,13 @@ export const MapDialog = ({
                     </StyledHorizonTable>
                   </ThemeProvider>
                 </Box>
-                <img width="50px" src={WeatherBtn} onClick={() => {}} />
+                <img
+                  width="50px"
+                  src={WeatherBtn}
+                  onClick={() => {
+                    setOpWeather(true);
+                  }}
+                />
               </Box>
             )}
           </Box>
@@ -372,6 +393,13 @@ export const MapDialog = ({
           />
         )}
       </Box>
+      <WeatherDialog
+        open={opWeather}
+        handleClose={() => {
+          setOpWeather(false);
+        }}
+        weather={weather}
+      />
     </Dialog>
   );
 };
@@ -391,10 +419,9 @@ export const ReviewDialog = ({
   return (
     <Dialog open={open} onClose={handleClose}>
       <Box width="85vw" align="center" pad="small">
-        <HeaderBox goBack={handleClose} title={course.courseName} />
+        <HeaderBox goBack={handleClose} title={title} />
         <Box width="75%" justify="around" align="center">
           {/* 제목 */}
-          <StyledText text={title} size="20px" weight="bold" />
           {/* 사진 */}
           {img && <img src={img} width="75%" />}
           {/* 별점 */}
@@ -417,39 +444,138 @@ export const ReviewDialog = ({
   );
 };
 
-export const WeatherDialog = ({
-  open,
-  handleClose,
-  title,
-  desc,
-  course,
-  cancel,
-  score,
-  starView,
-  tags,
-}) => {
-  return (
-    <Dialog open={open} onClose={handleClose}>
-      <Box width="85vw" align="center" pad="small">
-        <Box width="75%" justify="around" align="center">
-          {/* 제목 */}
-          <StyledText text={title} size="20px" weight="bold" />
-          {/* 별점 */}
-          <StarBox score={score} starView={starView} />
-          {/* 내용 */}
-          <StyledText text={desc} />
-          {/* 태그 */}
-          <Box direction="row">
-            {/* arrays.map */}
-            {tags.map((t, idx) => {
-              return <StyledText text={"#" + t.searchTagName} key={idx} />;
-            })}
+// temperature : 기온
+// rain : 강수확률
+// weather : 날씨 상태
+//   1. 맑은 상태
+//   2. 비가 오는 상태
+//   3. 구름 많은 상태
+//   4. 흐린 상태
+
+export const WeatherDialog = ({ open, handleClose, weather }) => {
+  const [data, setData] = useState();
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    if (loading) {
+      setData({
+        dt: [
+          {
+            id: "온도",
+            color: "hsl(359, 70%, 50%)",
+            data: weather.weatherListPerHour.map((w, idx) => ({
+              x: idx === 0 ? "현재" : idx + "h",
+              y: w.temperature,
+            })),
+          },
+        ],
+      });
+      setLoading(false);
+    }
+    return () => {
+      setLoading(false);
+    };
+  }, []);
+  if (loading) return <Spinner />;
+  else
+    return (
+      <Dialog open={open} onClose={handleClose}>
+        <Box width="85vw" align="center" pad="small">
+          <Box width="100%" justify="around" align="center">
+            {/* 제목 */}
+            <Box direction="row" align="center" justify="center" gap="medium">
+              <img
+                src={`/images/w${weather.weatherListPerHour[0].weather}.png`}
+                width="100px"
+                height="100px"
+              />
+              <StyledText
+                text={`${weather.weatherListPerHour[0].temperature}ºC`}
+                size="20px"
+                weight="bold"
+              />
+              <StyledText
+                text={`${weathers[weather.weatherListPerHour[0].weather - 1]}`}
+                size="20px"
+                weight="bold"
+              />
+
+              {weather.weatherListPerHour[0].rain != 0 && (
+                <StyledText
+                  text={`강수 확률 : ${weather.weatherListPerHour[0].rain}%`}
+                  size="20px"
+                  weight="bold"
+                />
+              )}
+            </Box>
+            <Box width="100%" height="300px">
+              <ResponsiveLine
+                data={data.dt}
+                margin={{ top: 30, right: 10, bottom: 50, left: 50 }}
+                xScale={{ type: "point" }}
+                yScale={{
+                  type: "linear",
+                  min: "auto",
+                  max: "auto",
+                  stacked: true,
+                  reverse: false,
+                }}
+                yFormat=" >-.2f"
+                axisTop={null}
+                axisRight={null}
+                axisBottom={{
+                  orient: "bottom",
+                  tickSize: 5,
+                  tickPadding: 5,
+                  tickRotation: 0,
+                  legend: "기온 현황",
+                  legendOffset: 36,
+                  legendPosition: "middle",
+                }}
+                axisLeft={{
+                  orient: "left",
+                  tickSize: 5,
+                  tickPadding: 5,
+                  tickRotation: 0,
+                  legend: "온도 (ºC)",
+                  legendOffset: -40,
+                  legendPosition: "middle",
+                }}
+                pointSize={10}
+                pointColor={{ theme: "background" }}
+                pointBorderWidth={2}
+                pointBorderColor={{ from: "serieColor" }}
+                pointLabelYOffset={-12}
+                useMesh={true}
+                legends={[
+                  {
+                    anchor: "bottom-right",
+                    direction: "column",
+                    justify: false,
+                    translateX: 100,
+                    translateY: 0,
+                    itemsSpacing: 0,
+                    itemDirection: "left-to-right",
+                    itemWidth: 80,
+                    itemHeight: 20,
+                    itemOpacity: 0.75,
+                    symbolSize: 12,
+                    symbolShape: "circle",
+                    symbolBorderColor: "rgba(0, 0, 0, .5)",
+                    effects: [
+                      {
+                        on: "hover",
+                        style: {
+                          itemBackground: "rgba(0, 0, 0, .03)",
+                          itemOpacity: 1,
+                        },
+                      },
+                    ],
+                  },
+                ]}
+              />
+            </Box>
           </Box>
-          <CourseMap course={course} width="100%" height="40vh" />
-          {/* 하단 버튼 */}
-          <ExitButton onClick={handleClose}>{cancel}</ExitButton>
         </Box>
-      </Box>
-    </Dialog>
-  );
+      </Dialog>
+    );
 };

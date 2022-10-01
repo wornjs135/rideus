@@ -67,7 +67,19 @@ export const CourseBox = ({
         <Box width="100%" align="center">
           {/* 제목, 북마크 버튼 */}
           <Box direction="row" justify="between" width="100%">
-            <StyledText text={courseName} weight="bold" size="18px" />
+            <StyledText
+              text={courseName}
+              weight="bold"
+              size="18px"
+              style={{
+                width: "80%",
+                height: "30px",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+                display: "block",
+              }}
+            />
             <Box direction="row" align="start">
               <img
                 src={bm ? Bookmark : BookmarkBlank}
@@ -78,13 +90,7 @@ export const CourseBox = ({
             </Box>
           </Box>
           {/* 코스 데이터, 사진 */}
-          <Box
-            direction="row"
-            width="100%"
-            justify="start"
-            gap="large"
-            align="center"
-          >
+          <Box direction="row" width="100%" justify="between" align="center">
             <Box gap="small">
               <StyledText
                 text={"코스 길이 : " + distance + "km"}
@@ -121,9 +127,11 @@ export const CourseBox = ({
                 weight="bold"
               />
             </Box>
-            <Box>
+            <Box style={{ marginRight: "25px" }}>
               <img
                 src={imageUrl ? imageUrl : NoImage}
+                width="70px"
+                height="70px"
                 style={{ borderRadius: "10px" }}
               />
             </Box>
@@ -131,10 +139,12 @@ export const CourseBox = ({
           {/* 사진 */}
         </Box>
         {/* 태그 */}
-        <Box direction="row">
+        <Box direction="row" gap="small">
           {tags &&
             tags.map((t, idx) => {
-              return <StyledText text={`#${t.tagName} `} key={t.tagId} />;
+              return (
+                <StyledText text={`#${t.tagName} `} key={t.tagId} size="12px" />
+              );
             })}
         </Box>
       </Box>
