@@ -46,7 +46,7 @@ public class MyRideRecordRes {
     public static MyRideRecordRes unSharedMyRide(Record record) {
         return MyRideRecordRes.builder()
                 .recordId(record.getId())
-                .courseName(record.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))+"에 주행")
+                .courseName(record.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))+" 주행기록")
                 .roomId(record.getRideRoom().getId())
                 .distance(record.getRecordDistance())
                 .expectedTime(record.getRecordTimeMinute().intValue())
