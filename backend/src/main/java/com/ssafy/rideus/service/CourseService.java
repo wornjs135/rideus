@@ -117,9 +117,15 @@ public class CourseService {
 
 
 	public List<RecommendationCourseDto> getPopularityCourseWithBookmark(Long memberId) {
-		List<RecommendationCourseDtoInterface> popularityCourses = courseRepository.findAllOrderByLikeCountWithBookmark(memberId);
+		List<RecommendationCourseDtoInterface> popularityCourses;
+		if (memberId == 0) {
+			popularityCourses = courseRepository.findAllOrderByLikeCountWithoutBookmark();
+		} else {
+			popularityCourses = courseRepository.findAllOrderByLikeCountWithBookmark(memberId);
+		}
 
 		List<RecommendationCourseDto> recommendationCourseDtos = new ArrayList<>();
+
 		for (RecommendationCourseDtoInterface c : popularityCourses) {
 			if (recommendationCourseDtos.isEmpty()) {
 				recommendationCourseDtos.add(RecommendationCourseDto.from(c));
@@ -133,14 +139,43 @@ public class CourseService {
 			}
 		}
 
+		recommendationCourseDtos = recommendationCourseDtos.subList(0, 5);
+		List<String> courseIds = new ArrayList<>();
+		for (RecommendationCourseDto recommendationCourseDto : recommendationCourseDtos) {
+			courseIds.add(recommendationCourseDto.getCourseId());
+		}
+
+		List<ReviewStarAvgDtoInterface> starAvgDtoInterfaceList = courseRepository.getCoursesStarAvg(courseIds);
+		List<ReviewStarAvgDto> starAvgList = new ArrayList<ReviewStarAvgDto>();
+		for(ReviewStarAvgDtoInterface r : starAvgDtoInterfaceList) {
+			starAvgList.add(ReviewStarAvgDto.from(r));
+		}
+
+		// 리뷰 별점 평균 return 값에 포함시키기
+		double starAvg;
+		for(int i=0; i < recommendationCourseDtos.size(); i++) {
+			starAvg = 0;
+			RecommendationCourseDto course = recommendationCourseDtos.get(i);
+			String courseId = course.getCourseId();
+			for(int idx=0; idx<starAvgList.size(); idx++) {
+				ReviewStarAvgDto starAvgDto = starAvgList.get(idx);
+				if(courseId.equals(starAvgDto.getCourseId())) {
+					starAvg = Math.round((starAvgDto.getSum() / starAvgDto.getCount())*10) / 10.0;
+					break;
+				}
+			}
+
+			recommendationCourseDtos.get(i).setStarAvg(starAvg);
+		}
+
 		return recommendationCourseDtos;
 	}
 
-	public List<PopularityCourseResponse> getPopularityCourseWithBookmarkWithoutBookmark() {
-		List<Course> popularityCourses = courseRepository.findAllOrderByLikeCountWithoutBookmark();
-
-		return popularityCourses.stream().map(course -> PopularityCourseResponse.from(course)).collect(Collectors.toList());
-	}
+//	public List<PopularityCourseResponse> getPopularityCourseWithBookmarkWithoutBookmark() {
+//		List<Course> popularityCourses = courseRepository.findAllOrderByLikeCountWithoutBookmark();
+//
+//		return popularityCourses.stream().map(course -> PopularityCourseResponse.from(course)).collect(Collectors.toList());
+//	}
 	
 
     

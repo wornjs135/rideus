@@ -34,7 +34,7 @@ public class MainController {
     @GetMapping("/course")
     public ResponseEntity<?> getPopularityCourse(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
         if (member == null) {
-            return ResponseEntity.ok(courseService.getPopularityCourseWithBookmarkWithoutBookmark());
+            return ResponseEntity.ok(courseService.getPopularityCourseWithBookmark(0L));
         } else {
             return ResponseEntity.ok(courseService.getPopularityCourseWithBookmark(member.getId()));
         }

@@ -19,9 +19,11 @@ public interface RecordRepository extends JpaRepository<Record, String> {
             "RANK() OVER (ORDER BY r.record_speed_best DESC) AS ranking FROM record r join member m on r.member_id = m.member_id", nativeQuery = true)
     List<RankBestSpeedResponseDtoInterface> searchRankTotalBestSpeed();
 
-    @Query(value = "SELECT m.member_id as memberId, m.nickname, m.profile_image_url as profileImageUrl, r.record_time_minute as timeMinute, " +
-            "RANK() OVER (ORDER BY r.record_time_minute ASC) AS ranking FROM record r join member m on r.member_id = m.member_id " +
-            "where course_id = :courseId", nativeQuery = true)
+    @Query(value = "SELECT m.member_id as memberId, m.nickname, m.profile_image_url as profileImageUrl, min timeMinute, RANK() OVER (ORDER BY min ASC) AS ranking\n" +
+            "from (select member_id, min(record_time_minute) as min\n" +
+            "from record\n" +
+            "where course_id = :courseId and record_is_finished = true\n" +
+            "group by member_id) r join member m on r.member_id = m.member_id", nativeQuery = true)
     List<RankCourseTimeResponseDtoInterface> searchRankCourseTime(@Param("courseId") String courseId);
 
     @Query(value = "SELECT m.member_id as memberId, m.nickname, m.profile_image_url as profileImageUrl, r.record_speed_best as speedBest, " +
