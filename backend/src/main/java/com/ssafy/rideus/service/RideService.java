@@ -168,4 +168,11 @@ public class RideService {
         mongoRecord.getCoordinates().addAll(saveCoordinatesRequest.getCoordinates());
         mongoRecordRepository.save(mongoRecord);
     }
+
+    public List<ParticipantDto> getRoomParticipants(Long rideRoomId) {
+        RedisRideRoom redisRideRoom = redisRideRoomRepository.findById(rideRoomId)
+                .orElseThrow(() -> new NotFoundException(RIDEROOM_NOT_FOUND));
+
+        return redisRideRoom.getParticipants();
+    }
 }
