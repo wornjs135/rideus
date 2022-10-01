@@ -48,8 +48,13 @@ const myRides = async (success, fail) => {
     await authInstance.get("/recent/my-ride").then(success).catch(fail);
 };
 
-const totalRecord = async (data, success, fail) => {
+const getTotalRecord = async (success, fail) => {
     await authInstance.get("/total-record").then(success).catch(fail);
 };
 
-export {updateMoreInfo, checkDuplicateNickname, recentRide, myInfo, myRides, totalRecord};
+
+const getMyTag = async (success, fail) => {
+    await authInstance.get("/my-tag").then(success).catch(fail);
+};
+
+export {updateMoreInfo, checkDuplicateNickname, recentRide, myInfo, myRides, getTotalRecord, getMyTag};
