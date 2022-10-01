@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.format.DateTimeFormatter;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -44,7 +46,7 @@ public class MyRideRecordRes {
     public static MyRideRecordRes unSharedMyRide(Record record) {
         return MyRideRecordRes.builder()
                 .recordId(record.getId())
-                .courseName(record.getCreatedDate().toString())
+                .courseName(record.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))+"에 주행")
                 .roomId(record.getRideRoom().getId())
                 .distance(record.getRecordDistance())
                 .expectedTime(record.getRecordTimeMinute().intValue())
