@@ -1,4 +1,5 @@
 import {API_SERVER, axios} from "./api";
+import {useNavigate} from "react-router-dom";
 
 const API_SERVER_USER = API_SERVER + "/member";
 
@@ -21,12 +22,15 @@ authInstance.interceptors.request.use(function (config) {
         const token = localStorage.getItem("accessToken");
         if (token) {
             config.headers["Authorization"] = 'Bearer ' + token;
+        } else {
+            window.location.href = "/login";
         }
         return config;
     },
     function (error) {
         return Promise.reject(error);
-    });
+    }
+);
 
 const updateMoreInfo = async (data, success, fail) => {
     await authInstance.put("/info", data).then(success).catch(fail);

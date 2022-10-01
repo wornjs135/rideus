@@ -1,4 +1,5 @@
 import {API_SERVER, axios} from "./api";
+import {useNavigate} from "react-router-dom";
 
 const API_SERVER_BOOKMARK = API_SERVER + "/bookmark";
 
@@ -9,6 +10,20 @@ const authInstance = axios.create({
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
     },
 });
+
+authInstance.interceptors.request.use(function (config) {
+        const token = localStorage.getItem("accessToken");
+        if (token) {
+            config.headers["Authorization"] = 'Bearer ' + token;
+        } else {
+            window.location.href = "/login";
+        }
+        return config;
+    },
+    function (error) {
+        return Promise.reject(error);
+    }
+);
 
 // 북마크 생성
 const makeBookmark = async (data, success, fail) => {

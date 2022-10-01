@@ -17,6 +17,20 @@ const authInstance = axios.create({
   },
 });
 
+authInstance.interceptors.request.use(function (config) {
+      const token = localStorage.getItem("accessToken");
+      if (token) {
+        config.headers["Authorization"] = 'Bearer ' + token;
+      } else {
+          window.location.href = "/login";
+      }
+      return config;
+    },
+    function (error) {
+      return Promise.reject(error);
+    }
+);
+
 // 메인화면에서 인기코스 가져오기
 const getPopularCourses = async (success, fail) => {
   await instance.get("/course").then(success).catch(fail);

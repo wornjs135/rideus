@@ -17,6 +17,20 @@ const authInstance = axios.create({
   },
 });
 
+authInstance.interceptors.request.use(function (config) {
+      const token = localStorage.getItem("accessToken");
+      if (token) {
+        config.headers["Authorization"] = 'Bearer ' + token;
+      } else {
+          window.location.href = "/login";
+      }
+      return config;
+    },
+    function (error) {
+      return Promise.reject(error);
+    }
+);
+
 const authFormDataInstance = axios.create({
   baseURL: API_SERVER_REVIEW,
   headers: {
@@ -24,6 +38,18 @@ const authFormDataInstance = axios.create({
     contentType: "multipart/form-data",
   },
 });
+
+authFormDataInstance.interceptors.request.use(function (config) {
+      const token = localStorage.getItem("accessToken");
+      if (token) {
+        config.headers["Authorization"] = 'Bearer ' + token;
+      }
+      return config;
+    },
+    function (error) {
+      return Promise.reject(error);
+    }
+);
 
 // 리뷰 작성(이미지 1정 포함)
 const writeReview = async (formData, success, fail) => {
