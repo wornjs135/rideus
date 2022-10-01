@@ -25,6 +25,7 @@ public class RecommendationCourseDto {
     private String imageUrl;
     private String category;
     private String bookmarkId;
+    private Double starAvg;
     
     private List<TagDto> tags = new ArrayList<>();
 
