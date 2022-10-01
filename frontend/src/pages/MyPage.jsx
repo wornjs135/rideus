@@ -88,7 +88,7 @@ export const MyPage = () => {
                 align="center"
                 justify="between"
                 round
-                background="#F3F3F3"
+                background="#e3f6f4"
                 border={{color: "#F3F3F3", size: "small", side: "all"}}
             >
                 {/* 인기코스 */}

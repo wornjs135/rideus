@@ -97,7 +97,7 @@ export const Router = () => {
         <Route path="/courseList" element={<CourseList />} />
         <Route path="/rank" element={<Rank />} />
         <Route path="/mypage" element={<MyPage />} />
-        <Route path="/recent" element={<RecentRide />} />
+        <Route path="/recent/:roomId" element={<RecentRide />} />
         <Route path="/profile" element={<EditProfile />} />
       </Route>
     </Routes>
