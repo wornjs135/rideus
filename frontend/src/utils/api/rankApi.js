@@ -17,6 +17,20 @@ const authInstance = axios.create({
   },
 });
 
+authInstance.interceptors.request.use(function (config) {
+      const token = localStorage.getItem("accessToken");
+      if (token) {
+        config.headers["Authorization"] = 'Bearer ' + token;
+      } else {
+        window.location.href = "/login";
+      }
+      return config;
+    },
+    function (error) {
+      return Promise.reject(error);
+    }
+);
+
 // 전체 랭킹(시간)
 const getTotalRankTime = async (success, fail) => {
   await instance.get("/total/time").then(success).catch(fail);
