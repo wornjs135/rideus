@@ -2,6 +2,7 @@ package com.ssafy.rideus.controller;
 
 import com.ssafy.rideus.config.security.auth.CustomUserDetails;
 import com.ssafy.rideus.config.security.util.JwtTokenProvider;
+import com.ssafy.rideus.domain.base.Coordinate;
 import com.ssafy.rideus.dto.record.request.FinishRiddingRequest;
 import com.ssafy.rideus.dto.record.request.SaveCoordinatesRequest;
 import com.ssafy.rideus.dto.record.response.CreateRecordResponse;
@@ -82,7 +83,7 @@ public class RideController {
     // 중간 주행 좌표 리스트들 저장
     @PostMapping("/save/{recordId}")
     public ResponseEntity saveCoordinatesPerPeriod(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member, @PathVariable String recordId,
-                                                   @RequestBody SaveCoordinatesRequest saveCoordinatesRequest) {
+                                                   @RequestBody List<Coordinate> saveCoordinatesRequest) {
         rideService.saveCoordinatesPerPeriod(member.getId(), recordId, saveCoordinatesRequest);
 
         return ResponseEntity.ok().build();
