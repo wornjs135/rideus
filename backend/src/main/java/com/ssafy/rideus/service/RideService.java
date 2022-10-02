@@ -158,14 +158,14 @@ public class RideService {
     }
 
     @Transactional
-    public void saveCoordinatesPerPeriod(Long memberId, String recordId, SaveCoordinatesRequest saveCoordinatesRequest) {
+    public void saveCoordinatesPerPeriod(Long memberId, String recordId, List<Coordinate> saveCoordinatesRequest) {
         MongoRecord mongoRecord = mongoRecordRepository.findById(recordId)
                 .orElseThrow(() -> new NotFoundException(RECORD_NOT_FOUND));
         if (!mongoRecord.getMemberId().equals(memberId)) {
             throw new NotMatchException(MEMBER_RECORD_NOT_MATCH);
         }
 
-        mongoRecord.getCoordinates().addAll(saveCoordinatesRequest.getCoordinates());
+        mongoRecord.getCoordinates().addAll(saveCoordinatesRequest);
         mongoRecordRepository.save(mongoRecord);
     }
 
