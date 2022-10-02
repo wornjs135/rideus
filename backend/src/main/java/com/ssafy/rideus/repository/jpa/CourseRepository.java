@@ -49,7 +49,7 @@ public interface CourseRepository extends JpaRepository<Course, String> {
             "from course c\n" +
             "left join course_tag ct on c.course_id = ct.course_id\n" +
             "left join tag t on ct.tag_id = t.tag_id\n" +
-            "order by c.like_count desc limit 25", nativeQuery = true)
+            "order by c.like_count desc, c.course_name asc limit 25", nativeQuery = true)
     List<RecommendationCourseDtoInterface> findAllOrderByLikeCountWithoutBookmark();
 
     @Query(value = "select distinct c.course_id courseId, c.course_name courseName, c.distance distance, c.expected_time expectedTime,\n" +
@@ -59,7 +59,7 @@ public interface CourseRepository extends JpaRepository<Course, String> {
             "left join course_tag ct on c.course_id = ct.course_id\n" +
             "left join tag t on ct.tag_id = t.tag_id\n" +
             "left join bookmark b on c.course_id = b.course_id and b.member_id = :memberId\n" +
-            "order by c.like_count desc limit 25", nativeQuery = true)
+            "order by c.like_count, c.course_name asc desc limit 25", nativeQuery = true)
     List<RecommendationCourseDtoInterface> findAllOrderByLikeCountWithBookmark(Long memberId);
 
     
