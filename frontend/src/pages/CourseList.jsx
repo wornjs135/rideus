@@ -100,6 +100,7 @@ export const CourseList = () => {
         (response) => {
           console.log(response);
           setCourses((prev) => (prev = response.data));
+          setLoading(false);
         },
         (fail) => {
           console.log(fail);
@@ -241,11 +242,15 @@ export const CourseList = () => {
                 })
             ) : (
               <Box margin={{ top: "30px" }}>
-                <StyledText
-                  text="해당하는 코스가 없습니다!"
-                  size="16px"
-                  weight="bold"
-                />
+                {loading ? (
+                  <Spinner />
+                ) : (
+                  <StyledText
+                    text="해당하는 코스가 없습니다!"
+                    size="16px"
+                    weight="bold"
+                  />
+                )}
               </Box>
             )
           ) : (

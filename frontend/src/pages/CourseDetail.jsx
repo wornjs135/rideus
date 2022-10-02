@@ -275,15 +275,29 @@ export const CourseDetail = () => {
                     ? course.coordinates[0]
                     : { lng: 127.002158, lat: 37.512847 }
                 }
-              >
-                <div style={{ color: "#000" }}>시작점</div>
-              </MapMarker>
+                image={{
+                  src: `/images/start.png`,
+                  size: {
+                    width: 29,
+                    height: 41,
+                  }, // 마커이미지의 크기입니다
+                }}
+              ></MapMarker>
               {course.coordinates &&
               course.coordinates[0].lat ===
                 course.coordinates[course.coordinates.length - 1].lat &&
               course.coordinates[0].lng ===
                 course.coordinates[course.coordinates.length - 1].lng ? (
-                <MapMarker position={course.coordinates[0]}>
+                <MapMarker
+                  position={course.coordinates[0]}
+                  image={{
+                    src: `/images/start.png`,
+                    size: {
+                      width: 29,
+                      height: 41,
+                    }, // 마커이미지의 크기입니다
+                  }}
+                >
                   <div style={{ color: "#000" }}>시작, 종점</div>
                 </MapMarker>
               ) : (
@@ -293,9 +307,14 @@ export const CourseDetail = () => {
                       ? course.coordinates[course.coordinates.length - 1]
                       : []
                   }
-                >
-                  <div style={{ color: "#000" }}>종점</div>
-                </MapMarker>
+                  image={{
+                    src: `/images/end.png`,
+                    size: {
+                      width: 29,
+                      height: 41,
+                    }, // 마커이미지의 크기입니다
+                  }}
+                ></MapMarker>
               )}
             </Map>
           )}
