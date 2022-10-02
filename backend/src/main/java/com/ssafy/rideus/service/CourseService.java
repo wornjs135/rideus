@@ -33,6 +33,7 @@ import java.util.Set;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -71,6 +72,8 @@ import com.ssafy.rideus.repository.jpa.RecordRepository;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
+@Slf4j
 public class CourseService {
 	
 	private static final String SUCCESS = "success";
@@ -420,6 +423,7 @@ public class CourseService {
 	
 	
 	// 코스 추가
+	@Transactional
 	public String addCourseData(Map<String, String> inputMap, Long memberId, MultipartFile image) {
 		// inputMap - memberId, courseName, distance, recordId
 
@@ -461,6 +465,7 @@ public class CourseService {
 			// 이미지 s3에 업로드
 			String imageUrl = s3Upload.uploadImageToS3(image);
 
+
 			// 서버 db 확인하고 member_id 값 수정하기
 			Member member = memberRepository.findById(memberId).get();
 			Course course = new Course(courseId, courseName, distance, start, finish, expectedTime, 0, imageUrl, null, member, null, null);
@@ -485,6 +490,7 @@ public class CourseService {
 	
 	/////////////////////////////////////////////////////////////////////	
 	// 추천 코스 크롤링 데이터 넣기
+	@Transactional
 	public void addCrawlingData() {
 		
 		try { 
