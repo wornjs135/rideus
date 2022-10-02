@@ -3,6 +3,7 @@ import {StyledText} from "./Common";
 import {Box} from "grommet";
 import {Notes} from "grommet-icons";
 import {expectTimeHandle} from "../utils/util";
+import {useNavigate} from "react-router-dom";
 
 const CourseBox = styled.div`
   flex-direction: column;
@@ -32,9 +33,10 @@ const Wrap = styled.div`
   -webkit-box-orient: vertical;
 `;
 
-export const MyPageCourse = ({course}) => {
+export const MyPageCourse = ({course, nav}) => {
+    const navigate = useNavigate();
     return (
-        <CourseBox>
+        <CourseBox onClick={nav}>
             <div style={{display: "flex", flexDirection: "column"}}>
                 <div style={{display: "flex", justifyContent: "flex-start"}}>
                     <Wrap>

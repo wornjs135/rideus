@@ -71,20 +71,20 @@ export const MyPage = () => {
                     <Box>
                         <Box direction="row" style={{marginBottom: "5vw", marginLeft: "auto"}}>
                             <Box style={{marginRight: "5vw"}}>
-                                <StyledText text={expectTimeHandle(totalRecord.total_time)} weight="bold" size="15px"
+                                <StyledText text={expectTimeHandle(totalRecord?.total_time)} weight="bold" size="15px"
                                             style={{textAlign: "right", display: "inline"}}/>
                                 <StyledText
                                     color="#4B4B4B"
-                                    text={`${totalRecord.total_distance}km`}
+                                    text={`${totalRecord?.total_distance}km`}
                                     weight="bold"
                                     size="15px"
                                     style={{textAlign: "right", display: "inline"}}
                                 />
                             </Box>
-                            <img src={convertDistanceToImg(totalRecord.total_distance)} width={50}/>
+                            <img src={convertDistanceToImg(totalRecord?.total_distance)} width={50}/>
                         </Box>
                         <Box justify={"end"}>
-                            <StyledText text={`${user.nickname}님은 현재`} weight="bold" size="18px"
+                            <StyledText text={`${user?.nickname}님은 현재`} weight="bold" size="18px"
                                         style={{textAlign: "right", display: "inline"}}></StyledText>
                             <StyledText text={convertDistanceToText(totalRecord.total_distance)} weight="bold"
                                         size="18px"
@@ -115,24 +115,32 @@ export const MyPage = () => {
                         <StyledHorizonTable>
                             {recentRides && recentRides.map((course, index, array) =>
                                 <div key={index} className="card">
-                                    <MyPageCourse course={course}/>
+                                    <MyPageCourse course={course} nav={course.shared ? () => {
+                                        navigate(`/recent/${course.roomId}`);
+                                    } : () => {
+                                        navigate('/registerCourse')
+                                    }}/>
                                 </div>)
                             }
 
                         </StyledHorizonTable>
                     </Box>
                 </Box>
-                {/* 월간자전거 */}
+                {/* 나만의 코스 */}
                 <Box align="start" width="100%" gap="large" margin="large">
                     <Box pad={{left: "20px"}}>
                         <StyledText text="나만의 코스" weight="bold" size="18px"/>
                     </Box>
-                    {/* 월간자전거 리스트 */}
+                    {/* 나만의 코스 리스트 */}
                     <Box direction="row" overflow="scroll">
                         <StyledHorizonTable>
-                            {myRideCourses && myRideCourses.map((value, index, array) =>
+                            {myRideCourses && myRideCourses.map((course, index, array) =>
                                 <div key={index} className="card">
-                                    <MyPageCourse course={value}/>
+                                    <MyPageCourse course={course} nav={course.shared ? () => {
+                                        navigate(`/recent/${course.roomId}`);
+                                    } : () => {
+                                        navigate('/registerCourse')
+                                    }}/>
                                 </div>)
                             }
 
@@ -145,13 +153,15 @@ export const MyPage = () => {
                         <StyledText text="코스 북마크" weight="bold" size="18px"/>
                     </Box>
                     {/* 인기태그 리스트 */}
-                    {/* 월간자전거 리스트 */}
+                    {/* 코스 북마크 리스트 */}
                     <Box direction="row" overflow="scroll">
                         <StyledHorizonTable>
                             {
                                 bookmarkCourses && bookmarkCourses.map((value, index, array) =>
                                     <div className="card" key={index}>
-                                        <MyPageCourse course={value}/>
+                                        <MyPageCourse course={value} nav={() => {
+                                            navigate(`/courseDetail/${value.courseId}`);
+                                        }}/>
                                     </div>
                                 )
                             }

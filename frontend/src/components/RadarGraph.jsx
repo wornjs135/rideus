@@ -6,12 +6,13 @@ import { ResponsiveRadar } from '@nivo/radar'
 // no chart will be rendered.
 // website examples showcase many properties,
 // you'll often use just a few of them.
-export const RadarGraph = ({ data /* see data tab */ }) => (
-    <ResponsiveRadar
+export const RadarGraph = ({ data /* see data tab */ }) => {
+    console.log();
+    return <ResponsiveRadar
         data={data}
-        keys={[ 'chardonay', 'carmenere', 'syrah' ]}
-        indexBy="taste"
-        valueFormat=">-.2f"
+        keys={['recordTimeMinute', 'recordSpeedBest', 'recordSpeedAvg', 'recordDistance']}
+        indexBy="nickname"
+        // valueFormat=">-.2f"
         margin={{ top: 70, right: 80, bottom: 40, left: 80 }}
         borderColor={{ from: 'color' }}
         gridLabelOffset={36}
@@ -43,4 +44,4 @@ export const RadarGraph = ({ data /* see data tab */ }) => (
             }
         ]}
     />
-)
+    }

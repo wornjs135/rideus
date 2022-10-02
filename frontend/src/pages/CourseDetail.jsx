@@ -236,7 +236,7 @@ export const CourseDetail = () => {
         >
           <BackButton
             onClick={() => {
-              navigate("/courseList");
+              navigate(-1);
             }}
           >
             <img src={BackBtn} alt="" />
