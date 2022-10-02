@@ -165,6 +165,8 @@ public class RideService {
             throw new NotMatchException(MEMBER_RECORD_NOT_MATCH);
         }
 
+        log.info("주행 좌표 리스트 DB에서 가져온거: " + mongoRecord.getCoordinates());
+        log.info("주행 좌표 리스트 DB에서 가져온거: " + mongoRecord.getCoordinates().size());
         mongoRecord.getCoordinates().addAll(saveCoordinatesRequest.getCoordinates());
         mongoRecordRepository.save(mongoRecord);
     }
