@@ -78,6 +78,7 @@ public class CourseController {
 	public ResponseEntity<String> add(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member,
 									   @RequestPart Map<String, String> inputMap, @RequestPart MultipartFile image) {
 
+		log.info("코스 등록 데이터: " + inputMap);
 		String result = courseService.addCourseData(inputMap, member.getId(), image);
 
 		return ResponseEntity.status(HttpStatus.OK).body(result);
