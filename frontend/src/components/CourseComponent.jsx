@@ -5,7 +5,7 @@ import StarBlank from "../assets/images/star_blank.png";
 import { Box, Spinner } from "grommet";
 import { expectTimeHandle, timeHandle } from "../utils/util.js";
 import { useNavigate } from "react-router-dom";
-
+import NoNews from "../assets/images/news.png";
 const CourseBox = styled.div`
   display: flex;
   flex-direction: column;
@@ -117,9 +117,9 @@ export const NewsBox = ({ news }) => {
         window.open(news.link, "_blank");
       }}
     >
-      <Box>
+      <Box height="50%">
         <img
-          src={news.image}
+          src={news.image ? news.image : NoNews}
           alt=""
           style={{
             borderRadius: "15px 15px 0 0",

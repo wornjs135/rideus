@@ -115,7 +115,10 @@ export const CourseReviewRank = ({
               </div>
             </>
           ) : (
-            <StyledText text="랭킹이 없습니다." />
+            <StyledText
+              text="랭킹이 없습니다."
+              style={{ textAlign: "center" }}
+            />
           )}
         </Box>
 
@@ -140,7 +143,10 @@ export const CourseReviewRank = ({
               );
             })
           ) : (
-            <StyledText text="리뷰가 없습니다." />
+            <StyledText
+              text="리뷰가 없습니다."
+              style={{ textAlign: "center" }}
+            />
           )}
         </Box>
       </Box>
