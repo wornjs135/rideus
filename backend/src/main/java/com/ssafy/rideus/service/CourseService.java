@@ -470,10 +470,10 @@ public class CourseService {
 			Member member = memberRepository.findById(memberId).get();
 			Course course = new Course(courseId, courseName, distance, start, finish, expectedTime, 0, imageUrl, null, member, null, null);
 //	        courseRepository.save(new Course(courseId, courseName, distance, start, finish, expectedTime, 0, null, null, null));
-	        courseRepository.save(course);
+			Course saveCourse = courseRepository.save(course);
 
-	        // 저장한 코스를 record에 course 정보 담아서 저장(update)
-	        Record record = Record.findCourse(originRecord, course);
+			// 저장한 코스를 record에 course 정보 담아서 저장(update)
+	        Record record = Record.findCourse(originRecord, saveCourse);
 	        recordRepository.save(record);
 	        
 	        return SUCCESS;
