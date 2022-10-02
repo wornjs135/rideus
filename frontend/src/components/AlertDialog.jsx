@@ -241,15 +241,29 @@ export const MapDialog = ({
                   ? course.coordinates[0]
                   : { lng: 127.002158, lat: 37.512847 }
               }
-            >
-              <div style={{ color: "#000" }}>시작점</div>
-            </MapMarker>
+              image={{
+                src: `/images/start.png`,
+                size: {
+                  width: 29,
+                  height: 41,
+                }, // 마커이미지의 크기입니다
+              }}
+            ></MapMarker>
             {course.coordinates &&
             course.coordinates[0].lat ===
               course.coordinates[course.coordinates.length - 1].lat &&
             course.coordinates[0].lng ===
               course.coordinates[course.coordinates.length - 1].lng ? (
-              <MapMarker position={course.coordinates[0]}>
+              <MapMarker
+                position={course.coordinates[0]}
+                image={{
+                  src: `/images/start.png`,
+                  size: {
+                    width: 29,
+                    height: 41,
+                  }, // 마커이미지의 크기입니다
+                }}
+              >
                 <div style={{ color: "#000" }}>시작, 종점</div>
               </MapMarker>
             ) : (
@@ -259,9 +273,14 @@ export const MapDialog = ({
                     ? course.coordinates[course.coordinates.length - 1]
                     : []
                 }
-              >
-                <div style={{ color: "#000" }}>종점</div>
-              </MapMarker>
+                image={{
+                  src: `/images/end.png`,
+                  size: {
+                    width: 29,
+                    height: 41,
+                  }, // 마커이미지의 크기입니다
+                }}
+              ></MapMarker>
             )}
             {nearInfos.data
               .filter((near) => {
@@ -482,12 +501,12 @@ export const WeatherDialog = ({ open, handleClose, weather }) => {
         <Box width="85vw" align="center" pad="small">
           <Box width="100%" justify="around" align="center">
             {/* 제목 */}
+            <img
+              src={`/images/w${weather.weatherListPerHour[0].weather}.png`}
+              width="65px"
+              height="65px"
+            />
             <Box direction="row" align="center" justify="center" gap="medium">
-              <img
-                src={`/images/w${weather.weatherListPerHour[0].weather}.png`}
-                width="100px"
-                height="100px"
-              />
               <StyledText
                 text={`${weather.weatherListPerHour[0].temperature}ºC`}
                 size="20px"
