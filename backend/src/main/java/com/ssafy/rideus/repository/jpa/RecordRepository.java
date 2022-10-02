@@ -48,4 +48,6 @@ public interface RecordRepository extends JpaRepository<Record, String> {
     @Query("select r from Record r where r.member.id = :memberId and r.recordIsMine = true order by r.createdDate desc")
     List<Record> findMyRideRecentRecord(Long memberId);
 
+    List<Record> findRecordByRideRoomIdOrderByRecordDistanceDesc(Long roomId);
+
 }
