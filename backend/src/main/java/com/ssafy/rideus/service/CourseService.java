@@ -171,6 +171,13 @@ public class CourseService {
 			recommendationCourseDtos.get(i).setStarAvg(starAvg);
 		}
 
+		Collections.sort(recommendationCourseDtos, new Comparator<RecommendationCourseDto>() {
+			@Override
+			public int compare(RecommendationCourseDto o1, RecommendationCourseDto o2) {
+				return o2.getStarAvg().compareTo(o1.getStarAvg());
+			}
+		});
+
 		return recommendationCourseDtos;
 	}
 
