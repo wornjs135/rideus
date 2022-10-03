@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -34,6 +33,12 @@ public class MyRideRecordRes {
 
     private boolean isShared;
 
+    private Double avgSpeed;
+
+    private Double topSpeed;
+
+    private double nowTime;
+
     private List<Coordinate> latlng;
 
     public static MyRideRecordRes sharedMyRide(Record record) {
@@ -56,6 +61,9 @@ public class MyRideRecordRes {
                 .roomId(record.getRideRoom().getId())
                 .distance(record.getRecordDistance())
                 .expectedTime(record.getRecordTimeMinute().intValue())
+                .avgSpeed(record.getRecordSpeedAvg())
+                .topSpeed(record.getRecordSpeedBest())
+                .nowTime(record.getRecordTime())
                 .isShared(false)
                 .build();
     }
