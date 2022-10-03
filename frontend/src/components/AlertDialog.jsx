@@ -451,7 +451,9 @@ export const ReviewDialog = ({
           <Box direction="row" overflow="scroll">
             {/* arrays.map */}
             {tags.map((t, idx) => {
-              return <StyledText text={"#" + t.tagName} key={idx} />;
+              return (
+                <StyledText text={"#" + t.tagName} key={idx} size="10px" />
+              );
             })}
           </Box>
           <CourseMap course={course} width="100%" height="40vh" />

@@ -5,6 +5,9 @@ import { StyledText } from "../components/Common";
 import { RankBike } from "../components/RankBike";
 import { RankBox } from "../components/RankBox";
 import {
+  getTotalRankBestSpeed,
+  getTotalRankDistance,
+  getTotalRankTime,
   getUserRankDistance,
   getUserRankSpeed,
   getUserRankTime,
@@ -47,7 +50,7 @@ export const Rank = () => {
   const [type, setType] = useState("time");
   useEffect(() => {
     if (loading) {
-      getUserRankTime(
+      getTotalRankTime(
         (response) => {
           console.log("time : ", response);
           setTimeRanks(response.data);
@@ -56,7 +59,7 @@ export const Rank = () => {
           console.log(fail);
         }
       );
-      getUserRankDistance(
+      getTotalRankDistance(
         (response) => {
           console.log("dis : ", response);
           setDisRanks(response.data);
@@ -65,15 +68,15 @@ export const Rank = () => {
           console.log(fail);
         }
       );
-      // getUserRankSpeed(
-      //   (response) => {
-      //     console.log("speed : ", response);
-      //     setSpeedRanks(response.data);
-      //   },
-      //   (fail) => {
-      //     console.log(fail);
-      //   }
-      // );
+      getTotalRankBestSpeed(
+        (response) => {
+          console.log("speed : ", response);
+          setSpeedRanks(response.data);
+        },
+        (fail) => {
+          console.log(fail);
+        }
+      );
     }
     setLoading(false);
     return () => {
@@ -99,16 +102,16 @@ export const Rank = () => {
           pad={{ top: "15px" }}
         >
           {/* 123등 박스 */}
-          {timeRanks.top3 && (
+          {timeRanks && (
             <Box width="90%" direction="row" justify="center">
               {/* 1등 */}
               <RankBike
                 rank={
                   type === "time"
-                    ? timeRanks.top3[0]
+                    ? timeRanks[0]
                     : type === "dis"
-                    ? disRanks.top3[0]
-                    : speedRanks.top3[0]
+                    ? disRanks[0]
+                    : speedRanks[0]
                 }
                 type={type}
               />
@@ -116,10 +119,10 @@ export const Rank = () => {
               <RankBike
                 rank={
                   type === "time"
-                    ? timeRanks.top3[1]
+                    ? timeRanks[1]
                     : type === "dis"
-                    ? disRanks.top3[1]
-                    : speedRanks.top3[1]
+                    ? disRanks[1]
+                    : speedRanks[1]
                 }
                 type={type}
               />
@@ -127,10 +130,10 @@ export const Rank = () => {
               <RankBike
                 rank={
                   type === "time"
-                    ? timeRanks.top3[2]
+                    ? timeRanks[2]
                     : type === "dis"
-                    ? disRanks.top3[2]
-                    : speedRanks.top3[2]
+                    ? disRanks[2]
+                    : speedRanks[2]
                 }
                 type={type}
               />
@@ -160,8 +163,8 @@ export const Rank = () => {
                     }}
                   >
                     <Box pad="medium" overflow="scroll" height="45vh">
-                      {timeRanks.myTimeRankWithUpAndDown &&
-                        timeRanks.myTimeRankWithUpAndDown.map((d, idx) => {
+                      {timeRanks &&
+                        timeRanks.map((d, idx) => {
                           return <RankBox record={d} key={idx} type="time" />;
                         })}
                     </Box>
@@ -179,8 +182,8 @@ export const Rank = () => {
                     }}
                   >
                     <Box pad="medium" overflow="scroll" height="45vh">
-                      {disRanks.myDistanceRankWithUpAndDown &&
-                        disRanks.myDistanceRankWithUpAndDown.map((d, idx) => {
+                      {disRanks &&
+                        disRanks.map((d, idx) => {
                           return <RankBox record={d} key={idx} type="dis" />;
                         })}
                     </Box>
@@ -197,7 +200,12 @@ export const Rank = () => {
                       setType("speed");
                     }}
                   >
-                    <Box pad="medium">Two</Box>
+                    <Box pad="medium" overflow="scroll" height="45vh">
+                      {speedRanks &&
+                        speedRanks.map((d, idx) => {
+                          return <RankBox record={d} key={idx} type="speed" />;
+                        })}
+                    </Box>
                   </Tab>
                 </Tabs>
               </Grommet>

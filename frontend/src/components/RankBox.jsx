@@ -46,7 +46,7 @@ export const RankBox = ({ record, type }) => {
               weight="bold"
             />
           ) : (
-            <StyledText text={"dd"} weight="bold" />
+            <StyledText text={record.speedBest + "km/h"} weight="bold" />
           )
         ) : (
           <StyledText

@@ -51,8 +51,6 @@ const NavBarDiv = styled.div`
   visibility: ${(props) => props.isShow || "visible"};
 `;
 const IconButtonStyle = {
-  display: "flex",
-  flexDirection: "column",
   justifyContent: "center",
   alignItems: "center",
 };
