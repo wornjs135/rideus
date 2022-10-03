@@ -168,7 +168,9 @@ public class RideService {
         log.info("주행 좌표 리스트 DB에서 가져온거: " + mongoRecord.getCoordinates());
         log.info("주행 좌표 리스트 DB에서 가져온거: " + mongoRecord.getCoordinates().size());
         mongoRecord.getCoordinates().addAll(saveCoordinatesRequest.getCoordinates());
-        mongoRecordRepository.save(mongoRecord);
+        log.info("주행 좌표 리스트에 추가: " + mongoRecord.getCoordinates());
+        MongoRecord save = mongoRecordRepository.save(mongoRecord);
+        log.info("몽고 DB에 들어간 거: " + save);
     }
 
     public List<ParticipantDto> getRoomParticipants(Long rideRoomId) {
