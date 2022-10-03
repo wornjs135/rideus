@@ -15,8 +15,8 @@ import java.util.Optional;
 public interface RecordRepository extends JpaRepository<Record, String> {
     public List<Record> findTop5RecordsByMemberIdOrderByIdDesc(Long id);
 
-    @Query(value = "SELECT m.member_id as memberId, m.nickname, m.profile_image_url as profileImageUrl, r.record_speed_best as speedBest, " +
-            "RANK() OVER (ORDER BY r.record_speed_best DESC) AS ranking FROM record r join member m on r.member_id = m.member_id", nativeQuery = true)
+    @Query(value = "SELECT m.member_id as memberId, m.nickname, m.profile_image_url as profileImageUrl, speedBest, RANK() OVER (ORDER BY speedBest DESC) AS ranking\n" +
+            "from (select member_id, max(record_speed_best) speedBest from record r group by r.member_id) r join member m on r.member_id = m.member_id;", nativeQuery = true)
     List<RankBestSpeedResponseDtoInterface> searchRankTotalBestSpeed();
 
     @Query(value = "SELECT m.member_id as memberId, m.nickname, m.profile_image_url as profileImageUrl, min timeMinute, RANK() OVER (ORDER BY min ASC) AS ranking\n" +
