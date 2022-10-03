@@ -227,7 +227,13 @@ export const CourseDetail = () => {
   if (loading) return <Spinner />;
   else
     return (
-      <Box align="center" width="100%" height="86%" alignSelf="center">
+      <Box
+        align="center"
+        width="100%"
+        height="86%"
+        alignSelf="center"
+        gap="medium"
+      >
         <Box
           direction="row"
           justify="between"

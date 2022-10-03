@@ -587,12 +587,20 @@ export const Ride = () => {
             </Box>
             {/* 평균 속도 */}
             <Box align="center">
-              <StyledText text={data.avgSpeed} weight="bold" size="18px" />
+              <StyledText
+                text={parseFloat(data.avgSpeed).toFixed(1)}
+                weight="bold"
+                size="18px"
+              />
               <StyledText text="평균 속도" size="10px" />
             </Box>
             {/* 최고 속도 */}
             <Box align="center">
-              <StyledText text={data.topSpeed} weight="bold" size="18px" />
+              <StyledText
+                text={parseFloat(data.topSpeed).toFixed(1)}
+                weight="bold"
+                size="18px"
+              />
               <StyledText text="최고 속도" size="10px" />
             </Box>
           </Box>
