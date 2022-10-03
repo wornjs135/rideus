@@ -9,7 +9,7 @@ import {getMyTag, getTotalRecord, myRides, recentRide} from "../utils/api/userAp
 import {useSelector} from 'react-redux'
 import {useNavigate} from "react-router-dom";
 import {getBookmarkedCourses} from "../utils/api/bookmarkApi";
-import {convertDistanceToImg, convertDistanceToText, expectTimeHandle} from "../utils/util";
+import {convertDistanceToImg, convertDistanceToText, expectTimeHandle, renameObjectKey} from "../utils/util";
 
 export const MyPage = () => {
 
@@ -129,7 +129,7 @@ export const MyPage = () => {
                 {/* 나만의 코스 */}
                 <Box align="start" width="100%" gap="large" margin="large">
                     <Box pad={{left: "20px"}}>
-                        <StyledText text="나만의 코스" weight="bold" size="18px"/>
+                        <StyledText text="나만의 주행" weight="bold" size="18px"/>
                     </Box>
                     {/* 나만의 코스 리스트 */}
                     <Box direction="row" overflow="scroll">
@@ -139,7 +139,10 @@ export const MyPage = () => {
                                     <MyPageCourse course={course} nav={course.shared ? () => {
                                         navigate(`/recent/${course.roomId}`);
                                     } : () => {
-                                        navigate('/registerCourse')
+                                        renameObjectKey(course, "distance","totalDistance");
+                                        navigate('/registerCourse', {
+                                            state: { courseData: course },
+                                        })
                                     }}/>
                                 </div>)
                             }
