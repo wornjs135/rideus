@@ -343,15 +343,15 @@ export const MapDialog = ({
               />
             </Box>
             {type === "detail" && (
-              <Box width="100%" align="center">
-                <Box
-                  direction="row"
-                  justify="start"
-                  overflow="scroll"
-                  margin="medium"
-                  height="70px"
-                >
-                  <ThemeProvider theme={theme}>
+              <ThemeProvider theme={theme}>
+                <Box width="100%" align="center">
+                  <Box
+                    direction="row"
+                    justify="start"
+                    overflow="scroll"
+                    margin="medium"
+                    height="70px"
+                  >
                     <StyledHorizonTable>
                       {markerCategorys.map((cat, idx) => {
                         return (
@@ -368,9 +368,10 @@ export const MapDialog = ({
                               height: "55px",
                               borderRadius: "10px",
                               marginRight: "10px",
+                              fontSize: "12px",
                             }}
                           >
-                            <Box align="center">
+                            <Box align="center" style={{ fontSize: "12px" }}>
                               {cat.icon}
                               {cat.name}
                             </Box>
@@ -378,16 +379,17 @@ export const MapDialog = ({
                         );
                       })}
                     </StyledHorizonTable>
-                  </ThemeProvider>
+                  </Box>
+
+                  <img
+                    width="50px"
+                    src={WeatherBtn}
+                    onClick={() => {
+                      setOpWeather(true);
+                    }}
+                  />
                 </Box>
-                <img
-                  width="50px"
-                  src={WeatherBtn}
-                  onClick={() => {
-                    setOpWeather(true);
-                  }}
-                />
-              </Box>
+              </ThemeProvider>
             )}
           </Box>
         </Box>
