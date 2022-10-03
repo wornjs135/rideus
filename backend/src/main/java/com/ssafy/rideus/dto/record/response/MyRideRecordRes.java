@@ -1,12 +1,16 @@
 package com.ssafy.rideus.dto.record.response;
 
 import com.ssafy.rideus.domain.Record;
+import com.ssafy.rideus.domain.base.Coordinate;
+import com.ssafy.rideus.domain.collection.MongoRecord;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -30,6 +34,8 @@ public class MyRideRecordRes {
 
     private boolean isShared;
 
+    private List<Coordinate> latlng;
+
     public static MyRideRecordRes sharedMyRide(Record record) {
         return MyRideRecordRes.builder()
                 .recordId(record.getId())
@@ -52,6 +58,10 @@ public class MyRideRecordRes {
                 .expectedTime(record.getRecordTimeMinute().intValue())
                 .isShared(false)
                 .build();
+    }
+
+    public void setLatLng(MongoRecord mongoRecord) {
+        latlng = mongoRecord.getCoordinates();
     }
 
 }
