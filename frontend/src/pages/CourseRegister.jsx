@@ -110,6 +110,7 @@ export const CourseRegister = () => {
 
   useEffect(() => {
     setTags(initTags);
+    console.log(courseData)
   }, []);
   return (
     <Box width="100%" align="center">
@@ -150,7 +151,7 @@ export const CourseRegister = () => {
               <StyledText text={`주행 거리: ${courseData.totalDistance}km`} />
               <StyledText
                 text={`주행 시간: ${expectTimeHandle(
-                  courseData.totalDistance
+                  courseData.nowTime
                 )}`}
               />
               <StyledText text={`평균 속도: ${courseData.avgSpeed}km/h`} />
