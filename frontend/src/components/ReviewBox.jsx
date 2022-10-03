@@ -1,4 +1,4 @@
-import { Box } from "grommet";
+import { Avatar, Box } from "grommet";
 import React, { useState } from "react";
 import Profile from "../assets/images/profile.png";
 import MoreBtn from "../assets/images/more.png";
@@ -30,9 +30,9 @@ export const ReviewBox = ({ review, score, starView, courseName }) => {
             setOpen(true);
           }}
         >
-          <img src={Profile} width="30px" />
+          <Avatar src={Profile} size="30px" />
           <Box justify="center" align="start">
-            <StyledText text={review.memberId} />
+            <StyledText text={review.memberNickname} />
             <StyledText text={review.content} />
             <Box direction="row">
               {review.tags.map((tag) => {

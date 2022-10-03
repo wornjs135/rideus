@@ -12,7 +12,7 @@ import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 
 import { useNavigate } from "react-router-dom";
-import { getAllCourse } from "../utils/api/courseApi";
+import { getAllCourse, getRecommendationCourses } from "../utils/api/courseApi";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { categorys } from "../utils/util";
 
@@ -89,6 +89,7 @@ export const theme = createTheme({
 
 export const CourseList = () => {
   const [courses, setCourses] = useState([]);
+  const [recCourses, setRecCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
@@ -100,6 +101,17 @@ export const CourseList = () => {
         (response) => {
           console.log(response);
           setCourses((prev) => (prev = response.data));
+
+          setLoading(false);
+        },
+        (fail) => {
+          console.log(fail);
+        }
+      );
+      getRecommendationCourses(
+        (response) => {
+          console.log(response);
+          setRecCourses((prev) => (prev = response.data));
           setLoading(false);
         },
         (fail) => {
@@ -187,7 +199,45 @@ export const CourseList = () => {
           gap="medium"
           height={{ min: "80vh" }}
         >
-          {courses ? (
+          {selected === 1 ? (
+            recCourses ? (
+              recCourses.filter((course) => {
+                if (searchTerm === "") {
+                  return course;
+                } else if (course.courseName.includes(searchTerm)) {
+                  return course;
+                }
+              }).length > 0 ? (
+                recCourses
+                  .filter((course) => {
+                    if (searchTerm === "") {
+                      return course;
+                    } else if (course.courseName.includes(searchTerm)) {
+                      return course;
+                    }
+                  })
+                  .map((course, idx) => {
+                    return (
+                      <CourseBox loading={loading} course={course} key={idx} />
+                    );
+                  })
+              ) : (
+                <Box margin={{ top: "30px" }}>
+                  {loading ? (
+                    <Spinner />
+                  ) : (
+                    <StyledText
+                      text="해당하는 코스가 없습니다!"
+                      size="16px"
+                      weight="bold"
+                    />
+                  )}
+                </Box>
+              )
+            ) : (
+              <Spinner />
+            )
+          ) : courses ? (
             courses.filter((course) => {
               if (selected === 0 || selected === 1) {
                 if (searchTerm === "") {

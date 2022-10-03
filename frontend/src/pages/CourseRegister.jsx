@@ -123,7 +123,7 @@ export const CourseRegister = () => {
       {/* 바디 */}
       <Box width="90%" align="center" margin={{ top: "20px" }}>
         {/* 지도, 코스 이름, 데이터 */}
-        <Box width="100%" direction="row" gap="small">
+        <Box width="80%" direction="row" gap="small">
           <Box width="100%" justify="around">
             {/* 기록 날짜 시작*/}
             <Box align="center" margin={{ bottom: "20px" }}>
@@ -188,7 +188,7 @@ export const CourseRegister = () => {
         </Box>
         {/* 사진 첨부 버튼 끝 */}
         {/* 텍스트아리아 시작 */}
-        <Box margin="small">
+        <Box margin="small" width="80%">
           <TextField
             placeholder="코스 제목을 입력해주세요."
             label="코스 제목"
@@ -216,8 +216,8 @@ export const CourseRegister = () => {
             setOpen(false);
           }}
           handleAction={handleRegister}
-          title="리뷰 등록"
-          desc="리뷰를 등록하시겠습니까?"
+          title="코스 등록"
+          desc="코스를 등록하시겠습니까?"
           cancel="취소"
           accept="등록"
           register
@@ -228,7 +228,7 @@ export const CourseRegister = () => {
           handleClose={() => {
             setNotValid(false);
           }}
-          title="리뷰 등록"
+          title="코스 등록"
           desc="모든 정보를 입력하세요!"
           cancel="닫기"
         />
