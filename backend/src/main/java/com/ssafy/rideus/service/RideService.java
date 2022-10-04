@@ -177,7 +177,7 @@ public class RideService {
         Update update = new Update();
         update.set("coordinates", saveCoordinatesRequest.getCoordinates());
         log.info("주행 좌표 리스트에 추가: " + mongoRecord.getCoordinates());
-        mongoTemplate.updateFirst(query, update, MongoRecord.class);
+        mongoTemplate.updateMulti(query, update, MongoRecord.class);
 
 //        MongoRecord save = mongoRecordRepository.save(mongoRecord);
 //        log.info("몽고 DB에 들어간 거: " + save);
