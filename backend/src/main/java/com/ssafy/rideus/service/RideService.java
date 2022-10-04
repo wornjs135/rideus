@@ -29,6 +29,10 @@ import com.ssafy.rideus.repository.mongo.MongoRecordRepository;
 import com.ssafy.rideus.repository.redis.RedisRideRoomRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,6 +58,7 @@ public class RideService {
     private final CourseRepository courseRepository;
     private final RecordRepository recordRepository;
     private final CourseCoordinateRepository courseCoordinateRepository;
+    private final MongoTemplate mongoTemplate;
 
     @Transactional
     public CreateRideRoomResponse createRiddingRoom(Long memberId, String courseId) {
@@ -167,10 +172,15 @@ public class RideService {
 
         log.info("주행 좌표 리스트 DB에서 가져온거: " + mongoRecord.getCoordinates());
         log.info("주행 좌표 리스트 DB에서 가져온거: " + mongoRecord.getCoordinates().size());
-        mongoRecord.getCoordinates().addAll(saveCoordinatesRequest.getCoordinates());
+
+        Query query = new Query().addCriteria(Criteria.where("_id").is(recordId));
+        Update update = new Update();
+        update.set("coordinates", mongoRecord.getCoordinates().addAll(saveCoordinatesRequest.getCoordinates()));
         log.info("주행 좌표 리스트에 추가: " + mongoRecord.getCoordinates());
-        MongoRecord save = mongoRecordRepository.save(mongoRecord);
-        log.info("몽고 DB에 들어간 거: " + save);
+        mongoTemplate.updateFirst(query, update, MongoRecord.class);
+
+//        MongoRecord save = mongoRecordRepository.save(mongoRecord);
+//        log.info("몽고 DB에 들어간 거: " + save);
     }
 
     public List<ParticipantDto> getRoomParticipants(Long rideRoomId) {
