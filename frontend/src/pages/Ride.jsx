@@ -340,12 +340,12 @@ export const Ride = () => {
 
   // 시간 핸들 useEffect
   useEffect(() => {
-    const timerId = setInterval(() => {
+    const timerId = setTimeout(() => {
       setNowTime((prev) => prev + 1);
     }, 1000);
 
     return () => {
-      clearInterval(timerId);
+      clearTimeout(timerId);
       // cancelLocationWatch();
       // window.removeEventListener("beforeunload", preventClose);
     };
