@@ -121,6 +121,12 @@ cloud:
 logging:
   level:
     org.hibernate.SQL: debug
+    org:
+      springframework:
+        data:
+          mongodb:
+            core:
+              MongoTemplate: debug
 
 kakao:
   restapikey:
