@@ -164,19 +164,19 @@ public class RideService {
 
     @Transactional
     public void saveCoordinatesPerPeriod(Long memberId, String recordId, SaveCoordinatesRequest saveCoordinatesRequest) {
-        MongoRecord mongoRecord = mongoRecordRepository.findById(recordId)
-                .orElseThrow(() -> new NotFoundException(RECORD_NOT_FOUND));
-        if (!mongoRecord.getMemberId().equals(memberId)) {
-            throw new NotMatchException(MEMBER_RECORD_NOT_MATCH);
-        }
+//        MongoRecord mongoRecord = mongoRecordRepository.findById(recordId)
+//                .orElseThrow(() -> new NotFoundException(RECORD_NOT_FOUND));
+//        if (!mongoRecord.getMemberId().equals(memberId)) {
+//            throw new NotMatchException(MEMBER_RECORD_NOT_MATCH);
+//        }
 
-        log.info("주행 좌표 리스트 DB에서 가져온거: " + mongoRecord.getCoordinates());
-        log.info("주행 좌표 리스트 DB에서 가져온거: " + mongoRecord.getCoordinates().size());
+//        log.info("주행 좌표 리스트 DB에서 가져온거: " + mongoRecord.getCoordinates());
+//        log.info("주행 좌표 리스트 DB에서 가져온거: " + mongoRecord.getCoordinates().size());
 
         Query query = new Query().addCriteria(Criteria.where("_id").is(recordId));
         Update update = new Update();
         update.set("coordinates", saveCoordinatesRequest.getCoordinates());
-        log.info("주행 좌표 리스트에 추가: " + mongoRecord.getCoordinates());
+//        log.info("주행 좌표 리스트에 추가: " + mongoRecord.getCoordinates());
         mongoTemplate.updateMulti(query, update, MongoRecord.class);
 
 //        MongoRecord save = mongoRecordRepository.save(mongoRecord);
