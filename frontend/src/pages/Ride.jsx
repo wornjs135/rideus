@@ -26,6 +26,7 @@ import * as StompJs from "@stomp/stompjs";
 import { finishRidding, saveCoordinatesDuringRide } from "../utils/api/rideApi";
 import { TextField, ThemeProvider } from "@mui/material";
 import { theme } from "./CourseList";
+import useInterval from "../hooks/UseInterval";
 
 // const geolocationOptions = {
 //   enableHighAccuracy: false,
@@ -339,17 +340,20 @@ export const Ride = () => {
   };
 
   // 시간 핸들 useEffect
-  useEffect(() => {
-    const timerId = setTimeout(() => {
-      setNowTime((prev) => prev + 1);
-    }, 1000);
+  // useEffect(() => {
+  //   // const timerId = setTimeout(() => {
+  //   //   setNowTime((prev) => prev + 1);
+  //   // }, 1000);
+  //   // return () => {
+  //   //   clearTimeout(timerId);
+  //   //   // cancelLocationWatch();
+  //   //   // window.removeEventListener("beforeunload", preventClose);
+  //   // };
+  // });
 
-    return () => {
-      clearTimeout(timerId);
-      // cancelLocationWatch();
-      // window.removeEventListener("beforeunload", preventClose);
-    };
-  });
+  useInterval(() => {
+    setNowTime(nowTime + 1);
+  }, 1000);
 
   useEffect(() => {
     if (rideType === "group") {
@@ -363,6 +367,72 @@ export const Ride = () => {
     };
   }, []);
 
+  useInterval(() => {
+    if (riding && isGeolocationAvailable && isGeolocationEnabled) {
+      console.log("location : ", coords);
+
+      const gps = {
+        lat: coords.latitude,
+        lng: coords.longitude,
+      };
+
+      console.log("gps : ", gps);
+      // 이전이랑 위치가 같을 때
+      if (
+        mapData.latlng.length > 0 &&
+        mapData.latlng.at(-1).lat === gps.lat &&
+        mapData.latlng.at(-1).lng === gps.lng
+      ) {
+        idle = idle + 1;
+      } else {
+        setMapData((prev) => {
+          return {
+            center: gps,
+            latlng: [...prev.latlng, gps],
+          };
+        });
+        // 위치가 1개 초과로 저장되었을 때 거리 계산
+        if (mapData.latlng.length > 1) {
+          console.log("data : ", data);
+
+          let dis = getDistanceFromLatLonInKm(
+            mapData.latlng.at(-1).lat,
+            mapData.latlng.at(-1).lng,
+            gps.lat,
+            gps.lng
+          );
+          console.log("dis: ", dis);
+          if (dis > 0) {
+            setData((prev) => ({
+              topSpeed: Math.max(prev.topSpeed, speedHandle(dis, idle)),
+              avgSpeed: (prev.avgSpeed + speedHandle(dis, idle)) / 2,
+              totalDistance: prev.totalDistance + dis,
+            }));
+            idle = 1;
+          }
+          // idle = 1;
+        }
+      }
+
+      // setI((prev) => {
+      //   return prev + 0.001;
+      // });
+      // 웹소켓 발행
+      if (client != null && rideType === "group") {
+        publishLocation(gps.lat, gps.lng);
+      }
+    } else {
+      // idle = idle + 1;
+      setData((prev) => {
+        return {
+          topSpeed: prev.topSpeed,
+          avgSpeed: prev.avgSpeed,
+          totalDistance: prev.totalDistance,
+        };
+      });
+    }
+  }, 1000);
+
   // 거리, 데이터 핸들 useEffect
   useEffect(() => {
     // console.log("hello");
@@ -371,78 +441,78 @@ export const Ride = () => {
     // let i = 0;
     // setNowTime(0);
 
-    const rideId = setInterval(() => {
-      if (riding && isGeolocationAvailable && isGeolocationEnabled) {
-        console.log("location : ", coords);
+    // const rideId = setInterval(() => {
+    //   if (riding && isGeolocationAvailable && isGeolocationEnabled) {
+    //     console.log("location : ", coords);
 
-        const gps = {
-          lat: coords.latitude,
-          lng: coords.longitude,
-        };
+    //     const gps = {
+    //       lat: coords.latitude,
+    //       lng: coords.longitude,
+    //     };
 
-        console.log("gps : ", gps);
-        // 이전이랑 위치가 같을 때
-        if (
-          mapData.latlng.length > 0 &&
-          mapData.latlng.at(-1).lat === gps.lat &&
-          mapData.latlng.at(-1).lng === gps.lng
-        ) {
-          idle = idle + 1;
-        } else {
-          setMapData((prev) => {
-            return {
-              center: gps,
-              latlng: [...prev.latlng, gps],
-            };
-          });
-          // 위치가 1개 초과로 저장되었을 때 거리 계산
-          if (mapData.latlng.length > 1) {
-            console.log("data : ", data);
+    //     console.log("gps : ", gps);
+    //     // 이전이랑 위치가 같을 때
+    //     if (
+    //       mapData.latlng.length > 0 &&
+    //       mapData.latlng.at(-1).lat === gps.lat &&
+    //       mapData.latlng.at(-1).lng === gps.lng
+    //     ) {
+    //       idle = idle + 1;
+    //     } else {
+    //       setMapData((prev) => {
+    //         return {
+    //           center: gps,
+    //           latlng: [...prev.latlng, gps],
+    //         };
+    //       });
+    //       // 위치가 1개 초과로 저장되었을 때 거리 계산
+    //       if (mapData.latlng.length > 1) {
+    //         console.log("data : ", data);
 
-            let dis = getDistanceFromLatLonInKm(
-              mapData.latlng.at(-1).lat,
-              mapData.latlng.at(-1).lng,
-              gps.lat,
-              gps.lng
-            );
-            console.log("dis: ", dis);
-            if (dis > 0) {
-              setData((prev) => ({
-                topSpeed: Math.max(prev.topSpeed, speedHandle(dis, idle)),
-                avgSpeed: (prev.avgSpeed + speedHandle(dis, idle)) / 2,
-                totalDistance: prev.totalDistance + dis,
-              }));
-              idle = 1;
-            }
-            // idle = 1;
-          }
-        }
+    //         let dis = getDistanceFromLatLonInKm(
+    //           mapData.latlng.at(-1).lat,
+    //           mapData.latlng.at(-1).lng,
+    //           gps.lat,
+    //           gps.lng
+    //         );
+    //         console.log("dis: ", dis);
+    //         if (dis > 0) {
+    //           setData((prev) => ({
+    //             topSpeed: Math.max(prev.topSpeed, speedHandle(dis, idle)),
+    //             avgSpeed: (prev.avgSpeed + speedHandle(dis, idle)) / 2,
+    //             totalDistance: prev.totalDistance + dis,
+    //           }));
+    //           idle = 1;
+    //         }
+    //         // idle = 1;
+    //       }
+    //     }
 
-        // setI((prev) => {
-        //   return prev + 0.001;
-        // });
-        // 웹소켓 발행
-        if (client != null && rideType === "group") {
-          publishLocation(gps.lat, gps.lng);
-        }
-      } else {
-        // idle = idle + 1;
-        setData((prev) => {
-          return {
-            topSpeed: prev.topSpeed,
-            avgSpeed: prev.avgSpeed,
-            totalDistance: prev.totalDistance,
-          };
-        });
-      }
-      // setI((prev) => {
-      //   return prev + 0.0001;
-      // });
-      // console.log(mapData.latlng);
-    }, 1000);
+    //     // setI((prev) => {
+    //     //   return prev + 0.001;
+    //     // });
+    //     // 웹소켓 발행
+    //     if (client != null && rideType === "group") {
+    //       publishLocation(gps.lat, gps.lng);
+    //     }
+    //   } else {
+    //     // idle = idle + 1;
+    //     setData((prev) => {
+    //       return {
+    //         topSpeed: prev.topSpeed,
+    //         avgSpeed: prev.avgSpeed,
+    //         totalDistance: prev.totalDistance,
+    //       };
+    //     });
+    //   }
+    //   // setI((prev) => {
+    //   //   return prev + 0.0001;
+    //   // });
+    //   // console.log(mapData.latlng);
+    // }, 1000);
 
     return () => {
-      clearInterval(rideId);
+      // clearInterval(rideId);
       // cancelLocationWatch();
 
       window.removeEventListener("beforeunload", preventClose);
