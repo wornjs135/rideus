@@ -4,8 +4,10 @@ import com.ssafy.rideus.common.api.S3Upload;
 import com.ssafy.rideus.common.exception.BadRequestException;
 import com.ssafy.rideus.common.exception.NotFoundException;
 import com.ssafy.rideus.domain.*;
+import com.ssafy.rideus.domain.collection.MongoRecord;
 import com.ssafy.rideus.dto.review.*;
 import com.ssafy.rideus.repository.jpa.*;
+import com.ssafy.rideus.repository.mongo.MongoRecordRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,8 +20,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.ssafy.rideus.common.exception.BadRequestException.NOT_REGISTED_COURSE;
-import static com.ssafy.rideus.common.exception.NotFoundException.RECORD_NOT_FOUND;
-import static com.ssafy.rideus.common.exception.NotFoundException.TAG_NOT_FOUND;
+import static com.ssafy.rideus.common.exception.NotFoundException.*;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +34,7 @@ public class ReviewService {
     private final RecordRepository recordRepository;
     private final S3Upload s3Upload;
     private final TagRepository tagRepository;
+    private final MongoRecordRepository mongoRecordRepository;
 
     @Transactional
     public WriteReviewResponse writeReview(ReviewRequestDto reviewRequestDto, Long mid, MultipartFile image) {
@@ -73,8 +75,12 @@ public class ReviewService {
 
     @Transactional
     public ReviewDetailResponseDto showReviewDetail(Long rid) {
-        Review review = reviewRepository.findById(rid).orElseThrow(() -> new BadRequestException("유효하지 않은 리뷰입니다."));
-        return ReviewDetailResponseDto.reviewDetailRes(review);
+//        Review review = reviewRepository.findById(rid).orElseThrow(() -> new BadRequestException("유효하지 않은 리뷰입니다."));
+        Review review = reviewRepository.findReviewWithMemberAndRecordById(rid).orElseThrow(() -> new NotFoundException(REVIEW_NOT_FOUND));
+        MongoRecord mongoRecord = mongoRecordRepository.findById(review.getRecord().getId())
+                .orElseThrow(() -> new NotFoundException(RECORD_NOT_FOUND));
+
+        return ReviewDetailResponseDto.reviewDetailRes(review, mongoRecord.getCoordinates());
     }
 
     @Transactional
