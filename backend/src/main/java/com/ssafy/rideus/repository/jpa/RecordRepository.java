@@ -1,9 +1,7 @@
 package com.ssafy.rideus.repository.jpa;
 
 import com.ssafy.rideus.domain.Record;
-import com.ssafy.rideus.dto.rank.response.RankBestSpeedResponseDtoInterface;
-import com.ssafy.rideus.dto.rank.response.RankCourseTimeResponseDto;
-import com.ssafy.rideus.dto.rank.response.RankCourseTimeResponseDtoInterface;
+import com.ssafy.rideus.dto.rank.response.*;
 import com.ssafy.rideus.dto.record.response.RecordTotalResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -50,4 +48,11 @@ public interface RecordRepository extends JpaRepository<Record, String> {
 
     List<Record> findRecordByRideRoomIdOrderByRecordDistanceDesc(Long roomId);
 
+    @Query(value = "SELECT m.member_id as memberId, m.nickname, m.profile_image_url as profileImageUrl, totalTime, RANK() OVER (ORDER BY totalTime DESC) AS ranking\n" +
+            "from (select member_id, sum(record_time) totalTime from record r where created_date BETWEEN DATE_ADD(NOW(), INTERVAL -1 MONTH ) AND NOW() group by r.member_id ) r join member m on r.member_id = m.member_id;", nativeQuery = true)
+    List<RankTimeResponseDtoInterface> searchRankTotalTime();
+
+    @Query(value = "SELECT m.member_id as memberId, m.nickname, m.profile_image_url as profileImageUrl, totalDistance, RANK() OVER (ORDER BY totalDistance DESC) AS ranking\n" +
+            "from (select member_id, sum(record_distance) totalDistance from record r where created_date BETWEEN DATE_ADD(NOW(), INTERVAL -1 MONTH ) AND NOW() group by r.member_id ) r join member m on r.member_id = m.member_id;", nativeQuery = true)
+    List<RankDistanceResponseDtoInterface> searchRankTotalDistance();
 }
