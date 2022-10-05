@@ -16,8 +16,8 @@ import { useNavigate } from "react-router-dom";
 import { getBookmarkedCourses } from "../utils/api/bookmarkApi";
 import {
   convertDistanceToImg,
-  convertDistanceToText,
-  expectTimeHandle,
+  convertDistanceToText, distanceHandleM,
+  expectTimeHandle, expectTimeHandle2,
   renameObjectKey,
 } from "../utils/util";
 import { motion } from "framer-motion";
@@ -106,14 +106,14 @@ export const MyPage = () => {
               >
                 <Box style={{ marginRight: "5vw" }}>
                   <StyledText
-                    text={expectTimeHandle(totalRecord?.total_time)}
+                    text={expectTimeHandle2(totalRecord?.total_time)}
                     weight="bold"
                     size="15px"
                     style={{ textAlign: "right", display: "inline" }}
                   />
                   <StyledText
                     color="#4B4B4B"
-                    text={`${totalRecord?.total_distance}km`}
+                    text={distanceHandleM(totalRecord?.total_distance)}
                     weight="bold"
                     size="15px"
                     style={{ textAlign: "right", display: "inline" }}

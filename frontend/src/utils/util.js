@@ -110,6 +110,11 @@ export const distanceHandle = (dis) => {
   else return parseFloat(dis / 1000.0).toFixed(2);
 };
 
+export const distanceHandleM = (dis) => {
+  if (dis < 1000) return dis + "m";
+  else return parseFloat(dis / 1000.0).toFixed(2) + "km";
+};
+
 export const speedHandle = (dis, idle) => {
   return parseFloat(((dis * 3.6) / idle).toFixed(1));
 };
@@ -121,6 +126,7 @@ export const renameObjectKey = (objs, from, to) => {
 };
 
 export const convertDistanceToImg = (dis) => {
+  dis /= 1000.0;
   if (dis >= 11059) return plant5;
   if (dis >= 8852) return plant4;
   if (dis >= 952) return plant3;
@@ -129,6 +135,7 @@ export const convertDistanceToImg = (dis) => {
 };
 
 export const convertDistanceToText = (dis) => {
+  dis /= 1000.0;
   if (dis >= 11059) return "서울부터 뉴욕까지의 거리를";
   if (dis >= 9580) return "서울부터 LA까지의 거리를";
   if (dis >= 8852) return "서울부터 런던까지의 거리를";
@@ -154,3 +161,4 @@ export const convertStringToColor = (color) => {
   if (color ==="AQUAMARINE") return "#7FFFD4";
   if (color ==="GRAY") return "#808080";
 }
+
