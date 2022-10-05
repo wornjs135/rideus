@@ -56,11 +56,11 @@ public class RideController {
         log.debug(request.toString());
         log.debug(bearerToken);
 
-        GroupRiddingResponse groupRiddingResponse = new GroupRiddingResponse();
+
         if (ENTER.equals(request.getMessageType())) { // 그룹 방에 입장
             messagingTemplate.convertAndSend(SOCKET_SUBSCRIBE_BASE_URI + request.getRideRoomId(), rideService.enterRiddingRoom(memberId, request));
         } else if (CURRENT_POSITION.equals(request.getMessageType())) { // 현재 내 위치 뿌리기
-            groupRiddingResponse = rideService.searchMemberInfo(memberId);
+            GroupRiddingResponse groupRiddingResponse = rideService.searchMemberInfo(memberId);
             groupRiddingResponse.setLat(request.getLat());
             groupRiddingResponse.setLng(request.getLng());
             messagingTemplate.convertAndSend(SOCKET_SUBSCRIBE_BASE_URI + request.getRideRoomId(), groupRiddingResponse);
