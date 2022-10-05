@@ -178,22 +178,17 @@ export const Main = () => {
             <img src={MainBike} />
             {/* <img src={test1} /> */}
           </Box>
-          <StyledText
-            color="#FFFFF"
-            text="즐거운 자전거 여행, 달려볼까요?"
-            weight="bold"
-            size="18px"
-          />
+
           <Button
             style={{
               boxShadow: "4px 4px 4px -4px rgb(0 0 0 / 0.2)",
               textTransform: "none",
-              fontSize: 14,
+              fontSize: 20,
               fontWeight: "bold",
               padding: "6px 12px",
               color: "white",
-              width: "240px",
-              height: "40px",
+              width: "276px",
+              height: "56px",
               margin: "10px",
               backgroundColor: "#64CCBE",
               borderRadius: "10px",

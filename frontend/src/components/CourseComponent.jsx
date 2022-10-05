@@ -2,17 +2,21 @@ import styled from "styled-components";
 import { StarBox, StyledText } from "./Common.jsx";
 import Star from "../assets/images/star.png";
 import StarBlank from "../assets/images/star_blank.png";
-import { Box, Spinner } from "grommet";
-import { expectTimeHandle, timeHandle } from "../utils/util.js";
+import { Avatar, Box, Spinner } from "grommet";
+import { expectTimeHandle, timeHandle, timeHandle2 } from "../utils/util.js";
 import { useNavigate } from "react-router-dom";
 import NoNews from "../assets/images/news.png";
+import Clock from "../assets/icons/clock.svg";
+import Flag from "../assets/icons/flag.svg";
+
+import NoImage from "../assets/images/noimage.jpg";
 
 const CourseBox = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
   width: 141px;
-  height: 133px;
+  height: 164px;
   margin-right: 15px;
   margin-bottom: 10px;
   margin-top: 5px;
@@ -20,6 +24,7 @@ const CourseBox = styled.div`
   padding-top: 14px;
   background-color: white;
   border-radius: 15px;
+  justify-content: space-between;
   box-shadow: 4px 4px 4px -4px rgb(0 0 0 / 0.2);
 `;
 
@@ -28,7 +33,7 @@ const NewsDiv = styled.div`
   align-items: center;
   width: 153px;
   text-align: center;
-  height: 222px;
+  height: 164px;
   margin-right: 15px;
   margin-bottom: 10px;
   margin-top: 5px;
@@ -70,47 +75,79 @@ export const BestCourse = ({ course }) => {
             navigate(`/courseDetail/${course.courseId}`);
           }}
         >
-          <Wrap>
-            <StyledText
-              text={course.courseName}
-              weight="bold"
-              color="#000000"
-              style={{
-                width: "90%",
-                height: "20px",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-                display: "block",
-              }}
+          <Box gap="medium">
+            <Box>
+              <StyledText
+                text={course.courseName}
+                weight="bold"
+                color="#000000"
+                style={{
+                  align: "center",
+                  width: "90%",
+                  height: "20px",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  display: "block",
+                }}
+              />
+
+              <StarBox starView={parseFloat(course.starAvg) * 16} />
+            </Box>
+            <img
+              src={course.imageUrl ? course.imageUrl : NoImage}
+              width="140px"
+              height="85px"
+              style={{ borderRadius: "10px", objectFit: "cover" }}
             />
-          </Wrap>
-          <StarBox starView={parseFloat(course.starAvg) * 20} />
-          <Box align="end" gap="small" margin={{ top: "25px" }}>
-            <StyledText
-              text={"코스 길이 : " + course.distance + "km"}
+          </Box>
+
+          <Box
+            direction="row"
+            justify="end"
+            gap="small"
+            margin={{ top: "10px" }}
+          >
+            <Box
+              justify="center"
+              align="center"
+              direction="row"
+              gap="4px"
               style={{
                 backgroundColor: "#BDE0EF",
                 borderRadius: "10px",
+                padding: "0px 4px",
                 // margin: "3px",
-                fontSize: "12px",
-                paddingLeft: "10px",
-                paddingRight: "10px",
               }}
-              weight="bold"
-            />
-            <StyledText
-              text={"예상 시간 : " + expectTimeHandle(course.expectedTime)}
+            >
+              <Avatar src={Flag} size="12px" />
+              <StyledText
+                size="13px"
+                text={course.distance + "km"}
+                weight="bold"
+              />
+            </Box>
+
+            <Box
+              justify="center"
+              align="center"
+              direction="row"
+              gap="4px"
               style={{
                 backgroundColor: "#F8F38F",
                 borderRadius: "10px",
-                fontSize: "12px",
-                paddingLeft: "10px",
-                paddingRight: "10px",
+                // margin: "3px",
+                padding: "0px 4px",
               }}
-              weight="bold"
-            />
-            <StyledText
+            >
+              <Avatar src={Clock} size="12px" />
+              <StyledText
+                size="13px"
+                text={timeHandle2(course.expectedTime)}
+                weight="bold"
+              />
+            </Box>
+            {/* <StyledText
               text={
                 course.start.split(" ")[0] + " " + course.start.split(" ")[1]
               }
@@ -122,7 +159,7 @@ export const BestCourse = ({ course }) => {
                 paddingRight: "10px",
               }}
               weight="bold"
-            />
+            /> */}
           </Box>
         </CourseBox>
         {/* <Box direction="row" overflow="scroll" gap="medium">
