@@ -83,10 +83,9 @@ public class RideController {
     // 중간 주행 좌표 리스트들 저장
     @PostMapping("/save")
     public ResponseEntity<CreateRecordResponse> saveCoordinatesPerPeriod(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member,
-                                                   @RequestBody SaveCoordinatesRequest saveCoordinatesRequest) {
+                                                                         @RequestBody SaveCoordinatesRequest saveCoordinatesRequest) {
         log.info("주행했던 좌표 리스트" + saveCoordinatesRequest);
         
-
         return ResponseEntity.ok(rideService.saveCoordinatesPerPeriod(member.getId(), saveCoordinatesRequest));
     }
 
