@@ -8,10 +8,10 @@ import { useNavigate } from "react-router-dom";
 import NoNews from "../assets/images/news.png";
 import Clock from "../assets/icons/clock.svg";
 import Flag from "../assets/icons/flag.svg";
-
+import { motion } from "framer-motion";
 import NoImage from "../assets/images/noimage.jpg";
 
-const CourseBox = styled.div`
+const CourseBox = styled(motion.div)`
   display: flex;
   flex-direction: column;
   position: relative;
@@ -28,7 +28,7 @@ const CourseBox = styled.div`
   box-shadow: 4px 4px 4px -4px rgb(0 0 0 / 0.2);
 `;
 
-const NewsDiv = styled.div`
+const NewsDiv = styled(motion.div)`
   display: flex;
   flex-direction: column;
   position: relative;
@@ -77,6 +77,7 @@ export const BestCourse = ({ course }) => {
           onClick={() => {
             navigate(`/courseDetail/${course.courseId}`);
           }}
+          whileTap={{ scale: 1.2 }}
         >
           <Box gap="10px" align="center">
             <img
@@ -178,6 +179,7 @@ export const NewsBox = ({ news }) => {
       onClick={() => {
         window.open(news.link, "_blank");
       }}
+      whileTap={{ scale: 1.2 }}
     >
       <Box height="50%" width="100%">
         <img

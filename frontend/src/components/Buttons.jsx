@@ -1,7 +1,7 @@
 import { styled } from "@mui/material/styles";
 import { Button } from "@mui/material";
-
-export const BootstrapButton = styled(Button)({
+import { motion } from "framer-motion";
+export const BootstrapButton = styled(motion.button)({
   boxShadow: "4px 4px 4px -4px rgb(0 0 0 / 0.2)",
   textTransform: "none",
   fontSize: 18,
@@ -11,9 +11,10 @@ export const BootstrapButton = styled(Button)({
   width: "80%",
   height: "56px",
   margin: "10px",
+  border: "none",
+  fontFamily: `gwtt, sans-serif`,
   backgroundColor: "#64CCBE",
   borderRadius: "10px",
-  fontFamily: ["sans-serif"],
   "&:hover": {
     backgroundColor: "#64CCBE",
     boxShadow: "none",

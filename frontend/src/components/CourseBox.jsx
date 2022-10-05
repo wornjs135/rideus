@@ -60,7 +60,7 @@ export const CourseBox = ({
           borderRadius: "10px",
           boxShadow: "4px 4px 4px -4px rgb(0 0 0 / 0.2)",
           width: "90%",
-          height: "16vh",
+          height: "15%",
         }}
         background="white"
         pad={{ left: "medium", right: "medium", top: "small", bottom: "small" }}

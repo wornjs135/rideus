@@ -12,7 +12,8 @@ import {
   getUserRankSpeed,
   getUserRankTime,
 } from "../utils/api/rankApi";
-
+import { container } from "./Main";
+import { motion } from "framer-motion";
 const theme = {
   tab: {
     active: { color: "#black", background: undefined },
@@ -86,7 +87,15 @@ export const Rank = () => {
   if (loading) return <Spinner />;
   else
     return (
-      <Box width="100%" align="center">
+      <motion.div
+        initial="hidden"
+        animate="visible"
+        variants={container}
+        style={{
+          width: "100%",
+          align: "center",
+        }}
+      >
         <StyledText
           text="RANKING"
           size="20px"
@@ -230,6 +239,6 @@ export const Rank = () => {
             </Box>
           </Box>
         </Box>
-      </Box>
+      </motion.div>
     );
 };

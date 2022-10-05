@@ -45,7 +45,10 @@ export const ReviewBox = ({ review, score, starView, courseName }) => {
                 );
               })}
             </Box> */}
-            <StarBox score={score} starView={starView} />
+            <StarBox
+              score={score}
+              starView={parseFloat(score).toFixed(2) * 16}
+            />
           </Box>
         </Box>
         <img src={MoreBtn} style={{ marginRight: "9px" }} />

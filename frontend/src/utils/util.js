@@ -66,53 +66,43 @@ export const timeHandle = (time) => {
 };
 
 export const timeHandle2 = (time) => {
-  if (time < 60) return `${time}m`;
-  else if (time < 3600) return `${parseInt(time / 60)}h ${time % 60}m`;
+  if (time < 60) return `${time}M`;
+  else if (time < 3600) return `${parseInt(time / 60)}H ${time % 60}M`;
 };
 
-
-export const TimeBox = ({time}) => {
-  if (time < 60) return  (<Box direction="row" align="end">
-  <StyledText
-  size="17px"
-  text={time}
-  weight="bold"
-/>
-<StyledText
-  size="13px"
-  text="m"
-  weight="bold"
-/>
-  </Box>);
-  else return   (<Box direction="row" align="end">
-      <StyledText
-  size="17px"
-  text={parseInt(time / 60)}
-  weight="bold"
-/>
-<StyledText
-  size="13px"
-  text="h "
-  weight="bold"
-/>
-<Box width="6px" />
-  <StyledText
-  size="17px"
-  text={time % 60}
-  weight="bold"
-/>
-<StyledText
-  size="13px"
-  text="m"
-  weight="bold"
-/>
-  </Box>);
+export const TimeBox = ({ time }) => {
+  if (time < 60)
+    return (
+      <Box direction="row" align="end">
+        <StyledText size="17px" text={time} weight="bold" />
+        <StyledText size="13px" text="M" weight="bold" />
+      </Box>
+    );
+  else
+    return (
+      <Box direction="row" align="end">
+        <StyledText size="17px" text={parseInt(time / 60)} weight="bold" />
+        <StyledText size="13px" text="H " weight="bold" />
+        <Box width="6px" />
+        <StyledText size="17px" text={time % 60} weight="bold" />
+        <StyledText size="13px" text="M" weight="bold" />
+      </Box>
+    );
 };
-
 
 export const expectTimeHandle = (time) => {
   if (time < 60) return `${parseInt(time)}분`;
   else return `${parseInt(time / 60)}시간 ${parseInt(time % 60)}분`;
+};
+
+export const expectTimeHandle2 = (time) => {
+  if (time < 60) return `${parseInt(time)}초`;
+  else if (time < 3600)
+    return `${parseInt(time / 60)}분 ${parseInt(time % 60)}초`;
+  else
+    return `${parseInt(time / 3600)}시간 ${parseInt(
+      (time - parseInt(time / 3060) * 3600) / 60
+    )}분`;
 };
 
 export const distanceHandle = (dis) => {

@@ -6,6 +6,7 @@ import { RankProfile } from "./RankProfile";
 import Profile from "../assets/images/profile.png";
 import { RankBox } from "./RankBox";
 import { ReviewBox } from "./ReviewBox";
+import { motion } from "framer-motion";
 export const CourseReviewRank = ({
   open,
   onDismiss,
@@ -46,44 +47,48 @@ export const CourseReviewRank = ({
           border={false}
           background="rgba(250, 250, 250, 0.93)"
         >
-          <Box
-            border={false}
-            justify="center"
-            align="center"
-            background={value === 0 ? "#64CCBE" : "white"}
-            width="50%"
-            height="4vh"
-            focusIndicator={false}
+          <motion.div
+            style={{
+              border: "none",
+              justifyContent: "center",
+              textAlign: "center",
+              background: value === 0 ? "#64CCBE" : "white",
+              width: "50%",
+              height: "4vh",
+              fontSize: "16px",
+              fontWeight: "bold",
+              color: value === 0 ? "white" : "black",
+              display: "flex",
+              alignItems: "center",
+            }}
             onClick={() => {
               setValue(0);
             }}
+            whileTap={{ scale: 1.2 }}
           >
-            <StyledText
-              text="랭킹"
-              size="16px"
-              weight="bold"
-              color={value === 0 ? "white" : "black"}
-            />
-          </Box>
-          <Box
-            border={false}
-            justify="center"
-            align="center"
-            background={value === 1 ? "#64CCBE" : "white"}
-            width="50%"
-            height="4vh"
-            focusIndicator={false}
+            랭킹
+          </motion.div>
+          <motion.div
+            style={{
+              border: "none",
+              justifyContent: "center",
+              textAlign: "center",
+              background: value === 1 ? "#64CCBE" : "white",
+              width: "50%",
+              height: "4vh",
+              fontSize: "16px",
+              fontWeight: "bold",
+              color: value === 1 ? "white" : "black",
+              display: "flex",
+              alignItems: "center",
+            }}
             onClick={() => {
               setValue(1);
             }}
+            whileTap={{ scale: 1.2 }}
           >
-            <StyledText
-              text="리뷰"
-              size="16px"
-              weight="bold"
-              color={value === 1 ? "white" : "black"}
-            />
-          </Box>
+            리뷰
+          </motion.div>
         </Box>
       }
       snapPoints={({ maxHeight }) => [maxHeight / 8, maxHeight * 0.6]}

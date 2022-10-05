@@ -245,7 +245,10 @@ export const CourseDetail = () => {
           direction="row"
           justify="between"
           width="90%"
-          margin={{ top: "10px", bottom: "10px" }}
+          margin={{ top: "15px", bottom: "15px" }}
+          style={{
+            maxHeight: "10vh",
+          }}
         >
           <BackButton
             onClick={() => {
@@ -311,9 +314,7 @@ export const CourseDetail = () => {
                       height: 41,
                     }, // 마커이미지의 크기입니다
                   }}
-                >
-                  <StyledText text="시작, 종점" style={{}} />
-                </MapMarker>
+                ></MapMarker>
               ) : (
                 <MapMarker
                   position={
@@ -334,9 +335,15 @@ export const CourseDetail = () => {
           )}
         </Box>
         <Box direction="row" justify="between" width="90%">
-          <Box width="25%" direction="row" align="center" />
-          <StyledText text={course.courseName} size="24px" weight="bold" />
-          <Box width="25%" direction="row" align="center" justify="end">
+          <Box width="13%" direction="row" align="center" />
+          <StyledText
+            text={course.courseName}
+            size="24px"
+            style={{
+              fontFamily: `gwtt, sans-serif`,
+            }}
+          />
+          <Box width="13%" direction="row" align="center" justify="end">
             <img
               src={bmk ? Bookmark : BookmarkBlank}
               width="25px"
@@ -348,8 +355,8 @@ export const CourseDetail = () => {
             <StyledText text={course.likeCount} />
           </Box>
         </Box>
-        <Box direction="row" justify="between" width="90%">
-          <Box width="40%">
+        <Box direction="row" justify="between" width="90%" height="10%">
+          <Box width="30%" justify="end">
             <img
               src={course.imageUrl ? course.imageUrl : NoImage}
               width="100%"
@@ -357,7 +364,7 @@ export const CourseDetail = () => {
               style={{ borderRadius: "10px", objectFit: "cover" }}
             />
           </Box>
-          <Box gap="small" align="end" width="50%">
+          <Box align="end" gap="medium" width="50%">
             <StarBox
               score={course.starAvg}
               starView={parseFloat(course.starAvg).toFixed(1) * 16}
@@ -372,7 +379,6 @@ export const CourseDetail = () => {
                 paddingLeft: "10px",
                 paddingRight: "10px",
               }}
-              weight="bold"
             />
             <StyledText
               text={"예상 시간 : " + expectTimeHandle(course.expectedTime)}
@@ -383,7 +389,6 @@ export const CourseDetail = () => {
                 paddingLeft: "10px",
                 paddingRight: "10px",
               }}
-              weight="bold"
             />
             <StyledText
               text={
@@ -396,7 +401,6 @@ export const CourseDetail = () => {
                 paddingLeft: "10px",
                 paddingRight: "10px",
               }}
-              weight="bold"
             />
           </Box>
         </Box>
@@ -405,6 +409,7 @@ export const CourseDetail = () => {
           onClick={() => {
             setStart(true);
           }}
+          whileTap={{ scale: 1.2 }}
         >
           주행 시작
         </BootstrapButton>

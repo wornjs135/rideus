@@ -15,6 +15,8 @@ import { useNavigate } from "react-router-dom";
 import { getAllCourse, getRecommendationCourses } from "../utils/api/courseApi";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { categorys } from "../utils/util";
+import { motion } from "framer-motion";
+import { container } from "./Main";
 
 export const theme = createTheme({
   status: {
@@ -124,7 +126,15 @@ export const CourseList = () => {
   if (loading) return <Spinner />;
   else
     return (
-      <Box align="center" width="100%">
+      <motion.div
+        style={{
+          align: "center",
+          width: "100%",
+        }}
+        initial="hidden"
+        animate="visible"
+        variants={container}
+      >
         {/* 추천코스, 검색 버튼 */}
         <Box
           width="100%"
@@ -323,6 +333,6 @@ export const CourseList = () => {
             });
           }}
         /> */}
-      </Box>
+      </motion.div>
     );
 };

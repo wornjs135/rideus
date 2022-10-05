@@ -20,7 +20,8 @@ import {
   expectTimeHandle,
   renameObjectKey,
 } from "../utils/util";
-
+import { motion } from "framer-motion";
+import { container } from "./Main";
 export const MyPage = () => {
   const navigate = useNavigate();
   const [recentRides, setRecentRides] = useState([]);
@@ -72,7 +73,16 @@ export const MyPage = () => {
   if (loading) return <Spinner />;
   else
     return (
-      <Box width="100vw" justify="center" margin="0 auto" gap="small">
+      <motion.div
+        initial="hidden"
+        animate="visible"
+        variants={container}
+        style={{
+          width: "100vw",
+          justify: "center",
+          margin: "0 auto",
+        }}
+      >
         {/* 자전거사진, 멘트, 버튼 */}
 
         <Box align="center" justify="between">
@@ -258,6 +268,6 @@ export const MyPage = () => {
             </Box>
           </Box>
         </Box>
-      </Box>
+      </motion.div>
     );
 };
