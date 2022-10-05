@@ -51,7 +51,7 @@ public class Record extends BaseEntity {
     public static Record from(Member findMember, Course findCourse, FinishRiddingRequest request, List<Coordinate> myCoordinates, List<Coordinate> courseCoordinates, RideRoom rideRoom) {
         Record record = new Record();
         record.id = request.getRecordId();
-        record.recordDistance = request.getDistance();
+        record.recordDistance = request.getDistance() / 1000;
         record.recordTime = request.getTime();
         record.recordTimeMinute = request.getTimeMinute();
         record.recordSpeedAvg = request.getSpeedAvg();

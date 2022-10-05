@@ -65,7 +65,7 @@ public class Member extends BaseEntity {
     }
 
     public void updateRecord(Double distance, Double time) {
-        this.totalDistance += distance;
+        this.totalDistance += distance / 1000;
         this.totalTime = String.valueOf(Double.parseDouble(this.totalTime) + time);
     }
 }
