@@ -235,7 +235,6 @@ export const Main = () => {
           <Box align="start" width="100%" margin={{ top: "large" }}>
             <Box pad={{ left: "20px" }}>
               <StyledText text={"인기 코스"} weight="bold" size="18px" />
-                <SportsScoreIcon/>
             </Box>
             {/* 인기코스 리스트 */}
             <Box direction="row" overflow="scroll">
