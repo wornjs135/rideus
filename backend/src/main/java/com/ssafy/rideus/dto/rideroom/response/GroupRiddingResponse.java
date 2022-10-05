@@ -14,4 +14,5 @@ public class GroupRiddingResponse {
     private String lat;
     private String lng;
     private String profileImageUrl;
+    private String color;
 }

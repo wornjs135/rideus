@@ -86,7 +86,7 @@ public class RideService {
                     groupRiddingResponse.setMemberId(member.getMemberId());
                     groupRiddingResponse.setNickname(member.getNickname());
                     groupRiddingResponse.setProfileImageUrl(member.getProfileImageUrl());
-
+                    groupRiddingResponse.setColor(member.getColor());
                     return groupRiddingResponse;
                 }
             }
