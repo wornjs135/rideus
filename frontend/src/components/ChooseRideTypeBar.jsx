@@ -95,26 +95,27 @@ export const ChooseRideTypeBar = ({ open, onDismiss }) => {
             //     roomInfo: undefined,
             //   },
             // });
-            startRidding(
-              (response) => {
-                console.log(response);
-                navigate("/ride", {
-                  state: {
-                    courseName: "나만의 길",
-                    rideType: "single",
-                    courseType: "my",
-                    recordId: response.data.recordId,
-                    coordinates: undefined,
-                    checkPoints: undefined,
-                    courseId: undefined,
-                    roomInfo: undefined,
-                  },
-                });
+            // startRidding(
+            //   (response) => {
+            //     console.log(response);
+               
+            //   },
+            //   (fail) => {
+            //     console.log(fail);
+            //   }
+            // );
+            navigate("/ride", {
+              state: {
+                courseName: "나만의 길",
+                rideType: "single",
+                courseType: "my",
+                recordId: undefined,
+                coordinates: undefined,
+                checkPoints: undefined,
+                courseId: undefined,
+                roomInfo: undefined,
               },
-              (fail) => {
-                console.log(fail);
-              }
-            );
+            });
           }}
           children={
             <Box width="145px" align="center" style={{ borderRadius: "8px" }}>
@@ -166,26 +167,27 @@ export const ChooseSoloGroupBar = ({
       >
         <GBtn
           onClick={() => {
-            startRidding(
-              (response) => {
-                console.log(response);
-                navigate("/ride", {
-                  state: {
-                    courseName: title,
-                    rideType: "single",
-                    courseType: "course",
-                    recordId: response.data.recordId,
-                    coordinates: coordinates,
-                    checkPoints: checkPoints,
-                    courseId: courseId,
-                    roomInfo: undefined,
-                  },
-                });
+            // startRidding(
+            //   (response) => {
+            //     console.log(response);
+                
+            //   },
+            //   (fail) => {
+            //     console.log(fail);
+            //   }
+            // );
+            navigate("/ride", {
+              state: {
+                courseName: title,
+                rideType: "single",
+                courseType: "course",
+                recordId: undefined,
+                coordinates: coordinates,
+                checkPoints: checkPoints,
+                courseId: courseId,
+                roomInfo: undefined,
               },
-              (fail) => {
-                console.log(fail);
-              }
-            );
+            });
             // navigate("/ride", {
             //   state: {
             //     courseName: title,
@@ -226,26 +228,27 @@ export const ChooseSoloGroupBar = ({
                   nickname: response.data.nickname,
                   rideRoomId: response.data.rideRoomId,
                 };
-                startRidding(
-                  (response2) => {
-                    console.log(response2);
-                    navigate("/ride", {
-                      state: {
-                        courseName: title,
-                        rideType: "group",
-                        courseType: "course",
-                        recordId: response2.data.recordId,
-                        coordinates: coordinates,
-                        checkPoints: checkPoints,
-                        courseId: courseId,
-                        roomInfo: roomInfo,
-                      },
-                    });
+                navigate("/ride", {
+                  state: {
+                    courseName: title,
+                    rideType: "group",
+                    courseType: "course",
+                    recordId: undefined,
+                    coordinates: coordinates,
+                    checkPoints: checkPoints,
+                    courseId: courseId,
+                    roomInfo: roomInfo,
                   },
-                  (fail) => {
-                    console.log(fail);
-                  }
-                );
+                });
+                // startRidding(
+                //   (response2) => {
+                //     console.log(response2);
+       
+                //   },
+                //   (fail) => {
+                //     console.log(fail);
+                //   }
+                // );
               },
               (fail) => {
                 console.log(fail);

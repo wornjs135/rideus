@@ -252,8 +252,18 @@ export const Main = () => {
           </Box>
           {/*  추천 코스 */}
           <Box align="start" width="100%" margin={{ top: "large" }}>
-            <Box pad={{ left: "20px" }}>
+            <Box pad={{ left: "20px" }} direction="row">
               <StyledText text="주변 코스" weight="bold" size="18px" />
+              <Box direction="row">
+                <Box direction="row">
+                    <Box></Box>
+                    <StyledText text="코스 길이" />
+                </Box>
+                <Box direction="row">
+                <Box></Box>
+                    <StyledText text="예상 시간" />
+                </Box>
+              </Box>
             </Box>
             {/* 인기코스 리스트 */}
             <Box direction="row" overflow="scroll">
