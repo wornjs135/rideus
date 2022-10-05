@@ -391,7 +391,7 @@ export const Main = () => {
                         color: "white",
                         backgroundColor: "#64ccbe",
                         padding: "8px",
-                        fontSize: "12px",
+                        fontSize: "11px",
                         margin: "0px 8px 12px 0px",
                         border: "1px solid #ebebeb",
                         borderRadius: "16px",
