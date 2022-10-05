@@ -7,10 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class RecordTotalResponse {
-    private Double total_time;
+    private String total_time;
     private Double total_distance;
 
-    public RecordTotalResponse(Double total_time, Double total_distance) {
+    public RecordTotalResponse(String total_time, Double total_distance) {
         this.total_time = total_time;
         this.total_distance = total_distance;
     }
