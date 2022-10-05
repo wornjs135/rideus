@@ -2,7 +2,7 @@ import styled from "styled-components";
 import {StyledText} from "./Common";
 import {Box} from "grommet";
 import {Notes} from "grommet-icons";
-import {expectTimeHandle} from "../utils/util";
+import {distanceHandle, distanceHandleM, expectTimeHandle, expectTimeHandle2} from "../utils/util";
 import {useNavigate} from "react-router-dom";
 
 const CourseBox = styled.div`
@@ -58,7 +58,7 @@ export const MyPageCourse = ({course, nav}) => {
 
                 <Box align={"end"}>
                     <StyledText
-                        text={course?.distance + "km 주행"}
+                        text={distanceHandleM(course?.distance) + " 주행"}
                         style={{
                             backgroundColor: "#BDE0EF",
                             borderRadius: "10px",
@@ -70,7 +70,7 @@ export const MyPageCourse = ({course, nav}) => {
                         weight="bold"
                     />
                     <StyledText
-                        text={expectTimeHandle(course?.expectedTime) + " 주행"}
+                        text={expectTimeHandle2(course?.expectedTime) + " 주행"}
                         style={{
                             backgroundColor: "#F8F38F",
                             borderRadius: "10px",
