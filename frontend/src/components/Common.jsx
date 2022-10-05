@@ -123,7 +123,7 @@ export const NavBar = () => {
           opacity: opacity,
           transition: "all 0.35s",
           visibility: show,
-          maxWidth:"500px",
+          maxWidth: "500px",
         }}
         width="100%"
         direction="row"
@@ -270,7 +270,7 @@ export const StarBox = ({ score, starView }) => {
           // align="center"
           style={{
             width: starView,
-            height: "16px",
+            height: "14px",
             overflow: "hidden",
           }}
         >
@@ -279,8 +279,8 @@ export const StarBox = ({ score, starView }) => {
             alt="별"
             src={Stars}
             style={{
-              height: "16px",
-              width: "80px",
+              height: "14px",
+              width: "70px",
             }}
           />
         </div>
@@ -290,8 +290,8 @@ export const StarBox = ({ score, starView }) => {
           src={StarsBlank}
           style={{
             position: "absolute",
-            width: "80px",
-            height: "16px",
+            width: "70px",
+            height: "14px",
           }}
         />
       </Box>

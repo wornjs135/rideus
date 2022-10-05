@@ -25,7 +25,6 @@ const Layout = () => {
     <div className="rootRoute">
       <LogoHeader />
       <Outlet />
-      <Footer />
       <NavBar />
     </div>
   );

@@ -438,10 +438,11 @@ export const ReviewDialog = ({
     <Dialog open={open} onClose={handleClose}>
       <Box width="85vw" align="center" pad="small">
         <HeaderBox goBack={handleClose} title={title} />
-        <Box width="75%" justify="around" align="center">
+        <Box width="90%" justify="around" align="center" gap="medium">
           {/* 제목 */}
+          <CourseMap course={course} width="100%" height="20vh" />
           {/* 사진 */}
-          {img && <img src={img} width="75%" />}
+          {img && <img src={img} width="100%" />}
           {/* 별점 */}
           <StarBox score={score} starView={starView} />
           {/* 내용 */}
@@ -455,7 +456,7 @@ export const ReviewDialog = ({
               );
             })}
           </Box>
-          <CourseMap course={course} width="100%" height="40vh" />
+
           {/* 하단 버튼 */}
           {/* <ExitButton onClick={handleClose}>{cancel}</ExitButton> */}
         </Box>

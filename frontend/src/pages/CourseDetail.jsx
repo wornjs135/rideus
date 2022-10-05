@@ -1,6 +1,11 @@
 import { Box, Spinner } from "grommet";
 import React, { useEffect, useState } from "react";
-import { Map, MapMarker, Polyline } from "react-kakao-maps-sdk";
+import {
+  CustomOverlayMap,
+  Map,
+  MapMarker,
+  Polyline,
+} from "react-kakao-maps-sdk";
 import { CourseMap, StarBox, StyledText } from "../components/Common";
 import Stars from "../assets/images/stars.png";
 import StarsBlank from "../assets/images/stars_blank.png";
@@ -306,7 +311,7 @@ export const CourseDetail = () => {
                     }, // 마커이미지의 크기입니다
                   }}
                 >
-                  <div style={{ color: "#000" }}>시작, 종점</div>
+                  <StyledText text="시작, 종점" style={{}} />
                 </MapMarker>
               ) : (
                 <MapMarker

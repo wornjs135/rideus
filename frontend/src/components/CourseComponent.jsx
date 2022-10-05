@@ -16,7 +16,7 @@ const CourseBox = styled.div`
   flex-direction: column;
   position: relative;
   width: 141px;
-  height: 164px;
+  height: 144px;
   margin-right: 15px;
   margin-bottom: 10px;
   margin-top: 5px;
@@ -75,76 +75,74 @@ export const BestCourse = ({ course }) => {
             navigate(`/courseDetail/${course.courseId}`);
           }}
         >
-          <Box gap="medium">
-            <Box>
-              <StyledText
-                text={course.courseName}
-                weight="bold"
-                color="#000000"
-                style={{
-                  align: "center",
-                  width: "90%",
-                  height: "20px",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                  display: "block",
-                }}
-              />
-
-              <StarBox starView={parseFloat(course.starAvg) * 16} />
-            </Box>
+          <Box gap="10px" align="center">
             <img
               src={course.imageUrl ? course.imageUrl : NoImage}
               width="140px"
               height="85px"
               style={{ borderRadius: "10px", objectFit: "cover" }}
             />
+            <StyledText
+              text={course.courseName}
+              weight="bold"
+              color="#000000"
+              style={{
+                textAlign: "center",
+                width: "90%",
+                height: "20px",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+                display: "block",
+              }}
+            />
           </Box>
-
+          {/* <Box margin={{ left: "30px" }}>
+            <StarBox starView={parseFloat(course.starAvg) * 14} />
+          </Box> */}
           <Box
-            direction="row"
             justify="end"
+            direction="row"
             gap="small"
             margin={{ top: "10px" }}
+            width="100%"
           >
-            <Box
-              justify="center"
-              align="center"
-              direction="row"
-              gap="4px"
-              style={{
-                backgroundColor: "#BDE0EF",
-                borderRadius: "10px",
-                padding: "0px 4px",
-                // margin: "3px",
-              }}
-            >
-              <StyledText
-                size="13px"
-                text={course.distance + "km"}
-                weight="bold"
-              />
-            </Box>
-
-            <Box
-              justify="center"
-              align="center"
-              direction="row"
-              gap="4px"
+            <StyledText
+              size="13px"
+              text={timeHandle2(course.expectedTime)}
+              weight="bold"
               style={{
                 backgroundColor: "#F8F38F",
                 borderRadius: "10px",
                 // margin: "3px",
                 padding: "0px 4px",
               }}
+            />
+
+            <StyledText
+              size="13px"
+              text={course.distance + "km"}
+              weight="bold"
+              style={{
+                backgroundColor: "#BDE0EF",
+                borderRadius: "10px",
+                padding: "0px 4px",
+                // margin: "3px",
+              }}
+            />
+            {/* <Box
+              // align="center"
+              gap="4px"
+              
             >
-              <StyledText
-                size="13px"
-                text={timeHandle2(course.expectedTime)}
-                weight="bold"
-              />
+             
             </Box>
+            <Box
+              gap="4px"
+
+            >
+
+            </Box> */}
             {/* <StyledText
               text={
                 course.start.split(" ")[0] + " " + course.start.split(" ")[1]

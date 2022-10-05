@@ -224,19 +224,64 @@ export const Main = () => {
         </Box>
         {/* 인기코스, 월간코스, 인기태그 */}
         <Box
-          align="center"
+          align="end"
           justify="between"
           round={{ corner: "top", size: "large" }}
           background="#E0F7F4"
           border={{ color: "#E0F7F4", size: "small", side: "all" }}
         >
+          <Box
+            direction="row"
+            gap="medium"
+            margin={{
+              top: "10px",
+              right: "15px",
+            }}
+          >
+            <Box direction="row" align="center" gap="4px">
+              <StyledText
+                text="예상 시간"
+                size="12px"
+                weight="bold"
+                style={{
+                  backgroundColor: "#F8F38F",
+                  borderRadius: "10px",
+                  // margin: "3px",
+                  padding: "4px 6px",
+                }}
+              />
+            </Box>
+            <Box direction="row" align="center" gap="4px">
+              <StyledText
+                text="코스 길이"
+                size="12px"
+                weight="bold"
+                style={{
+                  backgroundColor: "#BDE0EF",
+                  borderRadius: "10px",
+                  // margin: "3px",
+                  padding: "0px 4px",
+                }}
+              />
+            </Box>
+          </Box>
           {/* 인기코스 */}
-          <Box align="start" width="100%" margin={{ top: "large" }}>
-            <Box pad={{ left: "20px" }}>
+          <Box
+            align="start"
+            width="100%"
+            margin={{ top: "large" }}
+            gap="medium"
+          >
+            <Box
+              direction="row"
+              width="100%"
+              justify="between"
+              pad={{ left: "30px", right: "20px" }}
+            >
               <StyledText text="인기 코스" weight="bold" size="18px" />
             </Box>
             {/* 인기코스 리스트 */}
-            <Box direction="row" overflow="scroll">
+            <Box direction="row" overflow="scroll" pad={{ left: "10px" }}>
               <StyledHorizonTable>
                 {popularCourses.length > 0
                   ? popularCourses.map((course, idx) => {
@@ -252,18 +297,13 @@ export const Main = () => {
           </Box>
           {/*  추천 코스 */}
           <Box align="start" width="100%" margin={{ top: "large" }}>
-            <Box pad={{ left: "20px" }} direction="row">
+            <Box
+              width="100%"
+              justify="between"
+              pad={{ left: "20px", right: "20px" }}
+              direction="row"
+            >
               <StyledText text="주변 코스" weight="bold" size="18px" />
-              <Box direction="row">
-                <Box direction="row">
-                    <Box></Box>
-                    <StyledText text="코스 길이" />
-                </Box>
-                <Box direction="row">
-                <Box></Box>
-                    <StyledText text="예상 시간" />
-                </Box>
-              </Box>
             </Box>
             {/* 인기코스 리스트 */}
             <Box direction="row" overflow="scroll">
@@ -319,7 +359,15 @@ export const Main = () => {
                       key={tag.tagId}
                       color="#64CCBE"
                       weight="bold"
-                      style={{ marginRight: "10px" }}
+                      style={{
+                        color: "white",
+                        backgroundColor: "#64ccbe",
+                        padding: "8px",
+                        fontSize: "12px",
+                        margin: "0px 8px 12px 0px",
+                        border: "1px solid #ebebeb",
+                        borderRadius: "16px",
+                      }}
                     />
                   );
                 })}

@@ -126,7 +126,14 @@ export const CourseList = () => {
     return (
       <Box>
         {/* 추천코스, 검색 버튼 */}
-        <Box align="center">
+        <Box
+          align="center"
+          margin={{
+            top: "10px",
+            bottom: "15px",
+          }}
+          gap="15px"
+        >
           <StyledText text="추천 코스" weight="bold" size="24px" />
           <Box direction="row">
             <Paper
