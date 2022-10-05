@@ -49,7 +49,7 @@ public class Batch {
 //    }
 //
 //    // 랭킹 갱신
-//    @Scheduled(cron = "0 0 4 ? ? 1") // 매주 월요일 오전 4시
+//    @Scheduled(cron = "0 0 4 1 * *") // 매달 1일 오전 4시
 //    public void updateRanking() {
 //        // cache 초기화
 //        RestTemplate restTemplate = new RestTemplate();

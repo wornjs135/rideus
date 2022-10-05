@@ -22,7 +22,8 @@ public class RankService {
     private final RecordRepository recordRepository;
 
     public List<RankTimeResponseDto> getRankTotalTime() {
-        List<RankTimeResponseDtoInterface> rankTimeResponseDtoInterfaces = memberRepository.searchRankTotalTime();
+//        List<RankTimeResponseDtoInterface> rankTimeResponseDtoInterfaces = memberRepository.searchRankTotalTime();
+        List<RankTimeResponseDtoInterface> rankTimeResponseDtoInterfaces = recordRepository.searchRankTotalTime();
 
         return rankTimeResponseDtoInterfaces
                 .stream()
@@ -31,7 +32,8 @@ public class RankService {
     }
 
     public List<RankDistanceResponseDto> getRankTotalDistance() {
-        List<RankDistanceResponseDtoInterface> rankDistanceResponseDtoInterfaces = memberRepository.searchRankTotalDistance();
+//        List<RankDistanceResponseDtoInterface> rankDistanceResponseDtoInterfaces = memberRepository.searchRankTotalDistance();
+        List<RankDistanceResponseDtoInterface> rankDistanceResponseDtoInterfaces = recordRepository.searchRankTotalDistance();
 
         return rankDistanceResponseDtoInterfaces
                 .stream()
