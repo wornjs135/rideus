@@ -29,16 +29,19 @@ const CourseBox = styled.div`
 `;
 
 const NewsDiv = styled.div`
+  display: flex;
+  flex-direction: column;
   position: relative;
-  align-items: center;
-  width: 153px;
-  text-align: center;
-  height: 164px;
+  width: 141px;
+  height: 144px;
   margin-right: 15px;
   margin-bottom: 10px;
   margin-top: 5px;
+  padding: 10px;
+  padding-top: 14px;
   background-color: white;
   border-radius: 15px;
+  justify-content: space-between;
   box-shadow: 4px 4px 4px -4px rgb(0 0 0 / 0.2);
 `;
 
@@ -180,11 +183,9 @@ export const NewsBox = ({ news }) => {
         <img
           src={news.image ? news.image : NoNews}
           alt=""
-          style={{
-            borderRadius: "15px 15px 0 0",
-          }}
-          width="100%"
-          height="100%"
+          width="140px"
+          height="85px"
+          style={{ borderRadius: "10px", objectFit: "cover" }}
         />
       </Box>
       <Box align="center">

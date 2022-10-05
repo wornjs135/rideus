@@ -4,11 +4,11 @@ import { Button } from "@mui/material";
 export const BootstrapButton = styled(Button)({
   boxShadow: "4px 4px 4px -4px rgb(0 0 0 / 0.2)",
   textTransform: "none",
-  fontSize: 16,
+  fontSize: 18,
   fontWeight: "bold",
   padding: "6px 12px",
   color: "white",
-  width: "276px",
+  width: "80%",
   height: "56px",
   margin: "10px",
   backgroundColor: "#64CCBE",

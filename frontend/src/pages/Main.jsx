@@ -297,17 +297,22 @@ export const Main = () => {
             </Box>
           </Box>
           {/*  추천 코스 */}
-          <Box align="start" width="100%" margin={{ top: "large" }}>
+          <Box
+            align="start"
+            width="100%"
+            margin={{ top: "large" }}
+            gap="medium"
+          >
             <Box
               width="100%"
               justify="between"
-              pad={{ left: "20px", right: "20px" }}
+              pad={{ left: "30px", right: "20px" }}
               direction="row"
             >
               <StyledText text="주변 코스" weight="bold" size="18px" />
             </Box>
             {/* 인기코스 리스트 */}
-            <Box direction="row" overflow="scroll">
+            <Box direction="row" overflow="scroll" pad={{ left: "10px" }}>
               <StyledHorizonTable>
                 {nearCourses.length > 0
                   ? nearCourses.map((course, idx) => {
@@ -322,12 +327,22 @@ export const Main = () => {
             </Box>
           </Box>
           {/* 월간자전거 */}
-          <Box align="start" width="100%" margin={{ top: "large" }}>
-            <Box pad={{ left: "20px" }}>
+          <Box
+            align="start"
+            width="100%"
+            margin={{ top: "large" }}
+            gap="medium"
+          >
+            <Box
+              width="100%"
+              justify="between"
+              pad={{ left: "30px", right: "20px" }}
+              direction="row"
+            >
               <StyledText text="자전거 소식" weight="bold" size="18px" />
             </Box>
             {/* 월간자전거 리스트 */}
-            <Box direction="row" overflow="scroll">
+            <Box direction="row" overflow="scroll" pad={{ left: "10px" }}>
               <StyledHorizonTable>
                 {newses &&
                   newses.map((news, idx) => {
