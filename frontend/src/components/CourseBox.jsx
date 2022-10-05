@@ -1,4 +1,4 @@
-import { Box, Spinner } from "grommet";
+import { Avatar, Box, Spinner } from "grommet";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { StyledText } from "./Common";
@@ -6,7 +6,10 @@ import Bookmark from "../assets/images/bookmark.png";
 import NoImage from "../assets/images/noimage.jpg";
 import BookmarkBlank from "../assets/images/bookmark_blank.png";
 import { useNavigate } from "react-router-dom";
-import { expectTimeHandle } from "../utils/util";
+import { expectTimeHandle, timeHandle2 } from "../utils/util";
+import Clock from "../assets/icons/clock.svg";
+import Flag from "../assets/icons/flag.svg";
+import Mark from "../assets/icons/mark.svg";
 // {
 //   "bookmarkId": "string",
 //   "category": "string",
@@ -91,32 +94,72 @@ export const CourseBox = ({
           </Box>
           {/* 코스 데이터, 사진 */}
           <Box direction="row" width="100%" justify="between" align="center">
-            <Box gap="small">
-              <StyledText
-                text={"코스 길이 : " + distance + "km"}
+            <Box style={{ marginRight: "25px" }}>
+              <img
+                src={imageUrl ? imageUrl : NoImage}
+                width="140px"
+                height="75px"
+                style={{ borderRadius: "10px", objectFit: "cover" }}
+              />
+            </Box>
+            <Box gap="small" align="end">
+              <Box
+                justify="center"
+                align="center"
+                direction="row"
+                gap="4px"
                 style={{
                   backgroundColor: "#BDE0EF",
                   borderRadius: "10px",
+                  padding: "0px 4px",
                   // margin: "3px",
-                  fontSize: "12px",
-                  paddingLeft: "10px",
-                  paddingRight: "10px",
                 }}
-                weight="bold"
-              />
-              <StyledText
-                text={"예상 시간 : " + expectTimeHandle(expectedTime)}
+              >
+                <Avatar src={Flag} size="12px" />
+                <StyledText size="13px" text={distance + "km"} weight="bold" />
+              </Box>
+
+              <Box
+                justify="center"
+                align="center"
+                direction="row"
+                gap="4px"
                 style={{
                   backgroundColor: "#F8F38F",
                   borderRadius: "10px",
-                  fontSize: "12px",
-                  paddingLeft: "10px",
-                  paddingRight: "10px",
+                  // margin: "3px",
+                  padding: "0px 4px",
                 }}
-                weight="bold"
-              />
+              >
+                <Avatar src={Clock} size="12px" />
+                <StyledText
+                  size="13px"
+                  text={timeHandle2(expectedTime)}
+                  weight="bold"
+                />
+              </Box>
+              <Box
+                justify="center"
+                align="center"
+                direction="row"
+                gap="4px"
+                style={{
+                  backgroundColor: "#F4D4D4",
+                  borderRadius: "10px",
+                  // margin: "3px",
+                  padding: "0px 4px",
+                }}
+              >
+                <Avatar src={Mark} size="12px" />
+                <StyledText
+                  size="13px"
+                  text={start.split(" ")[0]}
+                  weight="bold"
+                />
+              </Box>
+              {/* 
               <StyledText
-                text={start.split(" ")[0] + " " + start.split(" ")[1]}
+                text={start.split(" ")[0]}
                 style={{
                   backgroundColor: "#F4D4D4",
                   borderRadius: "10px",
@@ -125,15 +168,7 @@ export const CourseBox = ({
                   paddingRight: "10px",
                 }}
                 weight="bold"
-              />
-            </Box>
-            <Box style={{ marginRight: "25px" }}>
-              <img
-                src={imageUrl ? imageUrl : NoImage}
-                width="70px"
-                height="70px"
-                style={{ borderRadius: "10px" }}
-              />
+              /> */}
             </Box>
           </Box>
           {/* 사진 */}
@@ -143,7 +178,7 @@ export const CourseBox = ({
           {tags &&
             tags.map((t, idx) => {
               return (
-                <StyledText text={`#${t.tagName} `} key={t.tagId} size="12px" />
+                <StyledText text={`#${t.tagName} `} key={t.tagId} size="11px" />
               );
             })}
         </Box>

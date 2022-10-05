@@ -344,51 +344,48 @@ export const MapDialog = ({
             </Box>
             {type === "detail" && (
               <ThemeProvider theme={theme}>
-                <Box width="100%" align="center">
-                  <Box
-                    direction="row"
-                    justify="start"
-                    overflow="scroll"
-                    margin="medium"
-                    height="70px"
-                  >
-                    <StyledHorizonTable>
-                      {markerCategorys.map((cat, idx) => {
-                        return (
-                          <MBtn
-                            key={idx}
-                            variant="contained"
-                            color={selected === idx ? cat.name : "deactive"}
-                            onClick={() => {
-                              setSelected(idx);
-                            }}
-                            style={{
-                              fontWeight: "bold",
-                              width: "55px",
-                              height: "55px",
-                              borderRadius: "10px",
-                              marginRight: "10px",
-                              fontSize: "12px",
-                            }}
-                          >
-                            <Box align="center" style={{ fontSize: "12px" }}>
-                              {cat.icon}
-                              {cat.name}
-                            </Box>
-                          </MBtn>
-                        );
-                      })}
-                    </StyledHorizonTable>
-                  </Box>
-
-                  <img
-                    width="50px"
-                    src={WeatherBtn}
-                    onClick={() => {
-                      setOpWeather(true);
-                    }}
-                  />
+                <Box
+                  direction="row"
+                  justify="start"
+                  overflow="scroll"
+                  margin="medium"
+                  height="70px"
+                >
+                  <StyledHorizonTable>
+                    {markerCategorys.map((cat, idx) => {
+                      return (
+                        <MBtn
+                          key={idx}
+                          variant="contained"
+                          color={selected === idx ? cat.name : "deactive"}
+                          onClick={() => {
+                            setSelected(idx);
+                          }}
+                          style={{
+                            fontWeight: "bold",
+                            width: "55px",
+                            height: "55px",
+                            borderRadius: "10px",
+                            marginRight: "10px",
+                            fontSize: "12px",
+                          }}
+                        >
+                          <Box align="center" style={{ fontSize: "12px" }}>
+                            {cat.icon}
+                            {cat.name}
+                          </Box>
+                        </MBtn>
+                      );
+                    })}
+                  </StyledHorizonTable>
                 </Box>
+                <img
+                  width="50px"
+                  src={WeatherBtn}
+                  onClick={() => {
+                    setOpWeather(true);
+                  }}
+                />
               </ThemeProvider>
             )}
           </Box>
