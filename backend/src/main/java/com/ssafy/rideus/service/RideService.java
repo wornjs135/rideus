@@ -175,9 +175,10 @@ public class RideService {
 
         Query query = new Query().addCriteria(Criteria.where("_id").is(recordId));
         Update update = new Update();
-        update.set("coordinates", saveCoordinatesRequest.getCoordinates());
+//        update.set("coordinates", saveCoordinatesRequest.getCoordinates());
+        update.push("coordinates").each(saveCoordinatesRequest.getCoordinates());
 //        log.info("주행 좌표 리스트에 추가: " + mongoRecord.getCoordinates());
-        mongoTemplate.updateMulti(query, update, MongoRecord.class);
+        mongoTemplate.updateFirst(query, update, "record");
 
 //        MongoRecord save = mongoRecordRepository.save(mongoRecord);
 //        log.info("몽고 DB에 들어간 거: " + save);
