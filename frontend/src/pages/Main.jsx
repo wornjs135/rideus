@@ -24,7 +24,7 @@ import {
 } from "../utils/api/mainApi";
 import { useGeolocated } from "react-geolocated";
 import SportsScoreIcon from "@mui/icons-material/SportsScore";
-
+import { motion } from "framer-motion";
 // 코스 구조
 // [
 //   {
@@ -43,7 +43,17 @@ import SportsScoreIcon from "@mui/icons-material/SportsScore";
 //     ]
 //   }
 // ]
-
+export const container = {
+  hidden: { opacity: 1, scale: 0 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      delayChildren: 0.3,
+      staggerChildren: 0.2,
+    },
+  },
+};
 export const Main = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -167,7 +177,16 @@ export const Main = () => {
   if (loading) return <Spinner />;
   else
     return (
-      <Box width="100vw" justify="center" background="#fffff">
+      <motion.div
+        style={{
+          width: "100vw",
+          justify: "center",
+          background: "#fffff",
+        }}
+        initial="hidden"
+        animate="visible"
+        variants={container}
+      >
         {/* 자전거사진, 멘트, 버튼 */}
         <Box
           align="center"
@@ -180,26 +199,22 @@ export const Main = () => {
             {/* <img src={test1} /> */}
           </Box>
 
-          <Button
+          <motion.button
             style={{
               boxShadow: "4px 4px 4px -4px rgb(0 0 0 / 0.2)",
               textTransform: "none",
-              fontSize: 20,
-              fontWeight: "bold",
+              fontSize: 24,
               padding: "6px 12px",
               color: "white",
               width: "276px",
               height: "56px",
               margin: "10px",
+              border: "none",
               backgroundColor: "#64CCBE",
               borderRadius: "10px",
-              fontFamily: ["sans-serif"],
-              "&:hover": {
-                backgroundColor: "#64CCBE",
-                boxShadow: "none",
-                color: "white",
-              },
+              fontFamily: `gwtt, sans-serif`,
             }}
+            whileTap={{ scale: 1.2 }}
             onClick={() => {
               // if (User === undefined) {
               //   alert("로그인 하세요!");
@@ -212,7 +227,7 @@ export const Main = () => {
             }}
           >
             RIDE!
-          </Button>
+          </motion.button>
           {/* <Button
           variant="contained"
           size="large"
@@ -243,7 +258,6 @@ export const Main = () => {
               <StyledText
                 text="예상 시간"
                 size="12px"
-                weight="bold"
                 style={{
                   backgroundColor: "#F8F38F",
                   borderRadius: "10px",
@@ -256,7 +270,6 @@ export const Main = () => {
               <StyledText
                 text="코스 길이"
                 size="12px"
-                weight="bold"
                 style={{
                   backgroundColor: "#BDE0EF",
                   borderRadius: "10px",
@@ -279,7 +292,7 @@ export const Main = () => {
               justify="between"
               pad={{ left: "30px", right: "20px" }}
             >
-              <StyledText text="인기 코스" weight="bold" size="18px" />
+              <StyledText text="인기 코스" size="18px" />
             </Box>
             {/* 인기코스 리스트 */}
             <Box direction="row" overflow="scroll" pad={{ left: "10px" }}>
@@ -297,17 +310,22 @@ export const Main = () => {
             </Box>
           </Box>
           {/*  추천 코스 */}
-          <Box align="start" width="100%" margin={{ top: "large" }}>
+          <Box
+            align="start"
+            width="100%"
+            margin={{ top: "large" }}
+            gap="medium"
+          >
             <Box
               width="100%"
               justify="between"
-              pad={{ left: "20px", right: "20px" }}
+              pad={{ left: "30px", right: "20px" }}
               direction="row"
             >
-              <StyledText text="주변 코스" weight="bold" size="18px" />
+              <StyledText text="주변 코스" size="18px" />
             </Box>
             {/* 인기코스 리스트 */}
-            <Box direction="row" overflow="scroll">
+            <Box direction="row" overflow="scroll" pad={{ left: "10px" }}>
               <StyledHorizonTable>
                 {nearCourses.length > 0
                   ? nearCourses.map((course, idx) => {
@@ -322,12 +340,22 @@ export const Main = () => {
             </Box>
           </Box>
           {/* 월간자전거 */}
-          <Box align="start" width="100%" margin={{ top: "large" }}>
-            <Box pad={{ left: "20px" }}>
-              <StyledText text="자전거 소식" weight="bold" size="18px" />
+          <Box
+            align="start"
+            width="100%"
+            margin={{ top: "large" }}
+            gap="medium"
+          >
+            <Box
+              width="100%"
+              justify="between"
+              pad={{ left: "30px", right: "20px" }}
+              direction="row"
+            >
+              <StyledText text="자전거 소식" size="18px" />
             </Box>
             {/* 월간자전거 리스트 */}
-            <Box direction="row" overflow="scroll">
+            <Box direction="row" overflow="scroll" pad={{ left: "10px" }}>
               <StyledHorizonTable>
                 {newses &&
                   newses.map((news, idx) => {
@@ -343,7 +371,7 @@ export const Main = () => {
           {/* 인기태그 */}
           <Box align="start" width="100%" margin={{ top: "large" }}>
             <Box pad={{ left: "20px" }}>
-              <StyledText text="인기 태그" weight="bold" size="18px" />
+              <StyledText text="인기 태그" size="18px" />
             </Box>
             {/* 인기태그 리스트 */}
             <Box
@@ -359,12 +387,11 @@ export const Main = () => {
                       text={`#${tag.tagName}`}
                       key={tag.tagId}
                       color="#64CCBE"
-                      weight="bold"
                       style={{
                         color: "white",
                         backgroundColor: "#64ccbe",
                         padding: "8px",
-                        fontSize: "12px",
+                        fontSize: "11px",
                         margin: "0px 8px 12px 0px",
                         border: "1px solid #ebebeb",
                         borderRadius: "16px",
@@ -376,6 +403,6 @@ export const Main = () => {
           </Box>
         </Box>
         <ChooseRideTypeBar open={open} onDismiss={onDismiss} />
-      </Box>
+      </motion.div>
     );
 };

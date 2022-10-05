@@ -24,6 +24,7 @@ import { getCourseRankTime } from "../utils/api/rankApi";
 import { expectTimeHandle } from "../utils/util";
 import styled from "styled-components";
 import Logo from "../assets/images/logo.png";
+import NoImage from "../assets/images/noimage.jpg";
 
 import BackBtn from "../assets/images/backButton.png";
 import { getCourseNearInfo } from "../utils/api/nearApi";
@@ -244,7 +245,10 @@ export const CourseDetail = () => {
           direction="row"
           justify="between"
           width="90%"
-          margin={{ top: "10px", bottom: "10px" }}
+          margin={{ top: "15px", bottom: "15px" }}
+          style={{
+            maxHeight: "10vh",
+          }}
         >
           <BackButton
             onClick={() => {
@@ -310,9 +314,7 @@ export const CourseDetail = () => {
                       height: 41,
                     }, // 마커이미지의 크기입니다
                   }}
-                >
-                  <StyledText text="시작, 종점" style={{}} />
-                </MapMarker>
+                ></MapMarker>
               ) : (
                 <MapMarker
                   position={
@@ -332,16 +334,16 @@ export const CourseDetail = () => {
             </Map>
           )}
         </Box>
-        <StyledText text={course.courseName} size="24px" weight="bold" />
         <Box direction="row" justify="between" width="90%">
-          <StarBox score={course.starAvg} starView={starView} />
-          <Box direction="row" align="center">
-            {/* <Button
-            children="북마크"
-            // onClick={() => {
-            //   check();
-            // }}
-          /> */}
+          <Box width="13%" direction="row" align="center" />
+          <StyledText
+            text={course.courseName}
+            size="24px"
+            style={{
+              fontFamily: `gwtt, sans-serif`,
+            }}
+          />
+          <Box width="13%" direction="row" align="center" justify="end">
             <img
               src={bmk ? Bookmark : BookmarkBlank}
               width="25px"
@@ -353,47 +355,61 @@ export const CourseDetail = () => {
             <StyledText text={course.likeCount} />
           </Box>
         </Box>
-
-        <Box gap="small" align="end" width="90%">
-          <StyledText
-            text={"코스 길이 : " + course.distance + "km"}
-            style={{
-              backgroundColor: "#BDE0EF",
-              borderRadius: "10px",
-              // margin: "3px",
-              fontSize: "12px",
-              paddingLeft: "10px",
-              paddingRight: "10px",
-            }}
-            weight="bold"
-          />
-          <StyledText
-            text={"예상 시간 : " + expectTimeHandle(course.expectedTime)}
-            style={{
-              backgroundColor: "#F8F38F",
-              borderRadius: "10px",
-              fontSize: "12px",
-              paddingLeft: "10px",
-              paddingRight: "10px",
-            }}
-            weight="bold"
-          />
-          <StyledText
-            text={course.start.split(" ")[0] + " " + course.start.split(" ")[1]}
-            style={{
-              backgroundColor: "#F4D4D4",
-              borderRadius: "10px",
-              fontSize: "12px",
-              paddingLeft: "10px",
-              paddingRight: "10px",
-            }}
-            weight="bold"
-          />
+        <Box direction="row" justify="between" width="90%" height="10%">
+          <Box width="30%" justify="end">
+            <img
+              src={course.imageUrl ? course.imageUrl : NoImage}
+              width="100%"
+              height="100%"
+              style={{ borderRadius: "10px", objectFit: "cover" }}
+            />
+          </Box>
+          <Box align="end" gap="medium" width="50%">
+            <StarBox
+              score={course.starAvg}
+              starView={parseFloat(course.starAvg).toFixed(1) * 16}
+            />
+            <StyledText
+              text={"코스 길이 : " + course.distance + "km"}
+              style={{
+                backgroundColor: "#BDE0EF",
+                borderRadius: "10px",
+                // margin: "3px",
+                fontSize: "12px",
+                paddingLeft: "10px",
+                paddingRight: "10px",
+              }}
+            />
+            <StyledText
+              text={"예상 시간 : " + expectTimeHandle(course.expectedTime)}
+              style={{
+                backgroundColor: "#F8F38F",
+                borderRadius: "10px",
+                fontSize: "12px",
+                paddingLeft: "10px",
+                paddingRight: "10px",
+              }}
+            />
+            <StyledText
+              text={
+                course.start.split(" ")[0] + " " + course.start.split(" ")[1]
+              }
+              style={{
+                backgroundColor: "#F4D4D4",
+                borderRadius: "10px",
+                fontSize: "12px",
+                paddingLeft: "10px",
+                paddingRight: "10px",
+              }}
+            />
+          </Box>
         </Box>
+
         <BootstrapButton
           onClick={() => {
             setStart(true);
           }}
+          whileTap={{ scale: 1.2 }}
         >
           주행 시작
         </BootstrapButton>

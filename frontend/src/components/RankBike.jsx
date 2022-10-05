@@ -15,7 +15,7 @@ export const RankBike = ({ type, rank }) => {
         }}
         gap="small"
       >
-        <Avatar
+        {/* <Avatar
           src={rank.profileImageUrl}
           size="40px"
           style={{
@@ -28,17 +28,9 @@ export const RankBike = ({ type, rank }) => {
                 ? "#C0C0C0"
                 : "#CD7F32",
           }}
-        />
+        /> */}
+        <img width="45%" src={`/images/medal${rank.ranking}.png`} />
         <StyledText text={rank.nickname} weight="bold" />
-        <StyledText
-          text={
-            type === "time"
-              ? expectTimeHandle(rank.totalTime)
-              : type === "dis"
-              ? distanceHandle(rank.totalDistance) + "km"
-              : rank.speedBest + "km/h"
-          }
-        />
         <img src={`/images/rank${rank.ranking}.png`} />
       </Box>
     );

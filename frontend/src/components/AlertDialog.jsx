@@ -263,9 +263,7 @@ export const MapDialog = ({
                     height: 41,
                   }, // 마커이미지의 크기입니다
                 }}
-              >
-                <div style={{ color: "#000" }}>시작, 종점</div>
-              </MapMarker>
+              ></MapMarker>
             ) : (
               <MapMarker
                 position={
@@ -355,13 +353,14 @@ export const MapDialog = ({
                     {markerCategorys.map((cat, idx) => {
                       return (
                         <MBtn
-                          key={idx}
                           variant="contained"
+                          key={idx}
                           color={selected === idx ? cat.name : "deactive"}
                           onClick={() => {
                             setSelected(idx);
                           }}
                           style={{
+                            display: "inline-block",
                             fontWeight: "bold",
                             width: "55px",
                             height: "55px",

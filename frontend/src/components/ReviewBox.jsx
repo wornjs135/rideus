@@ -34,18 +34,21 @@ export const ReviewBox = ({ review, score, starView, courseName }) => {
           <Box justify="center" align="start">
             <StyledText text={review.memberNickname} />
             <StyledText text={review.content} />
-            <Box direction="row" gap="3px">
+            {/* <Box direction="row" gap="3px">
               {review.tags.map((tag) => {
                 return (
                   <StyledText
                     text={`#${tag.tagName}`}
-                    size="12px"
+                    size="11px"
                     key={tag.tagId}
                   />
                 );
               })}
-            </Box>
-            <StarBox score={score} starView={starView} />
+            </Box> */}
+            <StarBox
+              score={score}
+              starView={parseFloat(score).toFixed(2) * 16}
+            />
           </Box>
         </Box>
         <img src={MoreBtn} style={{ marginRight: "9px" }} />
