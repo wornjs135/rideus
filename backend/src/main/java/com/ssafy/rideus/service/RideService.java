@@ -174,7 +174,7 @@ public class RideService {
 //        log.info("주행 좌표 리스트 DB에서 가져온거: " + mongoRecord.getCoordinates());
 //        log.info("주행 좌표 리스트 DB에서 가져온거: " + mongoRecord.getCoordinates().size());
 
-        Query query = new Query().addCriteria(Criteria.where("_id").is(new ObjectId(recordId)));
+        Query query = new Query().addCriteria(Criteria.where("_id").is(recordId));
         Update update = new Update();
 //        update.set("coordinates", saveCoordinatesRequest.getCoordinates());
         update.push("coordinates").each(saveCoordinatesRequest.getCoordinates());
