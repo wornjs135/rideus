@@ -58,7 +58,12 @@ export const CourseReviewRank = ({
               setValue(0);
             }}
           >
-            <StyledText text="랭킹" color={value === 0 ? "white" : "black"} />
+            <StyledText
+              text="랭킹"
+              size="16px"
+              weight="bold"
+              color={value === 0 ? "white" : "black"}
+            />
           </Box>
           <Box
             border={false}
@@ -72,7 +77,12 @@ export const CourseReviewRank = ({
               setValue(1);
             }}
           >
-            <StyledText text="리뷰" color={value === 1 ? "white" : "black"} />
+            <StyledText
+              text="리뷰"
+              size="16px"
+              weight="bold"
+              color={value === 1 ? "white" : "black"}
+            />
           </Box>
         </Box>
       }

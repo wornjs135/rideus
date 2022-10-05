@@ -124,25 +124,26 @@ export const CourseList = () => {
   if (loading) return <Spinner />;
   else
     return (
-      <Box>
+      <Box align="center" width="100%">
         {/* 추천코스, 검색 버튼 */}
         <Box
+          width="100%"
           align="center"
           margin={{
             top: "10px",
-            bottom: "15px",
+            bottom: "25px",
           }}
-          gap="15px"
+          gap="25px"
         >
           <StyledText text="추천 코스" weight="bold" size="24px" />
-          <Box direction="row">
+          <Box direction="row" width="100%" align="center" justify="center">
             <Paper
               component="form"
               sx={{
                 p: "2px 4px",
                 display: "flex",
                 alignItems: "center",
-                width: 300,
+                width: "90%",
               }}
             >
               <InputBase
@@ -160,14 +161,12 @@ export const CourseList = () => {
           </Box>
         </Box>
         {/* 카테고리 버튼 */}
-        <Box width="100%" align="center">
-          <Box
-            direction="row"
-            justify="start"
-            overflow="scroll"
-            margin="medium"
-            height="70px"
-          >
+        <Box
+          width="100%"
+          align="center"
+          margin={{ top: "15px", bottom: "15px" }}
+        >
+          <Box direction="row" justify="start" overflow="scroll" height="70px">
             <ThemeProvider theme={theme}>
               <StyledHorizonTable>
                 {categorys.map((cat, idx) => {
@@ -203,8 +202,10 @@ export const CourseList = () => {
           align="center"
           round={{ corner: "top", size: "large" }}
           background="#E0F7F4"
-          gap="medium"
+          gap="15px"
           height={{ min: "80vh" }}
+          width="100%"
+          pad={{ top: "25px" }}
         >
           {selected === 1 ? (
             recCourses ? (

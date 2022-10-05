@@ -123,7 +123,7 @@ export const NavBar = () => {
           opacity: opacity,
           transition: "all 0.35s",
           visibility: show,
-          maxWidth: "500px",
+          maWidth: "500px",
         }}
         width="100%"
         direction="row"
@@ -263,14 +263,20 @@ export function Footer() {
 
 export const StarBox = ({ score, starView }) => {
   return (
-    <Box direction="row" align="center" gap="medium" justify="start">
+    <Box
+      direction="row"
+      align="center"
+      gap="medium"
+      justify="start"
+      width="65%"
+    >
       {score && <StyledText text={score} weight="bold" size="19px" />}
       <Box style={{ position: "relative" }}>
         <div
           // align="center"
           style={{
             width: starView,
-            height: "14px",
+            height: "16px",
             overflow: "hidden",
           }}
         >
@@ -279,8 +285,8 @@ export const StarBox = ({ score, starView }) => {
             alt="별"
             src={Stars}
             style={{
-              height: "14px",
-              width: "70px",
+              height: "16px",
+              width: "80px",
             }}
           />
         </div>
@@ -290,8 +296,8 @@ export const StarBox = ({ score, starView }) => {
           src={StarsBlank}
           style={{
             position: "absolute",
-            width: "70px",
-            height: "14px",
+            width: "80px",
+            height: "16px",
           }}
         />
       </Box>

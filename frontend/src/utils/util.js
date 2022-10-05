@@ -12,6 +12,8 @@ import plant2 from "../assets/images/plant2.png";
 import plant3 from "../assets/images/plant3.png";
 import plant4 from "../assets/images/plant4.png";
 import plant5 from "../assets/images/plant5.png";
+import { StyledText } from "../components/Common";
+import { Box } from "grommet";
 
 export const tags = [
   { id: 1, searchTagName: "평지" },
@@ -67,6 +69,46 @@ export const timeHandle2 = (time) => {
   if (time < 60) return `${time}m`;
   else if (time < 3600) return `${parseInt(time / 60)}h ${time % 60}m`;
 };
+
+
+export const TimeBox = ({time}) => {
+  if (time < 60) return  (<Box direction="row" align="end">
+  <StyledText
+  size="17px"
+  text={time}
+  weight="bold"
+/>
+<StyledText
+  size="13px"
+  text="m"
+  weight="bold"
+/>
+  </Box>);
+  else return   (<Box direction="row" align="end">
+      <StyledText
+  size="17px"
+  text={parseInt(time / 60)}
+  weight="bold"
+/>
+<StyledText
+  size="13px"
+  text="h "
+  weight="bold"
+/>
+<Box width="6px" />
+  <StyledText
+  size="17px"
+  text={time % 60}
+  weight="bold"
+/>
+<StyledText
+  size="13px"
+  text="m"
+  weight="bold"
+/>
+  </Box>);
+};
+
 
 export const expectTimeHandle = (time) => {
   if (time < 60) return `${parseInt(time)}분`;
