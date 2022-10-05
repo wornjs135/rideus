@@ -2,6 +2,7 @@ package com.ssafy.rideus.service;
 
 import com.ssafy.rideus.common.exception.NotFoundException;
 import com.ssafy.rideus.domain.Member;
+import com.ssafy.rideus.domain.MemberTag;
 import com.ssafy.rideus.domain.Record;
 import com.ssafy.rideus.domain.collection.MongoRecord;
 import com.ssafy.rideus.dto.member.request.MemberMoreInfoReq;
@@ -24,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.ssafy.rideus.common.exception.NotFoundException.RECORD_NOT_FOUND;
 import static com.ssafy.rideus.common.exception.NotFoundException.USER_NOT_FOUND;
@@ -90,8 +92,8 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public List<MemberTagResponse> getMyTag(Long memberId) {
-        memberTagRepository.findByIdWithTag(memberId);
-        return tagQueryRepository.searchMemberTag(memberId);
+        List<MemberTag> myTagList = memberTagRepository.findByIdWithTag(memberId);
+        return myTagList.stream().map(memberTag -> MemberTagResponse.from(memberTag)).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
