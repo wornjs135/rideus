@@ -123,6 +123,7 @@ export const NavBar = () => {
           opacity: opacity,
           transition: "all 0.35s",
           visibility: show,
+          maxWidth:"500px",
         }}
         width="100%"
         direction="row"

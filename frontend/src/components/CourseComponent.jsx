@@ -120,7 +120,6 @@ export const BestCourse = ({ course }) => {
                 // margin: "3px",
               }}
             >
-              <Avatar src={Flag} size="12px" />
               <StyledText
                 size="13px"
                 text={course.distance + "km"}
@@ -140,7 +139,6 @@ export const BestCourse = ({ course }) => {
                 padding: "0px 4px",
               }}
             >
-              <Avatar src={Clock} size="12px" />
               <StyledText
                 size="13px"
                 text={timeHandle2(course.expectedTime)}

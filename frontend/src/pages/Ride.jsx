@@ -265,60 +265,59 @@ export const Ride = () => {
   // 주행 종료 핸들
   const handleRideFinish = () => {
     saveCoordinatesDuringRide(
-      recordId,
       {
         coordinates: mapData.latlng,
+        rideRoomId: roomInfo === undefined ? null : roomInfo.rideRoomId,
       },
-      (response) => {
-        console.log(response);
+      (response1) => {
+        console.log(response1);
+        finishRidding(
+          rideType,
+          {
+            courseId: courseId === undefined ? null : courseId,
+            distance: data.totalDistance,
+            recordId: response1.data.recordId,
+            rideRoomId: roomInfo === undefined ? null : roomInfo.rideRoomId,
+            speedAvg: data.avgSpeed,
+            speedBest: data.topSpeed,
+            time: nowTime,
+            timeMinute: parseInt(nowTime / 60),
+          },
+          (response) => {
+            console.log(response);
+            // // 나만의 코스 주행
+            // if (courseType === "my") {
+  
+            // }
+            // // 추천 코스 주행
+            // else if (courseType === "course") {
+  
+            // }
+          },
+          (fail) => {
+            console.log(fail);
+          }
+        ).then(
+          navigate("/rideEnd", {
+            state: {
+              courseType: courseType,
+              courseData: {
+                recordId: recordId,
+                courseId: courseId,
+                courseName: courseName,
+                latlng: mapData.latlng,
+                topSpeed: data.topSpeed,
+                avgSpeed: data.avgSpeed,
+                nowTime: nowTime,
+                totalDistance: data.totalDistance,
+              },
+            },
+          })
+        )
       },
       (fail) => {
         console.log(fail);
       }
-    ).then(
-      finishRidding(
-        rideType,
-        {
-          courseId: courseId === undefined ? null : courseId,
-          distance: data.totalDistance,
-          recordId: recordId,
-          rideRoomId: roomInfo === undefined ? null : roomInfo.rideRoomId,
-          speedAvg: data.avgSpeed,
-          speedBest: data.topSpeed,
-          time: nowTime,
-          timeMinute: parseInt(nowTime / 60),
-        },
-        (response) => {
-          console.log(response);
-          // // 나만의 코스 주행
-          // if (courseType === "my") {
-
-          // }
-          // // 추천 코스 주행
-          // else if (courseType === "course") {
-
-          // }
-        },
-        (fail) => {
-          console.log(fail);
-        }
-      ).then(
-        navigate("/rideEnd", {
-          state: {
-            courseType: courseType,
-            courseData: {
-              recordId: recordId,
-              courseId: courseId,
-              courseName: courseName,
-              latlng: mapData.latlng,
-              topSpeed: data.topSpeed,
-              avgSpeed: data.avgSpeed,
-              nowTime: nowTime,
-              totalDistance: data.totalDistance,
-            },
-          },
-        })
-      )
     );
   };
 

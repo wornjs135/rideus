@@ -43,8 +43,8 @@ const startRidding = async (success, fail) => {
 };
 
 // 주행 중간중간에 좌표 리스트들 저장
-const saveCoordinatesDuringRide = async (recordId, data, success, fail) => {
-  await authInstance.post(`/save/${recordId}`, data).then(success).catch(fail);
+const saveCoordinatesDuringRide = async (data, success, fail) => {
+  await authInstance.post(`/save`, data).then(success).catch(fail);
 };
 
 // 주행 종료
