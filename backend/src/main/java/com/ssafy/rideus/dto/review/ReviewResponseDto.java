@@ -16,6 +16,7 @@ import java.util.List;
 @Builder
 public class ReviewResponseDto {
     private String memberNickname;
+    private String memberProfileImage;
     private int score;
     private String content;
     private String imageUrl;
@@ -30,6 +31,7 @@ public class ReviewResponseDto {
         }
         return ReviewResponseDto.builder()
                 .memberNickname(review.getMember().getNickname())
+                .memberProfileImage(review.getMember().getProfileImageUrl())
                 .score(review.getScore())
                 .content(review.getContent())
                 .imageUrl(review.getImageUrl())
