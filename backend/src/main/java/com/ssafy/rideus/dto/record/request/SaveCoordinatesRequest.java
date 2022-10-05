@@ -14,4 +14,5 @@ import java.util.List;
 public class SaveCoordinatesRequest {
 
     private List<Coordinate> coordinates = new ArrayList<>();
+    private Long rideRoomId;
 }

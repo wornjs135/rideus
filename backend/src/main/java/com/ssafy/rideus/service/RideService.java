@@ -29,6 +29,7 @@ import com.ssafy.rideus.repository.mongo.MongoRecordRepository;
 import com.ssafy.rideus.repository.redis.RedisRideRoomRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -36,6 +37,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -144,16 +146,16 @@ public class RideService {
         RideRoom rideRoom = null;
         if (riddingType.equals(single)) {
             rideRoom = rideRoomRepository.save(RideRoom.create(findMember)); // 싱글 주행일때는 그룹방 새로 생성해서 넣어주기
-            mongoRecord.getParticipants().add(ParticipantDto.from(findMember)); // 같이 탄 사람에 자신 혼자.
+//            mongoRecord.getParticipants().add(ParticipantDto.from(findMember)); // 같이 탄 사람에 자신 혼자.
         } else if (riddingType.equals(group)) {
-            RedisRideRoom findRideRoom = redisRideRoomRepository.findById(request.getRideRoomId())
-                    .orElseThrow(() -> new NotFoundException(RIDEROOM_NOT_FOUND)); // 레디스에서 참가자 리스트 불러오기
-            mongoRecord.updateParticipants(findRideRoom.getParticipants()); // 참가자들 추가
+//            RedisRideRoom findRideRoom = redisRideRoomRepository.findById(request.getRideRoomId())
+//                    .orElseThrow(() -> new NotFoundException(RIDEROOM_NOT_FOUND)); // 레디스에서 참가자 리스트 불러오기
+//            mongoRecord.updateParticipants(findRideRoom.getParticipants()); // 참가자들 추가
 
-            rideRoom = rideRoomRepository.findById(findRideRoom.getId())
+            rideRoom = rideRoomRepository.findById(request.getRideRoomId())
                     .orElseThrow(() -> new NotFoundException(RIDEROOM_NOT_FOUND));
         }
-        mongoRecordRepository.save(mongoRecord);
+//        mongoRecordRepository.save(mongoRecord);
 
         // mysql에 최종 기록 저장
         Record saveRecord = recordRepository.save(Record.from(findMember, findCourse, request,
@@ -163,7 +165,9 @@ public class RideService {
     }
 
     @Transactional
-    public void saveCoordinatesPerPeriod(Long memberId, String recordId, SaveCoordinatesRequest saveCoordinatesRequest) {
+    public CreateRecordResponse saveCoordinatesPerPeriod(Long memberId, SaveCoordinatesRequest saveCoordinatesRequest) {
+        Member findMember = memberRepository.findById(memberId)
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
 //        MongoRecord mongoRecord = mongoRecordRepository.findById(recordId)
 //                .orElseThrow(() -> new NotFoundException(RECORD_NOT_FOUND));
 //        if (!mongoRecord.getMemberId().equals(memberId)) {
@@ -173,15 +177,27 @@ public class RideService {
 //        log.info("주행 좌표 리스트 DB에서 가져온거: " + mongoRecord.getCoordinates());
 //        log.info("주행 좌표 리스트 DB에서 가져온거: " + mongoRecord.getCoordinates().size());
 
-        Query query = new Query().addCriteria(Criteria.where("_id").is(recordId));
-        Update update = new Update();
+//        Query query = new Query().addCriteria(Criteria.where("_id").is(recordId));
+//        Update update = new Update();
 //        update.set("coordinates", saveCoordinatesRequest.getCoordinates());
-        update.push("coordinates").each(saveCoordinatesRequest.getCoordinates());
+//        update.push("coordinates").each(saveCoordinatesRequest.getCoordinates());
 //        log.info("주행 좌표 리스트에 추가: " + mongoRecord.getCoordinates());
-        mongoTemplate.updateFirst(query, update, "record");
+//        mongoTemplate.updateFirst(query, update, "record");
 
 //        MongoRecord save = mongoRecordRepository.save(mongoRecord);
 //        log.info("몽고 DB에 들어간 거: " + save);
+
+        List<ParticipantDto> participantDtos = new ArrayList<>();
+        if (saveCoordinatesRequest.getRideRoomId() == null) { // 싱글주행일때
+            participantDtos.add(ParticipantDto.from(findMember));
+        } else { // 그룹주행일때
+            RedisRideRoom findRideRoom = redisRideRoomRepository.findById(saveCoordinatesRequest.getRideRoomId())
+                    .orElseThrow(() -> new NotFoundException(RIDEROOM_NOT_FOUND)); // 레디스에서 참가자 리스트 불러오기
+            participantDtos.addAll(findRideRoom.getParticipants());
+        }
+
+        MongoRecord insertRecord = mongoRecordRepository.insert(MongoRecord.create(memberId, saveCoordinatesRequest.getCoordinates(), participantDtos));
+        return CreateRecordResponse.from(insertRecord.getId());
     }
 
     public List<ParticipantDto> getRoomParticipants(Long rideRoomId) {
