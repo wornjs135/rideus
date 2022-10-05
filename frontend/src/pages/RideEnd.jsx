@@ -6,7 +6,8 @@ import { Map, Polyline } from "react-kakao-maps-sdk";
 import Button from "../components/Button";
 import { useLocation, useNavigate } from "react-router-dom";
 import { distanceHandle, timeHandle } from "../utils/util";
-
+import { motion } from "framer-motion";
+import { container } from "./Main";
 export const RideEnd = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -37,7 +38,19 @@ export const RideEnd = () => {
     center: { lng: 127.002158, lat: 37.512847 },
   });
   return (
-    <Box background="#64CCBE" align="center" justify="around">
+    <motion.div
+      style={{
+        width: "100vw",
+        justify: "around",
+        align: "center",
+        textAlign: "center",
+        margin: "0 auto",
+        background: "#64CCBE",
+      }}
+      initial="hidden"
+      animate="visible"
+      variants={container}
+    >
       <StyledText
         text={courseData.courseName}
         color="white"
@@ -150,7 +163,7 @@ export const RideEnd = () => {
               <StyledText text="즐거운 시간 보내셨나요?" size="20px" />
             </Box>
             <Button
-              BigGreen
+              biggreen="true"
               children={
                 courseType === "my" ? "나만의 길 공유하기" : "리뷰 쓰기"
               }
@@ -165,7 +178,8 @@ export const RideEnd = () => {
               }}
             />
             <Button
-              BigWhite
+              whileTap={{ scale: 1.2 }}
+              bigwhite="true"
               children="나중에 할께요 / 건너뛰기"
               onClick={() => {
                 navigate("/");
@@ -174,6 +188,6 @@ export const RideEnd = () => {
           </Box>
         </Box>
       </Box>
-    </Box>
+    </motion.div>
   );
 };

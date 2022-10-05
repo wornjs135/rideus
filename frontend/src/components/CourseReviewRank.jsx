@@ -44,6 +44,7 @@ export const CourseReviewRank = ({
           direction="row"
           justify="center"
           width="100%"
+          maxWidth="500px"
           border={false}
           background="rgba(250, 250, 250, 0.93)"
         >
@@ -132,7 +133,7 @@ export const CourseReviewRank = ({
           ) : (
             <StyledText
               text="랭킹이 없습니다."
-              style={{ textAlign: "center" }}
+              style={{ textAlign: "center", marginTop: "15px" }}
             />
           )}
         </Box>
@@ -160,7 +161,7 @@ export const CourseReviewRank = ({
           ) : (
             <StyledText
               text="리뷰가 없습니다."
-              style={{ textAlign: "center" }}
+              style={{ textAlign: "center", marginTop: "15px" }}
             />
           )}
         </Box>

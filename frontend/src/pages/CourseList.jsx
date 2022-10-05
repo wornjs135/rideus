@@ -10,7 +10,7 @@ import InputBase from "@mui/material/InputBase";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
-
+import Recommend from "../assets/images/recommend.png";
 import { useNavigate } from "react-router-dom";
 import { getAllCourse, getRecommendationCourses } from "../utils/api/courseApi";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -141,7 +141,7 @@ export const CourseList = () => {
           align="center"
           margin={{
             top: "10px",
-            bottom: "25px",
+            bottom: "10px",
           }}
           gap="25px"
         >
@@ -174,37 +174,42 @@ export const CourseList = () => {
         <Box
           width="100%"
           align="center"
-          margin={{ top: "15px", bottom: "15px" }}
+          margin={{ bottom: "15px" }}
+          justify="center"
         >
-          <Box direction="row" justify="start" overflow="scroll" height="70px">
-            <ThemeProvider theme={theme}>
-              <StyledHorizonTable>
-                {categorys.map((cat, idx) => {
-                  return (
-                    <Button
-                      key={idx}
-                      variant="contained"
-                      color={selected === idx ? "active" : "deactive"}
-                      onClick={() => {
-                        setSelected(idx);
-                      }}
-                      style={{
-                        fontWeight: "bold",
-                        width: "55px",
-                        height: "55px",
-                        borderRadius: "10px",
-                        marginRight: "10px",
-                      }}
-                    >
-                      <Box align="center">
-                        {cat.icon}
-                        {cat.name}
-                      </Box>
-                    </Button>
-                  );
-                })}
-              </StyledHorizonTable>
-            </ThemeProvider>
+          <Box direction="row" justify="start" overflow="scroll" height="85px">
+            <StyledHorizonTable>
+              {categorys.map((cat, idx) => {
+                return (
+                  <motion.button
+                    key={idx}
+                    onClick={() => {
+                      setSelected(idx);
+                    }}
+                    whileTap={{ scale: 1.2 }}
+                    style={{
+                      boxShadow: "none",
+                      textTransform: "none",
+                      fontSize: 14,
+                      padding: "6px 12px",
+                      color: selected === idx ? "white" : "black",
+                      border: "none",
+                      backgroundColor: selected === idx ? "#64CCBE" : "#E0F7F4",
+                      fontWeight: "bold",
+                      width: "65px",
+                      height: "65px",
+                      borderRadius: "10px",
+                      marginRight: "10px",
+                    }}
+                  >
+                    <Box align="center">
+                      {cat.icon}
+                      {cat.name}
+                    </Box>
+                  </motion.button>
+                );
+              })}
+            </StyledHorizonTable>
           </Box>
         </Box>
         {/* 리스트 */}
@@ -215,8 +220,11 @@ export const CourseList = () => {
           gap="15px"
           height={{ min: "80vh" }}
           width="100%"
-          pad={{ top: "25px" }}
         >
+          <Box direction="row" margin={{ top: "15px" }} width="90%">
+            <img src={Recommend} width="20px" height="20px" />
+            <StyledText text="당신을 위한 추천 코스" size="16px" />
+          </Box>
           {selected === 1 ? (
             recCourses ? (
               recCourses.filter((course) => {

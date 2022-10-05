@@ -1,7 +1,10 @@
 import React from "react";
 import { Box, Spinner } from "grommet";
 import MainBike from "../assets/images/main_bike.png";
-import bike2 from "../assets/images/bicycle2.png";
+import Around from "../assets/images/around.png";
+import News from "../assets/images/news.png";
+import Fire from "../assets/images/fire.png";
+import Tag from "../assets/images/tag.png";
 // import Button from "../components/Button";
 // import { Button, styled } from "@material-ui/core";
 import { StyledText } from "../components/Common";
@@ -179,7 +182,7 @@ export const Main = () => {
     return (
       <motion.div
         style={{
-          width: "100vw",
+          width: "100%",
           justify: "center",
           background: "#fffff",
         }}
@@ -274,7 +277,7 @@ export const Main = () => {
                   backgroundColor: "#BDE0EF",
                   borderRadius: "10px",
                   // margin: "3px",
-                  padding: "0px 4px",
+                  padding: "4px 6px",
                 }}
               />
             </Box>
@@ -287,11 +290,19 @@ export const Main = () => {
             gap="medium"
           >
             <Box
-              direction="row"
               width="100%"
-              justify="between"
               pad={{ left: "30px", right: "20px" }}
+              direction="row"
+              align="end"
+              gap="small"
             >
+              <img
+                src={Fire}
+                height="24px"
+                style={{
+                  objectFit: "cover",
+                }}
+              />
               <StyledText text="인기 코스" size="18px" />
             </Box>
             {/* 인기코스 리스트 */}
@@ -318,10 +329,18 @@ export const Main = () => {
           >
             <Box
               width="100%"
-              justify="between"
               pad={{ left: "30px", right: "20px" }}
               direction="row"
+              align="end"
+              gap="small"
             >
+              <img
+                src={Around}
+                height="24px"
+                style={{
+                  objectFit: "cover",
+                }}
+              />
               <StyledText text="주변 코스" size="18px" />
             </Box>
             {/* 인기코스 리스트 */}
@@ -348,10 +367,18 @@ export const Main = () => {
           >
             <Box
               width="100%"
-              justify="between"
               pad={{ left: "30px", right: "20px" }}
               direction="row"
+              align="end"
+              gap="small"
             >
+              <img
+                src={News}
+                height="24px"
+                style={{
+                  objectFit: "cover",
+                }}
+              />
               <StyledText text="자전거 소식" size="18px" />
             </Box>
             {/* 월간자전거 리스트 */}
@@ -370,7 +397,20 @@ export const Main = () => {
           </Box>
           {/* 인기태그 */}
           <Box align="start" width="100%" margin={{ top: "large" }}>
-            <Box pad={{ left: "20px" }}>
+            <Box
+              width="100%"
+              pad={{ left: "30px", right: "20px" }}
+              direction="row"
+              align="end"
+              gap="small"
+            >
+              <img
+                src={Tag}
+                height="24px"
+                style={{
+                  objectFit: "cover",
+                }}
+              />
               <StyledText text="인기 태그" size="18px" />
             </Box>
             {/* 인기태그 리스트 */}
@@ -393,7 +433,7 @@ export const Main = () => {
                         padding: "8px",
                         fontSize: "11px",
                         margin: "0px 8px 12px 0px",
-                        border: "1px solid #ebebeb",
+                        border: "none",
                         borderRadius: "16px",
                       }}
                     />

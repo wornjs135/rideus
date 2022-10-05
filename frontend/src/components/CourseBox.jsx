@@ -10,6 +10,7 @@ import { expectTimeHandle, TimeBox, timeHandle2 } from "../utils/util";
 import Clock from "../assets/icons/clock.svg";
 import Flag from "../assets/icons/flag.svg";
 import Mark from "../assets/icons/mark.svg";
+import { motion } from "framer-motion";
 // {
 //   "bookmarkId": "string",
 //   "category": "string",
@@ -52,19 +53,19 @@ export const CourseBox = ({
   if (loading) return <Spinner />;
   else
     return (
-      <Box
+      <motion.div
         onClick={() => {
           navigate(`/courseDetail/${courseId}`);
         }}
+        whileTap={{ scale: 1.2 }}
         style={{
           borderRadius: "10px",
           boxShadow: "4px 4px 4px -4px rgb(0 0 0 / 0.2)",
           width: "90%",
           height: "15%",
+          padding: "10px 6px",
+          background: "white",
         }}
-        background="white"
-        pad={{ left: "medium", right: "medium", top: "small", bottom: "small" }}
-        gap="8px"
       >
         {/* 코스 박스 */}
         <Box width="100%" align="center">
@@ -83,7 +84,7 @@ export const CourseBox = ({
                 display: "block",
               }}
             />
-            <Box direction="row" align="start">
+            <Box direction="row" align="center">
               <img
                 src={bm ? Bookmark : BookmarkBlank}
                 width="18px"
@@ -173,7 +174,12 @@ export const CourseBox = ({
           {/* 사진 */}
         </Box>
         {/* 태그 */}
-        <Box direction="row" gap="small" justify="center">
+        <Box
+          direction="row"
+          gap="small"
+          justify="center"
+          margin={{ top: "5px" }}
+        >
           {tags &&
             tags.map((t, idx) => {
               return (
@@ -187,6 +193,6 @@ export const CourseBox = ({
               );
             })}
         </Box>
-      </Box>
+      </motion.div>
     );
 };

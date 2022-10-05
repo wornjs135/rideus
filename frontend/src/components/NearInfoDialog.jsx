@@ -12,7 +12,7 @@ export const NearInfoDialog = ({ open, info, handleClose }) => {
     <Dialog open={open} onClose={handleClose}>
       <Box align="center" pad="small">
         <HeaderBox goBack={handleClose} title={info.nearinfoCategory} />
-        <Box justify="around" align="center">
+        <Box justify="around" align="center" gap="medium">
           {/* 제목 */}
           {/* <StyledText text={title} size="20px" weight="bold" /> */}
           {/* 사진 */}
