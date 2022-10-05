@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.ssafy.rideus.common.exception.NotFoundException.RECORD_NOT_FOUND;
 import static com.ssafy.rideus.common.exception.NotFoundException.USER_NOT_FOUND;
@@ -81,7 +82,8 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public RecordTotalResponse getTotalRecord(Long memberId) {
-        return memberQueryRepository.searchTotalRecord(memberId);
+        Member member = findById(memberId);
+        return new RecordTotalResponse(member.getTotalTime(),member.getTotalDistance());
     }
 
     @Transactional(readOnly = true)
