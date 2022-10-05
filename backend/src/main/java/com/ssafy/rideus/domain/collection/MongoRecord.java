@@ -25,14 +25,23 @@ public class MongoRecord {
 
     private List<ParticipantDto> participants = new ArrayList<>();
 
-    public static MongoRecord create(Long memberId) {
+    public static MongoRecord create(Long memberId, List<Coordinate> coordinates, List<ParticipantDto> participants) {
         MongoRecord record = new MongoRecord();
         record.memberId = memberId;
+        record.coordinates = coordinates;
+        record.participants = participants;
 
         return record;
     }
 
     public void updateParticipants(List<ParticipantDto> participants) {
         this.participants = participants;
+    }
+
+    public static MongoRecord create(Long memberId) {
+        MongoRecord record = new MongoRecord();
+        record.memberId = memberId;
+
+        return record;
     }
 }
