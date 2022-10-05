@@ -16,6 +16,7 @@ import Stars from "../assets/images/stars.png";
 import StarsBlank from "../assets/images/stars_blank.png";
 import { Box } from "grommet";
 import { Map, Polyline } from "react-kakao-maps-sdk";
+import { motion } from "framer-motion";
 // 공통 컴포넌트들을 정의하는 클래스
 // ex) 버튼, 레이아웃, 틀
 
@@ -32,7 +33,12 @@ export function LogoHeader() {
   const navigate = useNavigate();
   return (
     <Header>
-      <img alt="logo" src={Logo} onClick={() => navigate("/")} />
+      <motion.img
+        whileTap={{ scale: 1.2 }}
+        alt="logo"
+        src={Logo}
+        onClick={() => navigate("/")}
+      />
     </Header>
   );
 }
@@ -46,6 +52,7 @@ const NavBarDiv = styled.div`
   justify-content: space-around;
   width: 100%;
   background-color: white;
+  max-width: 500px;
   padding: 5px 0px;
   opacity: ${(props) => props.opacity || "1"};
   transition: all 0.35s;
@@ -114,46 +121,32 @@ export const NavBar = () => {
     //   </div>
     // </NavBarDiv>
     <Box width="100%">
-      <Box
-        style={{
-          position: "fixed",
-          bottom: "0",
-          backgroundColor: "white",
-          padding: "5px 0px",
-          opacity: opacity,
-          transition: "all 0.35s",
-          visibility: show,
-          maWidth: "500px",
-        }}
-        width="100%"
-        direction="row"
-        justify="around"
-      >
-        <div style={IconButtonStyle}>
+      <NavBarDiv isShow={show} opacity={opacity}>
+        <motion.div style={IconButtonStyle} whileTap={{ scale: 1.2 }}>
           <Link to="/">
             <HomeIcon stroke={pathname === "/" ? "#64CCBE" : "#444444"} />
           </Link>
-        </div>
-        <div style={IconButtonStyle}>
+        </motion.div>
+        <motion.div style={IconButtonStyle} whileTap={{ scale: 1.2 }}>
           <Link to="/courseList">
             <CourseIcon
               fill={pathname === "/courseList" ? "#64CCBE" : "#444444"}
             />
           </Link>
-        </div>
-        <div style={IconButtonStyle}>
+        </motion.div>
+        <motion.div style={IconButtonStyle} whileTap={{ scale: 1.2 }}>
           <Link to="/rank">
             <RankIcon stroke={pathname === "/rank" ? "#64CCBE" : "#444444"} />
           </Link>
-        </div>
-        <div style={IconButtonStyle}>
+        </motion.div>
+        <motion.div style={IconButtonStyle} whileTap={{ scale: 1.2 }}>
           <Link to="/mypage">
             <MypageIcon
               stroke={pathname === "/mypage" ? "#64CCBE" : "#444444"}
             />
           </Link>
-        </div>
-      </Box>
+        </motion.div>
+      </NavBarDiv>
     </Box>
   );
 };
@@ -164,6 +157,7 @@ const TextForm = styled.div`
   font-size: ${(props) => props.size || "14px"};
   font-weight: ${(props) => props.weight || "normal"};
   align-items: center;
+  display: flex;
 `;
 
 //텍스트 사이즈, 컬러, 웨이트, 글자를 설정할 수 있는 컴포넌트

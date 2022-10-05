@@ -5,7 +5,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Button from "./Button";
-import { Button as GBtn, Spinner } from "grommet";
+import { Avatar, Button as GBtn, Spinner } from "grommet";
 import { Button as MBtn, ThemeProvider } from "@mui/material";
 import { Box } from "grommet";
 import styled from "styled-components";
@@ -24,6 +24,7 @@ import { theme } from "../pages/CourseList";
 import { useEffect } from "react";
 import { getWeather } from "../utils/api/weatherApi";
 import { ResponsiveLine } from "@nivo/line";
+import { motion } from "framer-motion";
 export const AlertDialog = ({
   open,
   handleClose,
@@ -49,19 +50,33 @@ export const AlertDialog = ({
       </DialogContent>
 
       <Box direction="row" justify="center">
-        <Button SmallWhite onClick={handleClose}>
+        <Button
+          smallwhite="true"
+          onClick={handleClose}
+          whileTap={{ scale: 1.2 }}
+        >
           {cancel}
         </Button>
-        {accept && (
-          <Button
-            SmallPink={register ? false : true}
-            SmallGreen={register ? true : false}
-            onClick={handleAction}
-            autoFocus
-          >
-            {accept}
-          </Button>
-        )}
+        {accept !== undefined &&
+          (register ? (
+            <Button
+              whileTap={{ scale: 1.2 }}
+              smallgreen="true"
+              onClick={handleAction}
+              autoFocus
+            >
+              {accept}
+            </Button>
+          ) : (
+            <Button
+              whileTap={{ scale: 1.2 }}
+              smallpink="true"
+              onClick={handleAction}
+              autoFocus
+            >
+              {accept}
+            </Button>
+          ))}
       </Box>
     </Dialog>
   );
@@ -224,7 +239,7 @@ export const MapDialog = ({
           <Map
             center={course.coordinates[0]}
             isPanto={true}
-            style={{ borderRadius: "25px", width: "100%", height: "100%" }}
+            style={{ width: "100%", height: "100%" }}
           >
             {course.coordinates && (
               <Polyline
@@ -280,29 +295,32 @@ export const MapDialog = ({
                 }}
               ></MapMarker>
             )}
-            {nearInfos.data
-              .filter((near) => {
-                if (selected === 0) {
-                  return near;
-                } else if (near.key.includes(markerCategorys[selected].name)) {
-                  return near;
-                }
-              })
-              .map((near, idxCat) => {
-                if (near.arr.length > 0)
-                  return near.arr.map((info, idx) =>
-                    idx % 2 === 0 ? (
-                      <EventMarkerContainer
-                        position={{
-                          lat: info.nearinfoLat,
-                          lng: info.nearinfoLng,
-                        }}
-                        key={idx}
-                        info={info}
-                      ></EventMarkerContainer>
-                    ) : null
-                  );
-              })}
+            {nearInfos &&
+              nearInfos.data
+                .filter((near) => {
+                  if (selected === 0) {
+                    return near;
+                  } else if (
+                    near.key.includes(markerCategorys[selected].name)
+                  ) {
+                    return near;
+                  }
+                })
+                .map((near, idxCat) => {
+                  if (near.arr.length > 0)
+                    return near.arr.map((info, idx) =>
+                      idx % 2 === 0 ? (
+                        <EventMarkerContainer
+                          position={{
+                            lat: info.nearinfoLat,
+                            lng: info.nearinfoLng,
+                          }}
+                          key={idx}
+                          info={info}
+                        ></EventMarkerContainer>
+                      ) : null
+                    );
+                })}
           </Map>
         )}
 
@@ -326,8 +344,10 @@ export const MapDialog = ({
               height="43px"
               background={"#64CCBE"}
               align="center"
-              justify="center"
+              justify="around"
+              direction="row"
             >
+              <Avatar size="34px" />
               <StyledText
                 text={title}
                 color="white"
@@ -339,59 +359,68 @@ export const MapDialog = ({
                   display: "block",
                 }}
               />
-            </Box>
-            {type === "detail" && (
-              <ThemeProvider theme={theme}>
-                <Box
-                  direction="row"
-                  justify="start"
-                  overflow="scroll"
-                  margin="medium"
-                  height="70px"
-                >
-                  <StyledHorizonTable>
-                    {markerCategorys.map((cat, idx) => {
-                      return (
-                        <MBtn
-                          variant="contained"
-                          key={idx}
-                          color={selected === idx ? cat.name : "deactive"}
-                          onClick={() => {
-                            setSelected(idx);
-                          }}
-                          style={{
-                            display: "inline-block",
-                            fontWeight: "bold",
-                            width: "55px",
-                            height: "55px",
-                            borderRadius: "10px",
-                            marginRight: "10px",
-                            fontSize: "12px",
-                          }}
-                        >
-                          <Box align="center" style={{ fontSize: "12px" }}>
-                            {cat.icon}
-                            {cat.name}
-                          </Box>
-                        </MBtn>
-                      );
-                    })}
-                  </StyledHorizonTable>
-                </Box>
-                <img
-                  width="50px"
+              {weather !== undefined && (
+                <motion.img
+                  height="34px"
+                  width="34px"
                   src={WeatherBtn}
                   onClick={() => {
                     setOpWeather(true);
                   }}
+                  whileTap={{ scale: 1.2 }}
                 />
-              </ThemeProvider>
+              )}
+            </Box>
+            {type === "detail" && (
+              <Box
+                direction="row"
+                justify="start"
+                overflow="scroll"
+                margin="medium"
+                height="85px"
+              >
+                <StyledHorizonTable>
+                  {markerCategorys.map((cat, idx) => {
+                    return (
+                      <motion.button
+                        key={idx}
+                        onClick={() => {
+                          setSelected(idx);
+                        }}
+                        whileTap={{ scale: 1.2 }}
+                        style={{
+                          boxShadow: "4px 4px 4px -4px rgb(0 0 0 / 0.2)",
+                          display: "inline-block",
+                          fontWeight: "bold",
+                          width: "60px",
+                          height: "60px",
+                          borderRadius: "10px",
+                          border: "none",
+                          marginRight: "10px",
+                          fontSize: "12px",
+                          color: "black",
+                          background: selected === idx ? cat.main : "#fff",
+                        }}
+                      >
+                        <Box align="center" style={{ fontSize: "12px" }}>
+                          {cat.icon}
+                          {cat.name}
+                        </Box>
+                      </motion.button>
+                    );
+                  })}
+                </StyledHorizonTable>
+              </Box>
             )}
           </Box>
         </Box>
         {/* 하단 버튼 */}
         <BottomBtn>
-          <WhiteButton onClick={handleClose} children={cancel} />
+          <WhiteButton
+            onClick={handleClose}
+            children={cancel}
+            whileTap={{ scale: 1.2 }}
+          />
           {/* {accept && type === "detail" ? (
             <BootstrapButton onClick={handleAction} children={accept} />
           ) : (
@@ -410,13 +439,15 @@ export const MapDialog = ({
           />
         )}
       </Box>
-      <WeatherDialog
-        open={opWeather}
-        handleClose={() => {
-          setOpWeather(false);
-        }}
-        weather={weather}
-      />
+      {weather !== undefined && (
+        <WeatherDialog
+          open={opWeather}
+          handleClose={() => {
+            setOpWeather(false);
+          }}
+          weather={weather}
+        />
+      )}
     </Dialog>
   );
 };

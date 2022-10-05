@@ -572,6 +572,7 @@ export const Ride = () => {
         background="#ffffff"
         pad={{ top: "20px", bottom: "20px" }}
         border={{ color: "#ffffff", size: "small", side: "top" }}
+        gap="medium"
       >
         {/* 카카오맵 */}
         <Box
@@ -719,13 +720,23 @@ export const Ride = () => {
                 if (riding === true) setRiding(false);
                 else setRiding(true);
               }}
+              whileTap={{ scale: 1.2 }}
             >
-              <img
-                src={riding ? PlayBtn : PauseBtn}
-                width="25px"
-                height="25px"
-              />
-              <StyledText text="일시정지" color="white" />
+              <Box
+                direction="row"
+                align="center"
+                justify="center"
+                style={{
+                  color: "white",
+                }}
+              >
+                <img
+                  src={riding ? PauseBtn : PlayBtn}
+                  width="25px"
+                  height="25px"
+                />
+                {riding ? "일시정지" : "다시시작"}
+              </Box>
             </PauseButton>
             {/* 체크 포인트 저장 버튼 */}
             <ExitButton
@@ -733,6 +744,7 @@ export const Ride = () => {
                 confirmNavigation();
                 setOpen(true);
               }}
+              whileTap={{ scale: 1.2 }}
             >
               주행 종료
             </ExitButton>

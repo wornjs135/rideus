@@ -47,14 +47,14 @@ export const categorys = [
 ];
 
 export const markerCategorys = [
-  { name: "전체", icon: <DensitySmallIcon /> },
-  { name: "관광명소", icon: <TourIcon /> },
-  { name: "음식점", icon: <RestaurantIcon /> },
-  { name: "카페", icon: <LocalCafeIcon /> },
-  { name: "편의점", icon: <LocalConvenienceStoreIcon /> },
-  { name: "자전거정비", icon: <SettingsOutlinedIcon /> },
-  { name: "문화시설", icon: <MuseumIcon /> },
-  { name: "공중화장실", icon: <WcIcon /> },
+  { name: "전체", icon: <DensitySmallIcon />, main: "#D6FFAD" },
+  { name: "관광명소", icon: <TourIcon />, main: "#D6FFAD" },
+  { name: "음식점", icon: <RestaurantIcon />, main: "#C0E7EC" },
+  { name: "카페", icon: <LocalCafeIcon />, main: "#FFC95F" },
+  { name: "편의점", icon: <LocalConvenienceStoreIcon />, main: "#FFFA85" },
+  { name: "자전거정비", icon: <SettingsOutlinedIcon />, main: "#FF9999" },
+  { name: "문화시설", icon: <MuseumIcon />, main: "#6499FF" },
+  { name: "공중화장실", icon: <WcIcon />, main: "#B7B7B7" },
 ];
 
 export const weathers = ["맑음", "강수", "구름 많음", "흐림"];
@@ -101,7 +101,7 @@ export const expectTimeHandle2 = (time) => {
     return `${parseInt(time / 60)}분 ${parseInt(time % 60)}초`;
   else
     return `${parseInt(time / 3600)}시간 ${parseInt(
-      (time - parseInt(time / 3060) * 3600) / 60
+      (time - parseInt(time / 3600) * 3600) / 60
     )}분`;
 };
 

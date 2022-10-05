@@ -1,4 +1,4 @@
-import { Box } from "grommet";
+import { Box, Grommet, Notification } from "grommet";
 import React, { useEffect, useState } from "react";
 import { Map, Polyline } from "react-kakao-maps-sdk";
 import styled from "styled-components";
@@ -14,7 +14,8 @@ import { expectTimeHandle, tags as initTags } from "../utils/util";
 import { BootstrapButton, RegisterButton } from "../components/Buttons";
 import { AlertDialog } from "../components/AlertDialog";
 import { writeReview } from "../utils/api/reviewApi";
-
+import { ReactComponent as Fail } from "../assets/icons/fail.svg";
+import { motion } from "framer-motion";
 const HeaderDiv = styled.div`
   margin: 5px;
   display: flex;
@@ -23,7 +24,7 @@ const HeaderDiv = styled.div`
   padding: 5px;
 `;
 
-const BackButton = styled.button`
+const BackButton = styled(motion.button)`
   background: none;
   font-size: 12px;
   font-family: Noto Sans KR, sans-serif;
@@ -53,12 +54,45 @@ export const ImageBtn = styled.img`
 //     totalDistance: data.totalDistance,
 //   },
 
+const GrommetTheme = {
+  notification: {
+    toast: {
+      time: 600,
+      container: {
+        width: "small",
+      },
+    },
+    normal: {
+      toast: {
+        background: {
+          color: "white",
+          opacity: "strong",
+        },
+      },
+    },
+    critical: {
+      toast: {
+        background: {
+          color: "white",
+          opacity: "strong",
+        },
+      },
+      icon: () => <Fail />,
+    },
+  },
+  carousel: {
+    animation: {
+      duration: 300,
+    },
+  },
+};
+
 const HeaderBox = ({ goBack }) => {
   return (
     <HeaderDiv>
       <div style={{ width: "10vw" }}></div>
       <StyledText size="20px" weight="bold" text="리뷰 쓰기" />
-      <BackButton onClick={goBack}>
+      <BackButton whileTap={{ scale: 1.2 }} onClick={goBack}>
         <img src={CloseButton} />
       </BackButton>
     </HeaderDiv>
@@ -77,6 +111,8 @@ export const ReviewRegister = () => {
   const [open, setOpen] = useState(false);
   const [notValid, setNotValid] = useState(false);
   const [exit, setExit] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
   const handleStarClick = (index) => {
     let clickStates = [...clicked];
     for (let i = 0; i < 5; i++) {
@@ -103,7 +139,14 @@ export const ReviewRegister = () => {
 
   const isValied = () => {
     let score = clicked.filter(Boolean).length;
-    if (score === 0 || image === undefined || tags === []) return false;
+    const request = {
+      recordId: courseData.recordId,
+      score: score,
+      content: reviewDesc,
+      tags: select,
+    };
+    console.log(request);
+    if (score === 0 || image === undefined || select.length === 0) return false;
     else return true;
   };
 
@@ -142,14 +185,14 @@ export const ReviewRegister = () => {
         }}
       />
       {/* 바디 */}
-      <Box align="center" margin={{ top: "20px" }}>
+      <Box align="center" margin={{ top: "20px" }} gap="medium">
         {/* 지도, 코스 이름, 데이터 */}
         <Box direction="row" gap="small">
           {/* 카카오맵 */}
           <Map
             center={courseData.latlng[parseInt(courseData.latlng.length / 2)]}
             isPanto={true}
-            level={9}
+            level={7}
             style={{ borderRadius: "10px", width: "120px", height: "120px" }}
           >
             <Polyline
@@ -173,7 +216,7 @@ export const ReviewRegister = () => {
         </Box>
         {/* 지도, 코스 이름, 데이터 끝 */}
         {/* 별점 입력 시작 */}
-        <Box margin={{ top: "20px" }}>
+        <Box margin={{ top: "20px" }} gap="medium">
           <StyledText text="코스 어떠셨나요?" size="20px" />
           <Box direction="row">
             {array.map((el) => (
@@ -187,41 +230,42 @@ export const ReviewRegister = () => {
         </Box>
         {/* 별점 입력 끝 */}
         {/* 사진 첨부 버튼 시작 */}
-        <Box width="80%" align="end">
-          <label
-            htmlFor="image"
-            style={{
-              display: "flex",
-              alignContent: "end",
-            }}
-          >
-            <ImageBtn src={ImInput} />
-            <StyledText
-              size="10px"
-              color={image ? "black" : "lightgray"}
-              text={image ? "첨부 완료" : "최대 1장"}
-              alignSelf="end"
-            />
-          </label>
-          <input
-            id="image"
-            type="file"
-            accept="image/jpg,image/png,image/jpeg,image/gif"
-            style={{
-              display: "none",
-            }}
-            onChange={handleImageUpload}
-          />
-        </Box>
+
         {/* 사진 첨부 버튼 끝 */}
         {/* 텍스트아리아 시작 */}
-        <Box margin="small">
+        <Box margin="small" width="90%" align="center">
+          <Box width="90%" align="end">
+            <label
+              htmlFor="image"
+              style={{
+                display: "flex",
+                alignContent: "end",
+              }}
+            >
+              <ImageBtn src={ImInput} />
+              <StyledText
+                size="10px"
+                color={image ? "black" : "lightgray"}
+                text={image ? "첨부 완료" : "최대 1장"}
+                alignSelf="end"
+              />
+            </label>
+            <input
+              id="image"
+              type="file"
+              accept="image/jpg,image/png,image/jpeg,image/gif"
+              style={{
+                display: "none",
+              }}
+              onChange={handleImageUpload}
+            />
+          </Box>
           <STextArea
             placeholder="코스에 대한 리뷰를 작성해주세요!"
             onChange={(e) => handleText(e.target.value)}
             value={reviewDesc}
           />
-          <Box justify="end" direction="row">
+          <Box justify="end" direction="row" width="90%">
             <div>{reviewDesc.length} / 50</div>
           </Box>
         </Box>
@@ -238,28 +282,45 @@ export const ReviewRegister = () => {
                 width: "88vw",
               }}
             >
-              {tags.map((tag, idx) => (
-                <Button
-                  key={idx}
-                  onClick={() => {
-                    select.length < 5 && !select.some((v) => v.id === tag.id)
-                      ? setSelect((select) => [...select, tag])
-                      : setSelect(
-                          select.filter((Button) => Button.id !== tag.id)
-                        );
-                  }}
-                  TagGray={!select.some((v) => v.id === tag.id) ? true : false}
-                  TagGreen={select.some((v) => v.id === tag.id) ? true : false}
-                  style={{
-                    margin: "6px 3px ",
-                    wordWrap: "break-word",
-                    minWidth: "22%",
-                    padding: "5px 3px",
-                  }}
-                >
-                  #{tag.searchTagName}
-                </Button>
-              ))}
+              {tags.map((tag, idx) =>
+                select.some((v) => v.id === tag.id) ? (
+                  <Button
+                    key={idx}
+                    onClick={() => {
+                      setSelect(
+                        select.filter((Button) => Button.id !== tag.id)
+                      );
+                    }}
+                    taggreen="true"
+                    style={{
+                      margin: "6px 3px ",
+                      wordWrap: "break-word",
+                      minWidth: "22%",
+                      padding: "5px 3px",
+                    }}
+                  >
+                    #{tag.searchTagName}
+                  </Button>
+                ) : (
+                  <Button
+                    key={idx}
+                    onClick={() => {
+                      select.length === 5
+                        ? setVisible(true)
+                        : setSelect((select) => [...select, tag]);
+                    }}
+                    taggray="true"
+                    style={{
+                      margin: "6px 3px ",
+                      wordWrap: "break-word",
+                      minWidth: "22%",
+                      padding: "5px 3px",
+                    }}
+                  >
+                    #{tag.searchTagName}
+                  </Button>
+                )
+              )}
             </FlexBox>
           </FlexBox>
         </Box>
@@ -270,6 +331,7 @@ export const ReviewRegister = () => {
             if (isValied()) setOpen(true);
             else setNotValid(true);
           }}
+          whileTap={{ scale: 1.2 }}
         >
           <StyledText text="등록" size="18px" color="white" weight="bold" />
         </RegisterButton>
@@ -294,6 +356,7 @@ export const ReviewRegister = () => {
           title="리뷰 등록"
           desc="모든 정보를 입력하세요!"
           cancel="닫기"
+          accept={undefined}
         />
         <AlertDialog
           open={exit}
@@ -308,6 +371,16 @@ export const ReviewRegister = () => {
           accept="나가기"
           cancel="닫기"
         />
+        {visible && (
+          <Grommet theme={GrommetTheme}>
+            <Notification
+              toast={{ position: "center" }}
+              title="태그는 최대 5개입니다!"
+              status={"critical"}
+              onClose={() => setVisible(false)}
+            />
+          </Grommet>
+        )}
       </Box>
     </Box>
   );
