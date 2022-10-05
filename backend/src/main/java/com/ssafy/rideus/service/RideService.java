@@ -79,7 +79,7 @@ public class RideService {
         GroupRiddingResponse groupRiddingResponse = new GroupRiddingResponse();
         groupRiddingResponse.setMemberId(findMember.getId());
         groupRiddingResponse.setNickname(findMember.getNickname());
-
+        groupRiddingResponse.setProfileImageUrl(findMember.getProfileImageUrl());
         return groupRiddingResponse;
     }
 
