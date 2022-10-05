@@ -47,8 +47,9 @@ public class MongoDBConfig {
         return converter;
     }
 
-    @Bean
-    public MongoTransactionManager transactionManager(MongoDatabaseFactory dbFactory) {
-        return new MongoTransactionManager(dbFactory);
-    }
+    // 못씀
+//    @Bean
+//    public MongoTransactionManager transactionManager(MongoDatabaseFactory dbFactory) {
+//        return new MongoTransactionManager(dbFactory);
+//    }
 }
