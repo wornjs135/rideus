@@ -287,11 +287,11 @@ export const Ride = () => {
             console.log(response);
             // // 나만의 코스 주행
             // if (courseType === "my") {
-  
+
             // }
             // // 추천 코스 주행
             // else if (courseType === "course") {
-  
+
             // }
           },
           (fail) => {
@@ -302,7 +302,7 @@ export const Ride = () => {
             state: {
               courseType: courseType,
               courseData: {
-                recordId: recordId,
+                recordId: response1.data.recordId,
                 courseId: courseId,
                 courseName: courseName,
                 latlng: mapData.latlng,
@@ -313,7 +313,7 @@ export const Ride = () => {
               },
             },
           })
-        )
+        );
       },
       (fail) => {
         console.log(fail);

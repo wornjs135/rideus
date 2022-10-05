@@ -64,7 +64,8 @@ export const CourseBox = ({
         }}
         background="white"
         pad="medium"
-        margin={{ top: "20px" }}
+        margin={{ top: "10px" }}
+        gap="8px"
       >
         {/* 코스 박스 */}
         <Box width="100%" align="center">
@@ -174,7 +175,7 @@ export const CourseBox = ({
           {/* 사진 */}
         </Box>
         {/* 태그 */}
-        <Box direction="row" gap="small">
+        <Box direction="row" gap="small" justify="center">
           {tags &&
             tags.map((t, idx) => {
               return (
