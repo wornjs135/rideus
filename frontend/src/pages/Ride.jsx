@@ -19,7 +19,7 @@ import {
 import history from "../utils/history.js";
 import {latlng} from "../utils/data";
 import useWatchLocation from "../hooks/watchLocationHook";
-import {distanceHandle, speedHandle, timeHandle} from "../utils/util";
+import {convertStringToColor, distanceHandle, speedHandle, timeHandle} from "../utils/util";
 import {ExitButton, PauseButton} from "../components/Buttons";
 import SockJS from "sockjs-client";
 import * as StompJs from "@stomp/stompjs";
@@ -629,7 +629,11 @@ export const Ride = () => {
                                         position={{lat: member.lat, lng: member.lng}}
                                     >
                                         {/* 커스텀 오버레이에 표시할 내용입니다 */}
-                                        <Avatar src={"http://k.kakaocdn.net/dn/clUd4x/btrLhO8irGb/GBphmFLGQPwccH60rKtv8k/img_110x110.jpg"} style={{width:"35px",height:"35px"}}/>
+                                        <Avatar src={member.profileImageUrl} style={{
+                                            width: "35px",
+                                            height: "35px",
+                                            border: `3px inset ${convertStringToColor(member.color)}`
+                                        }}/>
                                     </CustomOverlayMap>
                                 );
                             })}
@@ -703,6 +707,8 @@ export const Ride = () => {
                             border: "2px solid #64CCBE",
                             fontWeight: "bold",
                             position: "relative",
+                            flexDirection:"row",
+                            justifyContent:"space-evenly"
                         }}
                     >
                         <StyledText
@@ -718,9 +724,9 @@ export const Ride = () => {
                         />
                         {rideMembers.members
                             .map((m) => {
-                                return m.nickname;
+                                return <StyledText text={m.nickname} color={convertStringToColor(m.color)}/>;
                             })
-                            .join(" ")}
+                        }
                     </Box>
                 )}
                 {/* 일시정지, 체크포인트 버튼 */}
