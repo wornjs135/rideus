@@ -23,6 +23,7 @@ import {
   getRecommendationCourseByLocation,
 } from "../utils/api/mainApi";
 import { useGeolocated } from "react-geolocated";
+import SportsScoreIcon from "@mui/icons-material/SportsScore";
 
 // 코스 구조
 // [
