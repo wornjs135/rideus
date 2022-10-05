@@ -25,6 +25,7 @@ const Header = styled.div`
   width: 100%;
   max-height: 10vh;
   text-align: center;
+  margin: 15px 0px;
 `;
 
 export function LogoHeader() {
@@ -56,7 +57,7 @@ const IconButtonStyle = {
 };
 let lastScrollTop = 0;
 let nowScrollTop = 0;
-export function NavBar() {
+export const NavBar = () => {
   const [show, handleShow] = useState("visible");
   const [opacity, setOpacity] = useState("1");
   const { pathname } = useLocation();
@@ -88,32 +89,73 @@ export function NavBar() {
     };
   }, []);
   return (
-    <NavBarDiv isShow={show} opacity={opacity}>
-      <div style={IconButtonStyle}>
-        <Link to="/">
-          <HomeIcon stroke={pathname === "/" ? "#64CCBE" : "#444444"} />
-        </Link>
-      </div>
-      <div style={IconButtonStyle}>
-        <Link to="/courseList">
-          <CourseIcon
-            fill={pathname === "/courseList" ? "#64CCBE" : "#444444"}
-          />
-        </Link>
-      </div>
-      <div style={IconButtonStyle}>
-        <Link to="/rank">
-          <RankIcon stroke={pathname === "/rank" ? "#64CCBE" : "#444444"} />
-        </Link>
-      </div>
-      <div style={IconButtonStyle}>
-        <Link to="/mypage">
-          <MypageIcon stroke={pathname === "/mypage" ? "#64CCBE" : "#444444"} />
-        </Link>
-      </div>
-    </NavBarDiv>
+    // <NavBarDiv isShow={show} opacity={opacity}>
+    //   <div style={IconButtonStyle}>
+    //     <Link to="/">
+    //       <HomeIcon stroke={pathname === "/" ? "#64CCBE" : "#444444"} />
+    //     </Link>
+    //   </div>
+    //   <div style={IconButtonStyle}>
+    //     <Link to="/courseList">
+    //       <CourseIcon
+    //         fill={pathname === "/courseList" ? "#64CCBE" : "#444444"}
+    //       />
+    //     </Link>
+    //   </div>
+    //   <div style={IconButtonStyle}>
+    //     <Link to="/rank">
+    //       <RankIcon stroke={pathname === "/rank" ? "#64CCBE" : "#444444"} />
+    //     </Link>
+    //   </div>
+    //   <div style={IconButtonStyle}>
+    //     <Link to="/mypage">
+    //       <MypageIcon stroke={pathname === "/mypage" ? "#64CCBE" : "#444444"} />
+    //     </Link>
+    //   </div>
+    // </NavBarDiv>
+    <Box width="100%">
+      <Box
+        style={{
+          position: "fixed",
+          bottom: "0",
+          backgroundColor: "white",
+          padding: "5px 0px",
+          opacity: opacity,
+          transition: "all 0.35s",
+          visibility: show,
+        }}
+        width="100%"
+        direction="row"
+        justify="around"
+      >
+        <div style={IconButtonStyle}>
+          <Link to="/">
+            <HomeIcon stroke={pathname === "/" ? "#64CCBE" : "#444444"} />
+          </Link>
+        </div>
+        <div style={IconButtonStyle}>
+          <Link to="/courseList">
+            <CourseIcon
+              fill={pathname === "/courseList" ? "#64CCBE" : "#444444"}
+            />
+          </Link>
+        </div>
+        <div style={IconButtonStyle}>
+          <Link to="/rank">
+            <RankIcon stroke={pathname === "/rank" ? "#64CCBE" : "#444444"} />
+          </Link>
+        </div>
+        <div style={IconButtonStyle}>
+          <Link to="/mypage">
+            <MypageIcon
+              stroke={pathname === "/mypage" ? "#64CCBE" : "#444444"}
+            />
+          </Link>
+        </div>
+      </Box>
+    </Box>
   );
-}
+};
 
 //텍스트 폼
 const TextForm = styled.div`
@@ -227,7 +269,7 @@ export const StarBox = ({ score, starView }) => {
           // align="center"
           style={{
             width: starView,
-            height: "20px",
+            height: "16px",
             overflow: "hidden",
           }}
         >
@@ -236,8 +278,8 @@ export const StarBox = ({ score, starView }) => {
             alt="별"
             src={Stars}
             style={{
-              height: "20px",
-              width: "100px",
+              height: "16px",
+              width: "80px",
             }}
           />
         </div>
@@ -247,8 +289,8 @@ export const StarBox = ({ score, starView }) => {
           src={StarsBlank}
           style={{
             position: "absolute",
-            width: "100px",
-            height: "20px",
+            width: "80px",
+            height: "16px",
           }}
         />
       </Box>

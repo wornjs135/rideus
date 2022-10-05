@@ -162,12 +162,18 @@ export const Rank = () => {
                       setType("time");
                     }}
                   >
-                    <Box pad="medium" overflow="scroll" height="45vh">
+                    <div
+                      style={{
+                        overflow: "auto",
+                        height: "45vh",
+                        padding: "0px 10px",
+                      }}
+                    >
                       {timeRanks &&
                         timeRanks.map((d, idx) => {
                           return <RankBox record={d} key={idx} type="time" />;
                         })}
-                    </Box>
+                    </div>
                   </Tab>
                   <Tab
                     title="거리"
@@ -181,15 +187,21 @@ export const Rank = () => {
                       setType("dis");
                     }}
                   >
-                    <Box pad="medium" overflow="scroll" height="45vh">
+                    <div
+                      style={{
+                        overflow: "auto",
+                        height: "45vh",
+                        padding: "0px 10px",
+                      }}
+                    >
                       {disRanks &&
                         disRanks.map((d, idx) => {
                           return <RankBox record={d} key={idx} type="dis" />;
                         })}
-                    </Box>
+                    </div>
                   </Tab>
                   <Tab
-                    title="평균 속력"
+                    title="최고 속력"
                     style={{
                       fontWeight: "bold",
                       fontSize: "16px",
@@ -200,12 +212,18 @@ export const Rank = () => {
                       setType("speed");
                     }}
                   >
-                    <Box pad="medium" overflow="scroll" height="45vh">
+                    <div
+                      style={{
+                        overflow: "auto",
+                        height: "45vh",
+                        padding: "0px 10px",
+                      }}
+                    >
                       {speedRanks &&
                         speedRanks.map((d, idx) => {
                           return <RankBox record={d} key={idx} type="speed" />;
                         })}
-                    </Box>
+                    </div>
                   </Tab>
                 </Tabs>
               </Grommet>

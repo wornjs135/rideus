@@ -79,11 +79,10 @@ export const Router = () => {
       {/* 로고, 내브바 */}
       <Route path="/" element={<LayoutNoFooter />}></Route>
       {/* 로고 */}
-      <Route path="/" element={<LayoutLogo />}>
-        <Route path="/courseDetail/:courseId" element={<CourseDetail />} />
-      </Route>
+      <Route path="/" element={<LayoutLogo />}></Route>
       {/* 풀스크린 */}
       <Route path="/" element={<FullLayout />}>
+        <Route path="/courseDetail/:courseId" element={<CourseDetail />} />
         <Route path="/login" element={<Login />} />
         <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />
         <Route path="/moreinfo" element={<MoreInfo />} />
