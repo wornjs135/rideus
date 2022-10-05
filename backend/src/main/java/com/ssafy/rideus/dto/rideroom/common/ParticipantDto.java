@@ -14,11 +14,14 @@ public class ParticipantDto implements Serializable {
 
     private Long memberId;
     private String nickname;
+    private String color;
+    private String profileImageUrl;
 
     public static ParticipantDto from(Member member) {
         ParticipantDto participant = new ParticipantDto();
         participant.memberId = member.getId();
         participant.nickname = member.getNickname();
+        participant.profileImageUrl = member.getProfileImageUrl();
 
         return participant;
     }
