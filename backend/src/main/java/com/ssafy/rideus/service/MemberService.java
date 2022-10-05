@@ -10,6 +10,7 @@ import com.ssafy.rideus.dto.record.response.MyRideRecordRes;
 import com.ssafy.rideus.dto.record.response.RecordTotalResponse;
 import com.ssafy.rideus.dto.tag.response.MemberTagResponse;
 import com.ssafy.rideus.repository.jpa.MemberRepository;
+import com.ssafy.rideus.repository.jpa.MemberTagRepository;
 import com.ssafy.rideus.repository.jpa.RecordRepository;
 import com.ssafy.rideus.repository.mongo.MongoRecordRepository;
 import com.ssafy.rideus.repository.query.MemberQueryRepository;
@@ -39,6 +40,7 @@ public class MemberService {
     private final MongoRecordRepository mongoRecordRepository;
 
     private final RecordRepository recordRepository;
+    private final MemberTagRepository memberTagRepository;
 
     public void updateMoreInformation(MemberMoreInfoReq memberMoreInfoReq, long memberId) {
         Member findMember = findById(memberId);
@@ -88,6 +90,7 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public List<MemberTagResponse> getMyTag(Long memberId) {
+        memberTagRepository.findByIdWithTag(memberId);
         return tagQueryRepository.searchMemberTag(memberId);
     }
 
