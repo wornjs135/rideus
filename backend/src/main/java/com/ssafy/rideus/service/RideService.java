@@ -29,6 +29,7 @@ import com.ssafy.rideus.repository.mongo.MongoRecordRepository;
 import com.ssafy.rideus.repository.redis.RedisRideRoomRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -173,7 +174,7 @@ public class RideService {
 //        log.info("주행 좌표 리스트 DB에서 가져온거: " + mongoRecord.getCoordinates());
 //        log.info("주행 좌표 리스트 DB에서 가져온거: " + mongoRecord.getCoordinates().size());
 
-        Query query = new Query().addCriteria(Criteria.where("_id").is(recordId));
+        Query query = new Query().addCriteria(Criteria.where("_id").is(new ObjectId(recordId)));
         Update update = new Update();
 //        update.set("coordinates", saveCoordinatesRequest.getCoordinates());
         update.push("coordinates").each(saveCoordinatesRequest.getCoordinates());
