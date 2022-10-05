@@ -18,6 +18,7 @@ import { getCourseDetail } from "../utils/api/courseApi";
 import { getCourseRankTime } from "../utils/api/rankApi";
 import { expectTimeHandle } from "../utils/util";
 import styled from "styled-components";
+import Logo from "../assets/images/logo.png";
 
 import BackBtn from "../assets/images/backButton.png";
 import { getCourseNearInfo } from "../utils/api/nearApi";
@@ -238,7 +239,7 @@ export const CourseDetail = () => {
           direction="row"
           justify="between"
           width="90%"
-          margin={{ bottom: "10px" }}
+          margin={{ top: "10px", bottom: "10px" }}
         >
           <BackButton
             onClick={() => {
@@ -247,7 +248,8 @@ export const CourseDetail = () => {
           >
             <img src={BackBtn} alt="" />
           </BackButton>
-          <StyledText text={course.courseName} size="24px" weight="bold" />
+          <img alt="logo" src={Logo} onClick={() => navigate("/")} />
+
           <Blank />
         </Box>
         <Box
@@ -325,6 +327,7 @@ export const CourseDetail = () => {
             </Map>
           )}
         </Box>
+        <StyledText text={course.courseName} size="24px" weight="bold" />
         <Box direction="row" justify="between" width="90%">
           <StarBox score={course.starAvg} starView={starView} />
           <Box direction="row" align="center">

@@ -12,6 +12,7 @@ export const RankBox = ({ record, type }) => {
     <Box
       direction="row"
       justify="between"
+      height="48px"
       style={{
         borderTop: "1px solid #F4F4F4",
         boxShadow:
@@ -21,19 +22,25 @@ export const RankBox = ({ record, type }) => {
             ? "linear-gradient( to right, rgba(100, 204, 190, 0.26), white )"
             : "",
       }}
-      pad="small"
     >
-      <Box direction="row" width="40%" align="center" gap="medium">
-        <StyledText text={record.ranking} weight="bold" />
-        <Avatar
-          size="34px"
-          src={
-            record.profileImageUrl === null ? Profile : record.profileImageUrl
-          }
+      <Box direction="row" width="65%" align="center" gap="medium">
+        <StyledText
+          text={record.ranking}
+          weight="bold"
+          style={{ width: "15%", textAlign: "end" }}
         />
-        <StyledText text={record.nickname} />
+        <Box width="25%">
+          <Avatar
+            size="35px"
+            src={
+              record.profileImageUrl === null ? Profile : record.profileImageUrl
+            }
+          />
+        </Box>
+
+        <StyledText text={record.nickname} style={{ width: "75%" }} />
       </Box>
-      <Box width="25%" justify="center" align="end">
+      <Box width="30%" justify="center" align="end">
         {type ? (
           type === "time" ? (
             <StyledText
@@ -42,7 +49,7 @@ export const RankBox = ({ record, type }) => {
             />
           ) : type === "dis" ? (
             <StyledText
-              text={distanceHandle(record.totalDistance) + "km"}
+              text={parseFloat(record.totalDistance).toFixed(2) + "km"}
               weight="bold"
             />
           ) : (

@@ -41,7 +41,7 @@ export const Ride = () => {
     latlng: [],
     center: { lng: 127.002158, lat: 37.512847 },
   });
-
+  const [idle, setIdle] = useState(1);
   const [data, setData] = useState({
     topSpeed: 0,
     avgSpeed: 0,
@@ -328,7 +328,6 @@ export const Ride = () => {
     setWhen(true);
     setConfirmedNavigation(false);
   }, []);
-  let idle = 1;
 
   // 그룹 주행 공유하기
   const sharePage = () => {
@@ -383,7 +382,6 @@ export const Ride = () => {
         mapData.latlng.at(-1).lat === gps.lat &&
         mapData.latlng.at(-1).lng === gps.lng
       ) {
-        idle = idle + 1;
       } else {
         setMapData((prev) => {
           return {
@@ -404,11 +402,16 @@ export const Ride = () => {
           console.log("dis: ", dis);
           if (dis > 0) {
             setData((prev) => ({
-              topSpeed: Math.max(prev.topSpeed, speedHandle(dis, idle)),
-              avgSpeed: (prev.avgSpeed + speedHandle(dis, idle)) / 2,
+              topSpeed: Math.max(
+                prev.topSpeed,
+                speedHandle(dis, 1) < 40 ? speedHandle(dis, 1) : prev.topSpeed
+              ),
+              avgSpeed:
+                (prev.avgSpeed + speedHandle(dis, 1) > 0
+                  ? speedHandle(dis, 1)
+                  : prev.avgSpeed) / 2,
               totalDistance: prev.totalDistance + dis,
             }));
-            idle = 1;
           }
           // idle = 1;
         }

@@ -34,9 +34,15 @@ export const ReviewBox = ({ review, score, starView, courseName }) => {
           <Box justify="center" align="start">
             <StyledText text={review.memberNickname} />
             <StyledText text={review.content} />
-            <Box direction="row">
+            <Box direction="row" gap="3px">
               {review.tags.map((tag) => {
-                return <StyledText text={`#${tag.tagName}`} key={tag.tagId} />;
+                return (
+                  <StyledText
+                    text={`#${tag.tagName}`}
+                    size="12px"
+                    key={tag.tagId}
+                  />
+                );
               })}
             </Box>
             <StarBox score={score} starView={starView} />
