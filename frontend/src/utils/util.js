@@ -141,3 +141,16 @@ export const convertDistanceToText = (dis) => {
   if (dis >= 52.4) return "서울부터 인천까지의 거리를";
   return "집 근처 거리를";
 };
+
+export const convertStringToColor = (color) => {
+  if (color === "RED") return "#FF0000";
+  if (color === "YELLOW") return "#FFFF00";
+  if (color ==="BLUE") return "#0000FF";
+  if (color ==="GREEN") return "#008000";
+  if (color ==="PURPLE") return "#800080";
+  if (color ==="ORANGE") return "#FFA500";
+  if (color ==="PINK") return "#FFC0CB";
+  if (color ==="BROWN") return "#A52A2A";
+  if (color ==="AQUAMARINE") return "#7FFFD4";
+  if (color ==="GRAY") return "#808080";
+}
