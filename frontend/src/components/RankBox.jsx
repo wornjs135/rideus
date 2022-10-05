@@ -2,7 +2,11 @@ import { Avatar, Box } from "grommet";
 import React from "react";
 import { StyledText } from "./Common";
 import Profile from "../assets/images/profile.png";
-import { distanceHandle, expectTimeHandle } from "../utils/util";
+import {
+  distanceHandle,
+  expectTimeHandle,
+  expectTimeHandle2,
+} from "../utils/util";
 import { useSelector } from "react-redux";
 
 export const RankBox = ({ record, type }) => {
@@ -44,7 +48,7 @@ export const RankBox = ({ record, type }) => {
         {type ? (
           type === "time" ? (
             <StyledText
-              text={expectTimeHandle(record.totalTime)}
+              text={expectTimeHandle2(record.totalTime)}
               weight="bold"
             />
           ) : type === "dis" ? (

@@ -8,10 +8,10 @@ import { useNavigate } from "react-router-dom";
 import NoNews from "../assets/images/news.png";
 import Clock from "../assets/icons/clock.svg";
 import Flag from "../assets/icons/flag.svg";
-
+import { motion } from "framer-motion";
 import NoImage from "../assets/images/noimage.jpg";
 
-const CourseBox = styled.div`
+const CourseBox = styled(motion.div)`
   display: flex;
   flex-direction: column;
   position: relative;
@@ -28,17 +28,20 @@ const CourseBox = styled.div`
   box-shadow: 4px 4px 4px -4px rgb(0 0 0 / 0.2);
 `;
 
-const NewsDiv = styled.div`
+const NewsDiv = styled(motion.div)`
+  display: flex;
+  flex-direction: column;
   position: relative;
-  align-items: center;
-  width: 153px;
-  text-align: center;
-  height: 164px;
+  width: 141px;
+  height: 144px;
   margin-right: 15px;
   margin-bottom: 10px;
   margin-top: 5px;
+  padding: 10px;
+  padding-top: 14px;
   background-color: white;
   border-radius: 15px;
+  justify-content: space-between;
   box-shadow: 4px 4px 4px -4px rgb(0 0 0 / 0.2);
 `;
 
@@ -74,6 +77,7 @@ export const BestCourse = ({ course }) => {
           onClick={() => {
             navigate(`/courseDetail/${course.courseId}`);
           }}
+          whileTap={{ scale: 1.2 }}
         >
           <Box gap="10px" align="center">
             <img
@@ -175,16 +179,15 @@ export const NewsBox = ({ news }) => {
       onClick={() => {
         window.open(news.link, "_blank");
       }}
+      whileTap={{ scale: 1.2 }}
     >
       <Box height="50%" width="100%">
         <img
           src={news.image ? news.image : NoNews}
           alt=""
-          style={{
-            borderRadius: "15px 15px 0 0",
-          }}
-          width="100%"
-          height="100%"
+          width="140px"
+          height="85px"
+          style={{ borderRadius: "10px", objectFit: "cover" }}
         />
       </Box>
       <Box align="center">

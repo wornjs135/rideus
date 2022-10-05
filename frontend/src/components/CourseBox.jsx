@@ -6,7 +6,7 @@ import Bookmark from "../assets/images/bookmark.png";
 import NoImage from "../assets/images/noimage.jpg";
 import BookmarkBlank from "../assets/images/bookmark_blank.png";
 import { useNavigate } from "react-router-dom";
-import { expectTimeHandle, timeHandle2 } from "../utils/util";
+import { expectTimeHandle, TimeBox, timeHandle2 } from "../utils/util";
 import Clock from "../assets/icons/clock.svg";
 import Flag from "../assets/icons/flag.svg";
 import Mark from "../assets/icons/mark.svg";
@@ -59,18 +59,17 @@ export const CourseBox = ({
         style={{
           borderRadius: "10px",
           boxShadow: "4px 4px 4px -4px rgb(0 0 0 / 0.2)",
-          width: "283px",
-          height: "143px",
+          width: "90%",
+          height: "15%",
         }}
         background="white"
-        pad="medium"
-        margin={{ top: "10px" }}
+        pad={{ left: "medium", right: "medium", top: "small", bottom: "small" }}
         gap="8px"
       >
         {/* 코스 박스 */}
         <Box width="100%" align="center">
           {/* 제목, 북마크 버튼 */}
-          <Box direction="row" justify="between" width="100%">
+          <Box direction="row" justify="around" width="100%">
             <StyledText
               text={courseName}
               weight="bold"
@@ -94,12 +93,12 @@ export const CourseBox = ({
             </Box>
           </Box>
           {/* 코스 데이터, 사진 */}
-          <Box direction="row" width="100%" justify="between" align="center">
+          <Box direction="row" width="100%" justify="around" align="center">
             <Box style={{ marginRight: "25px" }}>
               <img
                 src={imageUrl ? imageUrl : NoImage}
-                width="140px"
-                height="75px"
+                width="156px"
+                height="84px"
                 style={{ borderRadius: "10px", objectFit: "cover" }}
               />
             </Box>
@@ -112,12 +111,15 @@ export const CourseBox = ({
                 style={{
                   backgroundColor: "#BDE0EF",
                   borderRadius: "10px",
-                  padding: "0px 4px",
+                  padding: "1px 5px",
                   // margin: "3px",
                 }}
               >
-                <Avatar src={Flag} size="12px" />
-                <StyledText size="13px" text={distance + "km"} weight="bold" />
+                <Avatar src={Flag} size="13px" />
+                <Box align="end" direction="row">
+                  <StyledText text={distance} weight="bold" size="17px" />
+                  <StyledText size="13px" text={"km"} weight="bold" />
+                </Box>
               </Box>
 
               <Box
@@ -129,15 +131,11 @@ export const CourseBox = ({
                   backgroundColor: "#F8F38F",
                   borderRadius: "10px",
                   // margin: "3px",
-                  padding: "0px 4px",
+                  padding: "1px 5px",
                 }}
               >
-                <Avatar src={Clock} size="12px" />
-                <StyledText
-                  size="13px"
-                  text={timeHandle2(expectedTime)}
-                  weight="bold"
-                />
+                <Avatar src={Clock} size="13px" />
+                <TimeBox time={expectedTime} />
               </Box>
               <Box
                 justify="center"
@@ -148,10 +146,10 @@ export const CourseBox = ({
                   backgroundColor: "#F4D4D4",
                   borderRadius: "10px",
                   // margin: "3px",
-                  padding: "0px 4px",
+                  padding: "2px 5px",
                 }}
               >
-                <Avatar src={Mark} size="12px" />
+                <Avatar src={Mark} size="13px" />
                 <StyledText
                   size="13px"
                   text={start.split(" ")[0]}
@@ -179,7 +177,13 @@ export const CourseBox = ({
           {tags &&
             tags.map((t, idx) => {
               return (
-                <StyledText text={`#${t.tagName} `} key={t.tagId} size="11px" />
+                <StyledText
+                  text={`#${t.tagName} `}
+                  key={t.tagId}
+                  size="11px"
+                  color="black"
+                  weight="bold"
+                />
               );
             })}
         </Box>
