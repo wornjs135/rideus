@@ -258,7 +258,7 @@ export const MyPage = () => {
                   return (
                     <StyledText
                       text={`#${tag.tagName}`}
-                      key={tag.tagId}
+                      key={idx}
                       color="#64CCBE"
                       weight="bold"
                       style={{ marginRight: "10px" }}

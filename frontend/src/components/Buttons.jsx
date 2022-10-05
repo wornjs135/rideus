@@ -22,7 +22,7 @@ export const BootstrapButton = styled(motion.button)({
   },
 });
 
-export const RegisterButton = styled(Button)({
+export const RegisterButton = styled(motion.button)({
   boxShadow: "none",
   textTransform: "none",
   fontSize: 14,
@@ -31,9 +31,10 @@ export const RegisterButton = styled(Button)({
   color: "white",
   width: "75%",
   height: "5vh",
+  border: "none",
   margin: "10px",
+  borderRadius: "10px",
   backgroundColor: "#64CCBE",
-  fontFamily: ["sans-serif"],
   "&:hover": {
     backgroundColor: "#64CCBE",
     boxShadow: "none",
@@ -41,7 +42,7 @@ export const RegisterButton = styled(Button)({
   },
 });
 
-export const PauseButton = styled(Button)({
+export const PauseButton = styled(motion.button)({
   boxShadow: "none",
   textTransform: "none",
   fontSize: 14,
@@ -50,9 +51,10 @@ export const PauseButton = styled(Button)({
   color: "white",
   width: "50%",
   height: "5vh",
+  border: "none",
   margin: "10px",
   backgroundColor: "#64CCBE",
-  fontFamily: ["sans-serif"],
+  borderRadius: "10px",
   "&:hover": {
     backgroundColor: "#64CCBE",
     boxShadow: "none",
@@ -60,7 +62,7 @@ export const PauseButton = styled(Button)({
   },
 });
 
-export const WhiteButton = styled(Button)({
+export const WhiteButton = styled(motion.button)({
   boxShadow: "none",
   textTransform: "none",
   border: "1px solid #64CCBE",
@@ -72,7 +74,7 @@ export const WhiteButton = styled(Button)({
   height: "5vh",
   margin: "10px",
   backgroundColor: "white",
-  fontFamily: ["sans-serif"],
+  borderRadius: "10px",
   "&:hover": {
     backgroundColor: "white",
     boxShadow: "none",
@@ -80,7 +82,7 @@ export const WhiteButton = styled(Button)({
   },
 });
 
-export const ExitButton = styled(Button)({
+export const ExitButton = styled(motion.button)({
   boxShadow: "none",
   textTransform: "none",
   fontSize: 14,
@@ -88,10 +90,11 @@ export const ExitButton = styled(Button)({
   padding: "6px 12px",
   color: "white",
   width: "50%",
+  border: "none",
   height: "5vh",
   margin: "10px",
   backgroundColor: "#F29393",
-  fontFamily: ["sans-serif"],
+  borderRadius: "10px",
   "&:hover": {
     backgroundColor: "#F29393",
     boxShadow: "none",

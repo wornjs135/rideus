@@ -6,8 +6,10 @@ export const StyledHorizonTable = styled.div`
   white-space: nowrap;
   padding-left: 20px;
   padding-right: 50px;
+  padding-top: 15px;
   &::-webkit-scrollbar {
     display: none;
+    width: 0 !important;
   }
 
   .card {

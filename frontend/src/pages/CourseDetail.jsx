@@ -31,7 +31,7 @@ import { getCourseNearInfo } from "../utils/api/nearApi";
 import { getCourseAllReview } from "../utils/api/reviewApi";
 import { deleteBookmark, makeBookmark } from "../utils/api/bookmarkApi";
 import { getWeather } from "../utils/api/weatherApi";
-
+import { motion } from "framer-motion";
 export const BackButton = styled.button`
   background: none;
   font-size: 12px;
@@ -237,7 +237,7 @@ export const CourseDetail = () => {
       <Box
         align="center"
         width="100%"
-        height="86%"
+        height="100vh"
         alignSelf="center"
         gap="medium"
       >
@@ -255,15 +255,23 @@ export const CourseDetail = () => {
               navigate(-1);
             }}
           >
-            <img src={BackBtn} alt="" />
+            <motion.img src={BackBtn} alt="" whileTap={{ scale: 1.2 }} />
           </BackButton>
-          <img alt="logo" src={Logo} onClick={() => navigate("/")} />
+          <motion.img
+            whileTap={{ scale: 1.2 }}
+            alt="logo"
+            src={Logo}
+            onClick={() => navigate("/")}
+          />
 
           <Blank />
         </Box>
-        <Box
-          width="90%"
-          height="35vh"
+        <motion.div
+          style={{
+            width: "90%",
+            height: "35%",
+          }}
+          whileTap={{ scale: 1.2 }}
           onClick={() => {
             setOpenMap(true);
           }}
@@ -333,30 +341,37 @@ export const CourseDetail = () => {
               )}
             </Map>
           )}
-        </Box>
-        <Box direction="row" justify="between" width="90%">
-          <Box width="13%" direction="row" align="center" />
-          <StyledText
-            text={course.courseName}
-            size="24px"
+        </motion.div>
+        <Box direction="row" justify="between" width="90%" height="5%">
+          <Box width="13%" direction="row" />
+          <Box
+            align="center"
+            justify="center"
             style={{
+              fontSize: "24px",
               fontFamily: `gwtt, sans-serif`,
             }}
-          />
+          >
+            {course.courseName}
+          </Box>
+
           <Box width="13%" direction="row" align="center" justify="end">
-            <img
+            <motion.img
               src={bmk ? Bookmark : BookmarkBlank}
               width="25px"
               height="25px"
               onClick={() => {
                 handleBookmark();
               }}
+              whileTap={{ scale: 1.2 }}
             />
-            <StyledText text={course.likeCount} />
+            <Box width="30%">
+              <StyledText text={course.likeCount} />
+            </Box>
           </Box>
         </Box>
         <Box direction="row" justify="between" width="90%" height="10%">
-          <Box width="30%" justify="end">
+          <Box width="50%" height="100%">
             <img
               src={course.imageUrl ? course.imageUrl : NoImage}
               width="100%"

@@ -93,11 +93,11 @@ export const Rank = () => {
         variants={container}
         style={{
           width: "100%",
-          align: "center",
+          textAlign: "center",
         }}
       >
         <StyledText
-          text="RANKING"
+          text="명예의 전당"
           size="20px"
           weight="bold"
           style={{ marginTop: "15px", marginBottom: "15px" }}
@@ -158,7 +158,7 @@ export const Rank = () => {
             {/* 탭 */}
             <Box margin={{ top: "15px" }}>
               <Grommet theme={theme}>
-                <Tabs>
+                <Tabs margin={{ bottom: "10px" }}>
                   <Tab
                     title="시간"
                     style={{

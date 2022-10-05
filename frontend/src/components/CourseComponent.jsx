@@ -50,7 +50,6 @@ const Wrap = styled.div`
   overflow: hidden;
   white-space: normal;
   word-break: break-word;
-
   display: -webkit-box;
   -webkit-line-clamp: 2; // 원하는 라인수
   -webkit-box-orient: vertical;
@@ -200,6 +199,7 @@ export const NewsBox = ({ news }) => {
             height: "40px",
             overflow: "hidden",
             textOverflow: "ellipsis",
+            whiteSpace: "normal",
           }}
         />
       </Box>
