@@ -3,13 +3,11 @@ body {
   font-family: "gwtt", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* min-height: 100vh;
+
+  min-height: 100vh;
   @supports (-webkit-touch-callout: none) {
     min-height: -webkit-fill-available;
-  } */
-}
-:root {
-  --vh: 100%;
+  }
 }
 /* body {
   margin: 0;

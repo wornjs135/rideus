@@ -6,7 +6,7 @@ import CloseButton from "../assets/images/close.png";
 import CourseButton from "../assets/images/recCourse.png";
 import RideButton from "../assets/images/myride.png";
 import { useNavigate } from "react-router-dom";
-import { Box, Button } from "grommet";
+import { Box } from "grommet";
 import { Button as GBtn } from "grommet";
 import SoloBtn from "../assets/images/single.png";
 import GroupBtn from "../assets/images/group.png";
@@ -14,13 +14,15 @@ import { Dialog, Divider } from "@mui/material";
 import { MdDirectionsBike, MdOutlineMap } from "react-icons/md";
 import { GrMapLocation } from "react-icons/gr";
 import { createGroupRoom, startRidding } from "../utils/api/rideApi";
+import { motion } from "framer-motion";
+
 const HeaderDiv = styled.div`
   margin: 5px;
   display: flex;
   justify-content: space-between;
 `;
 
-const BackButton = styled.button`
+const BackButton = styled(motion.button)`
   background: none;
   font-size: 12px;
   font-family: Noto Sans KR, sans-serif;
@@ -34,8 +36,16 @@ export const HeaderBox = ({ goBack, title }) => {
   return (
     <HeaderDiv>
       <div style={{ width: "10vw" }}></div>
-      <StyledText size="20px" weight="bold" text={title} />
-      <BackButton onClick={goBack}>
+      <StyledText
+        size="20px"
+        weight="bold"
+        text={title}
+        style={{
+          display: "flex",
+          alignItems: "center",
+        }}
+      />
+      <BackButton whileTap={{ scale: 1.2 }} onClick={goBack}>
         <img src={CloseButton} />
       </BackButton>
     </HeaderDiv>
@@ -63,10 +73,11 @@ export const ChooseRideTypeBar = ({ open, onDismiss }) => {
         pad="15px"
         margin={{ top: "20px", bottom: "50px" }}
       >
-        <Button
+        <motion.button
           onClick={() => {
             navigate("/courseList");
           }}
+          whileTap={{ scale: 1.2 }}
           children={
             <Box width="145px" align="center" style={{ borderRadius: "8px" }}>
               <img src={CourseButton} />
@@ -78,9 +89,19 @@ export const ChooseRideTypeBar = ({ open, onDismiss }) => {
               />
             </Box>
           }
+          style={{
+            background: "none",
+            border: "none",
+            fontFamily: "gwtt",
+          }}
         />
         <Divider orientation="vertical" variant="middle" flexItem />
-        <Button
+        <motion.button
+          style={{
+            background: "none",
+            border: "none",
+            fontFamily: "gwtt",
+          }}
           onClick={() => {
             // 탑승
             // navigate("/ride", {
@@ -98,7 +119,7 @@ export const ChooseRideTypeBar = ({ open, onDismiss }) => {
             // startRidding(
             //   (response) => {
             //     console.log(response);
-               
+
             //   },
             //   (fail) => {
             //     console.log(fail);
@@ -117,6 +138,7 @@ export const ChooseRideTypeBar = ({ open, onDismiss }) => {
               },
             });
           }}
+          whileTap={{ scale: 1.2 }}
           children={
             <Box width="145px" align="center" style={{ borderRadius: "8px" }}>
               <img src={RideButton} />
@@ -165,12 +187,18 @@ export const ChooseSoloGroupBar = ({
         margin={{ bottom: "20px" }}
         gap="small"
       >
-        <GBtn
+        <motion.button
+          style={{
+            background: "none",
+            border: "none",
+            fontFamily: "gwtt",
+          }}
+          whileTap={{ scale: 1.2 }}
           onClick={() => {
             // startRidding(
             //   (response) => {
             //     console.log(response);
-                
+
             //   },
             //   (fail) => {
             //     console.log(fail);
@@ -217,7 +245,13 @@ export const ChooseSoloGroupBar = ({
           }
         />
         <Divider orientation="vertical" variant="middle" flexItem />
-        <GBtn
+        <motion.button
+          style={{
+            background: "none",
+            border: "none",
+            fontFamily: "gwtt",
+          }}
+          whileTap={{ scale: 1.2 }}
           onClick={() => {
             createGroupRoom(
               courseId,
@@ -243,7 +277,7 @@ export const ChooseSoloGroupBar = ({
                 // startRidding(
                 //   (response2) => {
                 //     console.log(response2);
-       
+
                 //   },
                 //   (fail) => {
                 //     console.log(fail);
