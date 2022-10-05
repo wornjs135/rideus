@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.ServletException;
@@ -18,6 +19,7 @@ import static com.ssafy.rideus.config.security.repository.CookieAuthorizationReq
 
 @Component
 @RequiredArgsConstructor
+@Transactional
 public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
     private final CookieAuthorizationRequestRepository authorizationRequestRepository;
