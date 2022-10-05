@@ -1,11 +1,13 @@
 package com.ssafy.rideus.service;
 
+import com.ssafy.rideus.common.exception.MaxRoomException;
 import com.ssafy.rideus.common.exception.NotMatchException;
 import com.ssafy.rideus.domain.Course;
 import com.ssafy.rideus.domain.Record;
 import com.ssafy.rideus.domain.base.Coordinate;
 import com.ssafy.rideus.domain.collection.CourseCoordinate;
 import com.ssafy.rideus.domain.collection.MongoRecord;
+import com.ssafy.rideus.domain.type.Color;
 import com.ssafy.rideus.dto.record.request.FinishRiddingRequest;
 import com.ssafy.rideus.dto.record.request.SaveCoordinatesRequest;
 import com.ssafy.rideus.dto.record.response.CreateRecordResponse;
@@ -37,11 +39,10 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static com.ssafy.rideus.common.exception.DuplicateException.GROUP_PARTICIPATE_DUPLICATE;
+import static com.ssafy.rideus.common.exception.MaxRoomException.*;
 import static com.ssafy.rideus.common.exception.NotFoundException.*;
 import static com.ssafy.rideus.common.exception.NotMatchException.MEMBER_RECORD_NOT_MATCH;
 import static com.ssafy.rideus.dto.record.type.RiddingType.group;
@@ -62,6 +63,8 @@ public class RideService {
     private final CourseCoordinateRepository courseCoordinateRepository;
     private final MongoTemplate mongoTemplate;
 
+    private final int MAX_PLAYER_COUNT = 6;
+
     @Transactional
     public CreateRideRoomResponse createRiddingRoom(Long memberId, String courseId) {
         Member findMember = memberRepository.findById(memberId)
@@ -72,14 +75,23 @@ public class RideService {
         return CreateRideRoomResponse.from(rideRoomRepository.save(RideRoom.create(findMember)).getId(), findCourse.getId(), findMember.getNickname());
     }
 
-    public GroupRiddingResponse searchMemberInfo(Long memberId) {
-        Member findMember = memberRepository.findById(memberId)
-                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
-
+    public GroupRiddingResponse searchMemberInfo(Long memberId, GroupRiddingRequest request) {
+        Optional<RedisRideRoom> rideRoom = redisRideRoomRepository.findById(request.getRideRoomId());
         GroupRiddingResponse groupRiddingResponse = new GroupRiddingResponse();
-        groupRiddingResponse.setMemberId(findMember.getId());
-        groupRiddingResponse.setNickname(findMember.getNickname());
-        groupRiddingResponse.setProfileImageUrl(findMember.getProfileImageUrl());
+
+        if (rideRoom.isPresent()) {
+            RedisRideRoom redisRideRoom = rideRoom.get();
+            for (ParticipantDto member : redisRideRoom.getParticipants()) {
+                if (member.getMemberId().equals(memberId)) {
+                    groupRiddingResponse.setMemberId(member.getMemberId());
+                    groupRiddingResponse.setNickname(member.getNickname());
+                    groupRiddingResponse.setProfileImageUrl(member.getProfileImageUrl());
+
+                    return groupRiddingResponse;
+                }
+            }
+        }
+
         return groupRiddingResponse;
     }
 
@@ -93,22 +105,47 @@ public class RideService {
         if (rideRoom.isPresent()) {
             RedisRideRoom realRideRoom = rideRoom.get();
             List<ParticipantDto> participants = realRideRoom.getParticipants();
+            if (participants.size() > MAX_PLAYER_COUNT) {
+                throw new MaxRoomException(GROUP_MAX_PARTICIPANTS);
+            }
 
             for (ParticipantDto participant : participants) {
                 if (participant.getMemberId().equals(findMember.getId())) {
                     throw new DuplicateException(GROUP_PARTICIPATE_DUPLICATE);
                 }
             }
+            ParticipantDto participant = ParticipantDto.from(findMember);
+            participant.setColor(getNewColor(realRideRoom).name());
+            participants.add(participant);
 
-            participants.add(ParticipantDto.from(findMember));
             result = redisRideRoomRepository.save(realRideRoom);
         } else {
             RedisRideRoom redisRideRoom = RedisRideRoom.create(request.getRideRoomId());
-            redisRideRoom.getParticipants().add(ParticipantDto.from(findMember));
+
+            ParticipantDto participant = ParticipantDto.from(findMember);
+            participant.setColor(getNewColor(redisRideRoom).name());
+
+            redisRideRoom.getParticipants().add(participant);
+
             result = redisRideRoomRepository.save(redisRideRoom);
         }
 
         return RedisRideRoomResponse.from(result);
+    }
+
+    private Color getNewColor(RedisRideRoom redisRideRoom) {
+        Set<Color> usedColors = new HashSet<>();
+        for (ParticipantDto participant : redisRideRoom.getParticipants()) {
+            usedColors.add(Color.valueOf(participant.getColor()));
+        }
+
+        for (int i = 0; i < MAX_PLAYER_COUNT; i++) {
+            Color newColor = Color.randomColor();
+            if (!usedColors.contains(newColor)) {
+                return newColor;
+            }
+        }
+        return Color.RED;
     }
 
     @Transactional
