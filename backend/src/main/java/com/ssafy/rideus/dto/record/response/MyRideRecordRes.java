@@ -39,6 +39,8 @@ public class MyRideRecordRes {
 
     private double nowTime;
 
+    private boolean isSingle;
+
     private List<Coordinate> latlng;
 
     public static MyRideRecordRes sharedMyRide(Record record) {
@@ -70,6 +72,11 @@ public class MyRideRecordRes {
 
     public void setLatLng(MongoRecord mongoRecord) {
         latlng = mongoRecord.getCoordinates();
+    }
+
+    public void computeIsSingle(int participantCnt) {
+        if (participantCnt > 1) this.isSingle = false;
+        else this.isSingle = true;
     }
 
 }
