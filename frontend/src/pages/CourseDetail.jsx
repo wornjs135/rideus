@@ -436,7 +436,7 @@ export const CourseDetail = () => {
             >
               <img src={Mark} width="13px" height="13px" />
               <StyledText
-                size="13px"
+                size="14px"
                 text={
                   course.start.split(" ")[0] + " " + course.start.split(" ")[1]
                 }

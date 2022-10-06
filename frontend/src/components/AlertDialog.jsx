@@ -25,6 +25,7 @@ import { useEffect } from "react";
 import { getWeather } from "../utils/api/weatherApi";
 import { ResponsiveLine } from "@nivo/line";
 import { motion } from "framer-motion";
+import { getReivewDetail } from "../utils/api/reviewApi";
 export const AlertDialog = ({
   open,
   handleClose,
@@ -463,36 +464,57 @@ export const ReviewDialog = ({
   starView,
   tags,
   img,
+  reviewId,
 }) => {
-  return (
-    <Dialog open={open} onClose={handleClose}>
-      <Box width="85vw" align="center" pad="small">
-        <HeaderBox goBack={handleClose} title={title} />
-        <Box width="90%" justify="around" align="center" gap="medium">
-          {/* 제목 */}
-          <CourseMap course={course} width="100%" height="20vh" />
-          {/* 사진 */}
-          {img && <img src={img} width="100%" />}
-          {/* 별점 */}
-          <StarBox score={score} starView={starView} />
-          {/* 내용 */}
-          <StyledText text={desc} />
-          {/* 태그 */}
-          <Box direction="row" overflow="scroll">
-            {/* arrays.map */}
-            {tags.map((t, idx) => {
-              return (
-                <StyledText text={"#" + t.tagName} key={idx} size="10px" />
-              );
-            })}
-          </Box>
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    if (loading)
+      getReivewDetail(
+        reviewId,
+        (response) => {
+          console.log(response);
+          setLoading(false);
+        },
+        (fail) => {
+          console.log(fail);
+          setLoading(false);
+        }
+      );
+    return () => {
+      setLoading(false);
+    };
+  }, []);
+  if (loading) return <Spinner />;
+  else
+    return (
+      <Dialog open={open} onClose={handleClose}>
+        <Box width="85vw" align="center" pad="small">
+          <HeaderBox goBack={handleClose} title={title} />
+          <Box width="90%" justify="around" align="center" gap="medium">
+            {/* 제목 */}
+            <CourseMap course={course} width="100%" height="20vh" />
+            {/* 사진 */}
+            {img && <img src={img} width="100%" />}
+            {/* 별점 */}
+            <StarBox score={score} starView={starView} />
+            {/* 내용 */}
+            <StyledText text={desc} />
+            {/* 태그 */}
+            <Box direction="row" overflow="scroll">
+              {/* arrays.map */}
+              {tags.map((t, idx) => {
+                return (
+                  <StyledText text={"#" + t.tagName} key={idx} size="10px" />
+                );
+              })}
+            </Box>
 
-          {/* 하단 버튼 */}
-          {/* <ExitButton onClick={handleClose}>{cancel}</ExitButton> */}
+            {/* 하단 버튼 */}
+            {/* <ExitButton onClick={handleClose}>{cancel}</ExitButton> */}
+          </Box>
         </Box>
-      </Box>
-    </Dialog>
-  );
+      </Dialog>
+    );
 };
 
 // temperature : 기온

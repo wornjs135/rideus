@@ -418,9 +418,11 @@ export const Ride = () => {
                 speedHandle(dis, 1) < 40 ? speedHandle(dis, 1) : prev.topSpeed
               ),
               avgSpeed:
-                (prev.avgSpeed + speedHandle(dis, 1) > 0
-                  ? speedHandle(dis, 1)
-                  : prev.avgSpeed) / 2,
+                (prev.avgSpeed +
+                  (speedHandle(dis, 1) > 0
+                    ? speedHandle(dis, 1)
+                    : prev.avgSpeed)) /
+                2,
               totalDistance: prev.totalDistance + dis,
             }));
           }
