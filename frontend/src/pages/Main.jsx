@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Spinner } from "grommet";
+import { Avatar, Box, Spinner } from "grommet";
 import MainBike from "../assets/images/main_bike.png";
 import Around from "../assets/images/around.png";
 import News from "../assets/images/news.png";
@@ -28,6 +28,10 @@ import {
 import { useGeolocated } from "react-geolocated";
 import SportsScoreIcon from "@mui/icons-material/SportsScore";
 import { motion } from "framer-motion";
+import Clock from "../assets/icons/clock.svg";
+import Flag from "../assets/icons/flag.svg";
+import Mark from "../assets/icons/mark.svg";
+
 // 코스 구조
 // [
 //   {
@@ -206,11 +210,11 @@ export const Main = () => {
             style={{
               boxShadow: "4px 4px 4px -4px rgb(0 0 0 / 0.2)",
               textTransform: "none",
-              fontSize: 24,
+              fontSize: 20,
               padding: "6px 12px",
               color: "white",
-              width: "276px",
-              height: "56px",
+              width: "243px",
+              height: "43px",
               margin: "10px",
               border: "none",
               backgroundColor: "#64CCBE",
@@ -257,29 +261,33 @@ export const Main = () => {
               right: "15px",
             }}
           >
-            <Box direction="row" align="center" gap="4px">
-              <StyledText
-                text="예상 시간"
-                size="12px"
-                style={{
-                  backgroundColor: "#F8F38F",
-                  borderRadius: "10px",
-                  // margin: "3px",
-                  padding: "4px 6px",
-                }}
-              />
+            <Box
+              direction="row"
+              align="center"
+              gap="4px"
+              style={{
+                backgroundColor: "#F8F38F",
+                borderRadius: "10px",
+                // margin: "3px",
+                padding: "4px 6px",
+              }}
+            >
+              <img src={Clock} width="13px" height="13px" />
+              <StyledText text="예상 시간" size="12px" weight="bold" />
             </Box>
-            <Box direction="row" align="center" gap="4px">
-              <StyledText
-                text="코스 길이"
-                size="12px"
-                style={{
-                  backgroundColor: "#BDE0EF",
-                  borderRadius: "10px",
-                  // margin: "3px",
-                  padding: "4px 6px",
-                }}
-              />
+            <Box
+              direction="row"
+              align="center"
+              gap="4px"
+              style={{
+                backgroundColor: "#BDE0EF",
+                borderRadius: "10px",
+                // margin: "3px",
+                padding: "4px 6px",
+              }}
+            >
+              <img src={Flag} width="13px" height="13px" />
+              <StyledText text="코스 길이" size="12px" weight="bold" />
             </Box>
           </Box>
           {/* 인기코스 */}
@@ -298,7 +306,13 @@ export const Main = () => {
                   objectFit: "cover",
                 }}
               />
-              <StyledText text="인기 코스" size="18px" />
+              <StyledText
+                text="인기 코스"
+                size="18px"
+                style={{
+                  fontFamily: "gwtt",
+                }}
+              />
             </Box>
             {/* 인기코스 리스트 */}
             <Box direction="row" overflow="scroll" pad={{ left: "10px" }}>
@@ -331,7 +345,13 @@ export const Main = () => {
                   objectFit: "cover",
                 }}
               />
-              <StyledText text="주변 코스" size="18px" />
+              <StyledText
+                text="주변 코스"
+                size="18px"
+                style={{
+                  fontFamily: "gwtt",
+                }}
+              />
             </Box>
             {/* 인기코스 리스트 */}
             <Box direction="row" overflow="scroll" pad={{ left: "10px" }}>
@@ -364,7 +384,13 @@ export const Main = () => {
                   objectFit: "cover",
                 }}
               />
-              <StyledText text="자전거 소식" size="18px" />
+              <StyledText
+                text="자전거 소식"
+                size="18px"
+                style={{
+                  fontFamily: "gwtt",
+                }}
+              />
             </Box>
             {/* 월간자전거 리스트 */}
             <Box direction="row" overflow="scroll" pad={{ left: "10px" }}>
@@ -396,7 +422,13 @@ export const Main = () => {
                   objectFit: "cover",
                 }}
               />
-              <StyledText text="인기 태그" size="18px" />
+              <StyledText
+                text="인기 태그"
+                size="18px"
+                style={{
+                  fontFamily: "gwtt",
+                }}
+              />
             </Box>
             {/* 인기태그 리스트 */}
             <Box

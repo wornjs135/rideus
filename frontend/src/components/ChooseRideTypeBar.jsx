@@ -19,6 +19,7 @@ import { motion } from "framer-motion";
 const HeaderDiv = styled.div`
   margin: 5px;
   display: flex;
+  width: 100%;
   justify-content: space-between;
 `;
 
@@ -79,7 +80,12 @@ export const ChooseRideTypeBar = ({ open, onDismiss }) => {
           }}
           whileTap={{ scale: 1.2 }}
           children={
-            <Box width="145px" align="center" style={{ borderRadius: "8px" }}>
+            <Box
+              width="145px"
+              align="center"
+              style={{ borderRadius: "8px" }}
+              gap="medium"
+            >
               <img src={CourseButton} />
               <StyledText
                 text="추천 코스"
@@ -140,7 +146,12 @@ export const ChooseRideTypeBar = ({ open, onDismiss }) => {
           }}
           whileTap={{ scale: 1.2 }}
           children={
-            <Box width="145px" align="center" style={{ borderRadius: "8px" }}>
+            <Box
+              width="145px"
+              align="center"
+              style={{ borderRadius: "8px" }}
+              gap="medium"
+            >
               <img src={RideButton} />
               <StyledText
                 text="나만의 코스"
@@ -233,6 +244,7 @@ export const ChooseSoloGroupBar = ({
               justify="between"
               style={{ borderRadius: "8px" }}
               pad="small"
+              gap="medium"
             >
               <img src={SoloBtn} />
               <StyledText
@@ -324,6 +336,7 @@ export const ChooseSoloGroupBar = ({
               justify="between"
               style={{ borderRadius: "8px" }}
               pad="small"
+              gap="medium"
             >
               <img src={GroupBtn} />
               <StyledText

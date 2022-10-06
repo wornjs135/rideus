@@ -21,7 +21,7 @@ import { BootstrapButton } from "../components/Buttons";
 import { ChooseSoloGroupBar } from "../components/ChooseRideTypeBar";
 import { getCourseDetail } from "../utils/api/courseApi";
 import { getCourseRankTime } from "../utils/api/rankApi";
-import { expectTimeHandle } from "../utils/util";
+import { expectTimeHandle, TimeBox } from "../utils/util";
 import styled from "styled-components";
 import Logo from "../assets/images/logo.png";
 import NoImage from "../assets/images/noimage.jpg";
@@ -32,6 +32,10 @@ import { getCourseAllReview } from "../utils/api/reviewApi";
 import { deleteBookmark, makeBookmark } from "../utils/api/bookmarkApi";
 import { getWeather } from "../utils/api/weatherApi";
 import { motion } from "framer-motion";
+import Clock from "../assets/icons/clock.svg";
+import Flag from "../assets/icons/flag.svg";
+import Mark from "../assets/icons/mark.svg";
+
 export const BackButton = styled.button`
   background: none;
   font-size: 12px;
@@ -379,44 +383,78 @@ export const CourseDetail = () => {
               style={{ borderRadius: "10px", objectFit: "cover" }}
             />
           </Box>
-          <Box align="end" gap="medium" width="50%">
+          <Box align="end" width="50%" gap="small">
             <StarBox
               score={course.starAvg}
               starView={parseFloat(course.starAvg).toFixed(1) * 16}
             />
-            <StyledText
-              text={"코스 길이 : " + course.distance + "km"}
-              style={{
-                backgroundColor: "#BDE0EF",
-                borderRadius: "10px",
-                // margin: "3px",
-                fontSize: "12px",
-                paddingLeft: "10px",
-                paddingRight: "10px",
-              }}
-            />
-            <StyledText
-              text={"예상 시간 : " + expectTimeHandle(course.expectedTime)}
+            <Box
+              justify="center"
+              align="center"
+              direction="row"
+              gap="4px"
               style={{
                 backgroundColor: "#F8F38F",
                 borderRadius: "10px",
-                fontSize: "12px",
-                paddingLeft: "10px",
-                paddingRight: "10px",
+                // margin: "3px",
+                padding: "4px 6px",
               }}
-            />
-            <StyledText
-              text={
-                course.start.split(" ")[0] + " " + course.start.split(" ")[1]
-              }
+            >
+              <img src={Clock} width="13px" height="13px" />
+              <TimeBox time={course.expectedTime} />
+            </Box>
+            <Box
+              justify="center"
+              align="center"
+              direction="row"
+              gap="4px"
+              style={{
+                backgroundColor: "#BDE0EF",
+                borderRadius: "10px",
+                padding: "4px 6px",
+                // margin: "3px",
+              }}
+            >
+              <img src={Flag} width="13px" height="13px" />
+              <Box align="end" direction="row">
+                <StyledText text={course.distance} weight="bold" size="17px" />
+                <StyledText size="13px" text={"km"} weight="bold" />
+              </Box>
+            </Box>
+
+            <Box
+              justify="center"
+              align="center"
+              direction="row"
+              gap="4px"
               style={{
                 backgroundColor: "#F4D4D4",
                 borderRadius: "10px",
-                fontSize: "12px",
-                paddingLeft: "10px",
-                paddingRight: "10px",
+                // margin: "3px",
+                padding: "4px 6px",
               }}
-            />
+            >
+              <img src={Mark} width="13px" height="13px" />
+              <StyledText
+                size="13px"
+                text={
+                  course.start.split(" ")[0] + " " + course.start.split(" ")[1]
+                }
+                weight="bold"
+              />
+            </Box>
+            {/* 
+              <StyledText
+                text={start.split(" ")[0]}
+                style={{
+                  backgroundColor: "#F4D4D4",
+                  borderRadius: "10px",
+                  fontSize: "12px",
+                  paddingLeft: "10px",
+                  paddingRight: "10px",
+                }}
+                weight="bold"
+              /> */}
           </Box>
         </Box>
 

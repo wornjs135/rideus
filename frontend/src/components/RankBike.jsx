@@ -30,7 +30,13 @@ export const RankBike = ({ type, rank }) => {
           }}
         /> */}
         <img width="45%" src={`/images/medal${rank.ranking}.png`} />
-        <StyledText text={rank.nickname} weight="bold" />
+        <StyledText
+          text={rank.nickname}
+          weight="bold"
+          style={{
+            fontFamily: "gwtt",
+          }}
+        />
         <img src={`/images/rank${rank.ranking}.png`} />
       </Box>
     );

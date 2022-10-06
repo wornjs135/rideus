@@ -89,6 +89,7 @@ export const BestCourse = ({ course }) => {
               text={course.courseName}
               weight="bold"
               color="#000000"
+              size="16px"
               style={{
                 textAlign: "center",
                 width: "90%",
@@ -97,6 +98,7 @@ export const BestCourse = ({ course }) => {
                 textOverflow: "ellipsis",
                 whiteSpace: "nowrap",
                 display: "block",
+                fontFamily: "gwtt",
               }}
             />
           </Box>
@@ -110,29 +112,39 @@ export const BestCourse = ({ course }) => {
             margin={{ top: "10px" }}
             width="100%"
           >
-            <StyledText
-              size="13px"
-              text={timeHandle2(course.expectedTime)}
-              weight="bold"
+            <Box
+              gap="3px"
+              direction="row"
+              align="center"
               style={{
+                fontSize: "12px",
                 backgroundColor: "#F8F38F",
                 borderRadius: "10px",
                 // margin: "3px",
                 padding: "0px 4px",
+                fontWeight: "bold",
               }}
-            />
-
-            <StyledText
-              size="13px"
-              text={course.distance + "km"}
-              weight="bold"
+            >
+              <img src={Clock} width="12px" height="12px" />
+              {timeHandle2(course.expectedTime)}
+            </Box>
+            <Box
+              gap="3px"
+              direction="row"
+              align="center"
               style={{
+                fontSize: "12px",
                 backgroundColor: "#BDE0EF",
                 borderRadius: "10px",
-                padding: "0px 4px",
                 // margin: "3px",
+                padding: "0px 4px",
+                fontWeight: "bold",
               }}
-            />
+            >
+              <img src={Flag} width="12px" height="12px" />
+              {course.distance + "km"}
+            </Box>
+
             {/* <Box
               // align="center"
               gap="4px"
@@ -195,8 +207,8 @@ export const NewsBox = ({ news }) => {
           weight="bold"
           color="black"
           style={{
+            fontFamily: "gwmd",
             width: "90%",
-            height: "40px",
             overflow: "hidden",
             textOverflow: "ellipsis",
             whiteSpace: "normal",

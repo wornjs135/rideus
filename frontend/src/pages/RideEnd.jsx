@@ -56,6 +56,7 @@ export const RideEnd = () => {
           marginBottom: "20px",
           fontSize: "20px",
           color: "white",
+          fontFamily: "gwtt",
         }}
       >
         {courseData.courseName}

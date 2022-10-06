@@ -10,12 +10,20 @@ import { useLocation, useNavigate } from "react-router-dom";
 import ImInput from "../assets/icons/imageInput.svg";
 import { FlexBox, STextArea } from "../components/UserStyled";
 import Button from "../components/Button";
-import { expectTimeHandle, tags as initTags } from "../utils/util";
+import {
+  expectTimeHandle,
+  tags as initTags,
+  TimeBox,
+  TimeBoxSecond,
+} from "../utils/util";
 import { BootstrapButton, RegisterButton } from "../components/Buttons";
 import { AlertDialog } from "../components/AlertDialog";
 import { writeReview } from "../utils/api/reviewApi";
 import { ReactComponent as Fail } from "../assets/icons/fail.svg";
+import Clock from "../assets/icons/clock.svg";
+import Flag from "../assets/icons/flag.svg";
 import { motion } from "framer-motion";
+
 const HeaderDiv = styled.div`
   margin: 5px;
   display: flex;
@@ -187,12 +195,12 @@ export const ReviewRegister = () => {
       {/* 바디 */}
       <Box align="center" margin={{ top: "20px" }} gap="medium">
         {/* 지도, 코스 이름, 데이터 */}
-        <Box direction="row" gap="small">
+        <Box direction="row" gap="large">
           {/* 카카오맵 */}
           <Map
             center={courseData.latlng[parseInt(courseData.latlng.length / 2)]}
             isPanto={true}
-            level={7}
+            level={4}
             style={{ borderRadius: "10px", width: "120px", height: "120px" }}
           >
             <Polyline
@@ -203,21 +211,72 @@ export const ReviewRegister = () => {
               strokeStyle={"solid"} // 선의 스타일입니다
             />
           </Map>
-          <Box justify="around">
-            <StyledText text={courseData.courseName} size="18px" />
-            <Box direction="row">
-              <StyledText text={`거리: ${courseData.totalDistance}km`} />
-              <StyledText
-                text={`시간: ${expectTimeHandle(courseData.totalDistance)}`}
-              />
+          <Box gap="medium" justify="center">
+            <StyledText
+              text={courseData.courseName}
+              size="18px"
+              style={{
+                fontFamily: "gwtt",
+              }}
+            />
+            <Box
+              direction="row"
+              gap="medium"
+              margin={{
+                top: "10px",
+                right: "15px",
+              }}
+            >
+              <Box
+                direction="row"
+                align="center"
+                gap="4px"
+                style={{
+                  backgroundColor: "#F8F38F",
+                  borderRadius: "10px",
+                  // margin: "3px",
+                  padding: "4px 6px",
+                }}
+              >
+                <img src={Clock} width="13px" height="13px" />
+                <TimeBoxSecond time={courseData.nowTime} />
+              </Box>
+              <Box
+                direction="row"
+                align="center"
+                gap="4px"
+                style={{
+                  backgroundColor: "#BDE0EF",
+                  borderRadius: "10px",
+                  // margin: "3px",
+                  padding: "4px 6px",
+                }}
+              >
+                <img src={Flag} width="13px" height="13px" />
+                <Box align="end" direction="row">
+                  <StyledText
+                    text={courseData.totalDistance}
+                    weight="bold"
+                    size="17px"
+                  />
+                  <StyledText size="13px" text={"km"} weight="bold" />
+                </Box>
+              </Box>
             </Box>
-            <StyledText text="마포구, 서울" />
           </Box>
         </Box>
         {/* 지도, 코스 이름, 데이터 끝 */}
         {/* 별점 입력 시작 */}
         <Box margin={{ top: "20px" }} gap="medium">
-          <StyledText text="코스 어떠셨나요?" size="20px" />
+          <StyledText
+            text="코스 어떠셨나요?"
+            size="22px"
+            style={{
+              width: "100%",
+              textAlign: "center",
+              fontFamily: "gwtt",
+            }}
+          />
           <Box direction="row">
             {array.map((el) => (
               <img
@@ -244,7 +303,7 @@ export const ReviewRegister = () => {
             >
               <ImageBtn src={ImInput} />
               <StyledText
-                size="10px"
+                size="13px"
                 color={image ? "black" : "lightgray"}
                 text={image ? "첨부 완료" : "최대 1장"}
                 alignSelf="end"
@@ -375,8 +434,8 @@ export const ReviewRegister = () => {
           <Grommet theme={GrommetTheme}>
             <Notification
               toast={{ position: "center" }}
-              title="태그는 최대 5개입니다!"
-              status={"critical"}
+              title="태그는 5개까지~"
+              status={"normal"}
               onClose={() => setVisible(false)}
             />
           </Grommet>

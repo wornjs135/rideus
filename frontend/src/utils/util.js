@@ -70,6 +70,37 @@ export const timeHandle2 = (time) => {
   else if (time < 3600) return `${parseInt(time / 60)}H ${time % 60}M`;
 };
 
+export const TimeBoxSecond = ({ time }) => {
+  if (time < 60)
+    return (
+      <Box direction="row">
+        <StyledText size="17px" text={time} weight="bold" />
+        <StyledText size="13px" text="S" weight="bold" />
+      </Box>
+    );
+  else if (time < 3600)
+    return (
+      <Box direction="row">
+        <StyledText size="17px" text={parseInt(time / 60)} weight="bold" />
+        <StyledText size="13px" text="M" weight="bold" />
+      </Box>
+    );
+  else
+    return (
+      <Box direction="row">
+        <StyledText size="17px" text={parseInt(time / 3600)} weight="bold" />
+        <StyledText size="13px" text="H " weight="bold" />
+        <Box width="6px" />
+        <StyledText
+          size="17px"
+          text={time - parseInt(time % 3600) * 3600}
+          weight="bold"
+        />
+        <StyledText size="13px" text="M" weight="bold" />
+      </Box>
+    );
+};
+
 export const TimeBox = ({ time }) => {
   if (time < 60)
     return (

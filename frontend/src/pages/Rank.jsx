@@ -14,6 +14,7 @@ import {
 } from "../utils/api/rankApi";
 import { container } from "./Main";
 import { motion } from "framer-motion";
+import RankTitle from "../assets/images/rankTitle.png";
 const theme = {
   tab: {
     active: { color: "#black", background: undefined },
@@ -97,15 +98,21 @@ export const Rank = () => {
         }}
       >
         <Box
+          direction="row"
+          justify="center"
+          align="end"
+          gap="medium"
           style={{
-            marginTop: "15px",
+            marginTop: "25px",
             marginBottom: "15px",
-            alignItems: "center",
+            alignItems: "end",
             textAlign: "center",
-            fontSize: "20px",
+            fontSize: "24px",
             fontWeight: "bold",
+            fontFamily: "gwtt",
           }}
         >
+          <img src={RankTitle} width="30px" height="30px" />
           명예의 전당
         </Box>
 
