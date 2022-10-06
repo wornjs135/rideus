@@ -26,6 +26,7 @@ public class RecordInfoResponse {
     private Long recordTimeMinute;
     private Boolean recordIsFinished;
     private Boolean recordIsMine;
+    private String courseName;
 
     private String courseId;
     private Boolean isCourse;
@@ -50,6 +51,7 @@ public class RecordInfoResponse {
         recordInfoResponse.rideRoomId =record.getRideRoom().getId();
         recordInfoResponse.participants =mongoRecord.getParticipants();
         recordInfoResponse.coordinates =mongoRecord.getCoordinates();
+        recordInfoResponse.courseName = record.getCourse().getCourseName();
 
         return recordInfoResponse;
     }
