@@ -30,6 +30,7 @@ const HeaderDiv = styled.div`
   justify-content: space-between;
   border-bottom: 1px solid black;
   padding: 5px;
+  padding-bottom: 10px;
 `;
 
 const BackButton = styled(motion.button)`
@@ -99,9 +100,22 @@ const HeaderBox = ({ goBack }) => {
   return (
     <HeaderDiv>
       <div style={{ width: "10vw" }}></div>
-      <StyledText size="20px" weight="bold" text="리뷰 쓰기" />
+      <StyledText
+        size="20px"
+        weight="bold"
+        text="리뷰 쓰기"
+        style={{
+          alignItems: "center",
+        }}
+      />
       <BackButton whileTap={{ scale: 1.2 }} onClick={goBack}>
-        <img src={CloseButton} />
+        <img
+          src={CloseButton}
+          style={{
+            alignItems: "center",
+            display: "flex",
+          }}
+        />
       </BackButton>
     </HeaderDiv>
   );
@@ -434,7 +448,7 @@ export const ReviewRegister = () => {
           <Grommet theme={GrommetTheme}>
             <Notification
               toast={{ position: "center" }}
-              title="태그는 5개까지~"
+              title="태그는 5개까지"
               status={"normal"}
               onClose={() => setVisible(false)}
             />

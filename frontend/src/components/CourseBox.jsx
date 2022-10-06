@@ -68,27 +68,28 @@ export const CourseBox = ({
         }}
       >
         {/* 코스 박스 */}
-        <Box width="100%" align="center">
+        <Box width="100%" align="center" gap="medium">
           {/* 제목, 북마크 버튼 */}
           <Box
             direction="row"
-            justify="between"
             width="100%"
             align="center"
+            justify="start"
             pad={{ left: "15px", right: "15px" }}
+            gap="small"
           >
             <StyledText
               text={courseName}
-              weight="bold"
               size="18px"
               style={{
-                width: "80%",
-                height: "30px",
+                maxWidth: "42%",
+                fontWeight: "bold",
+                alignItems: "end",
                 overflow: "hidden",
                 textOverflow: "ellipsis",
                 whiteSpace: "nowrap",
                 display: "block",
-                fontFamily: "gwtt",
+                fontFamily: "gwmd",
               }}
             />
             <Box direction="row" align="center">
@@ -190,8 +191,8 @@ export const CourseBox = ({
         <Box
           direction="row"
           gap="small"
-          justify="center"
-          margin={{ top: "5px" }}
+          justify="start"
+          margin={{ top: "5px", left: "10px" }}
         >
           {tags &&
             tags.map((t, idx) => {

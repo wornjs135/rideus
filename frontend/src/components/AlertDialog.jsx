@@ -43,14 +43,32 @@ export const AlertDialog = ({
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
+      <DialogTitle
+        id="alert-dialog-title"
+        style={{
+          fontFamily: "gwmd",
+        }}
+      >
+        {title}
+      </DialogTitle>
       <DialogContent>
-        <DialogContentText id="alert-dialog-description">
+        <DialogContentText
+          id="alert-dialog-description"
+          style={{
+            fontFamily: "gwmd",
+          }}
+        >
           {desc}
         </DialogContentText>
       </DialogContent>
 
-      <Box direction="row" justify="center">
+      <Box
+        direction="row"
+        justify="center"
+        style={{
+          fontFamily: "gwmd",
+        }}
+      >
         <Button
           smallwhite="true"
           onClick={handleClose}
@@ -395,6 +413,7 @@ export const MapDialog = ({
                           fontWeight: "bold",
                           width: "60px",
                           height: "60px",
+                          fontFamily: "gwmd",
                           borderRadius: "10px",
                           border: "none",
                           marginRight: "10px",
@@ -467,12 +486,14 @@ export const ReviewDialog = ({
   reviewId,
 }) => {
   const [loading, setLoading] = useState(true);
+  const [review, setReview] = useState({});
   useEffect(() => {
     if (loading)
       getReivewDetail(
         reviewId,
         (response) => {
           console.log(response);
+          setReview(response.data);
           setLoading(false);
         },
         (fail) => {
@@ -492,17 +513,48 @@ export const ReviewDialog = ({
           <HeaderBox goBack={handleClose} title={title} />
           <Box width="90%" justify="around" align="center" gap="medium">
             {/* 제목 */}
-            <CourseMap course={course} width="100%" height="20vh" />
+            {review.coordinates.length > 0 ? (
+              <Map
+                center={
+                  review.coordinates[parseInt(review.coordinates.length / 2)]
+                }
+                isPanto={true}
+                style={{ width: "75%", height: "20vh" }}
+              >
+                {review.coordinates.length > 0 && (
+                  <Polyline
+                    path={[review.coordinates]}
+                    strokeWeight={5} // 선의 두께 입니다
+                    strokeColor={"#030ff1"} // 선의 색깔입니다
+                    strokeOpacity={0.7} // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+                    strokeStyle={"solid"} // 선의 스타일입니다
+                  />
+                )}
+              </Map>
+            ) : (
+              <StyledText text="기록이 없습니다." />
+            )}
             {/* 사진 */}
-            {img && <img src={img} width="100%" />}
+            {img && (
+              <img
+                src={img}
+                width="60%"
+                style={{
+                  objectFit: "cover",
+                }}
+              />
+            )}
             {/* 별점 */}
-            <StarBox score={score} starView={starView} />
+            <StarBox
+              score={review.score}
+              starView={parseFloat(review.score).toFixed(1) * 16}
+            />
             {/* 내용 */}
-            <StyledText text={desc} />
+            <StyledText text={review.content} />
             {/* 태그 */}
             <Box direction="row" overflow="scroll">
               {/* arrays.map */}
-              {tags.map((t, idx) => {
+              {review.tags.map((t, idx) => {
                 return (
                   <StyledText text={"#" + t.tagName} key={idx} size="10px" />
                 );

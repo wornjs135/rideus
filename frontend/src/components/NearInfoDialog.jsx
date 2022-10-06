@@ -36,7 +36,7 @@ export const NearInfoDialog = ({ open, info, handleClose }) => {
             onErrorGetNearestPanoId={() => setShow(false)}
           />
 
-          <StyledText text={info.nearinfoName} />
+          <StyledText text={info.nearinfoName} weight="bold" />
 
           {/* <StyledText text={info.nearinfoCategory} /> */}
           {info.nearinfoTel ? (
