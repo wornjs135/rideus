@@ -21,12 +21,15 @@ public class RecordWithSameGroupRes {
 
     private Double recordSpeedAvg;
 
+    private String courseName;
+
     private List<RecordForStatisticRes> records = new ArrayList<>();
 
-    public void myRecord(Long recordTimeMinute, Double recordSpeedBest, Double recordSpeedAvg) {
+    public void myRecord(Long recordTimeMinute, Double recordSpeedBest, Double recordSpeedAvg, String courseName) {
         this.recordTimeMinute = recordTimeMinute;
         this.recordSpeedBest = recordSpeedBest;
         this.recordSpeedAvg = recordSpeedAvg;
+        this.courseName = courseName;
     }
 
     public void addRecords(Record record, int rank) {
