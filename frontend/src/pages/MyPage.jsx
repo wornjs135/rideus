@@ -298,7 +298,7 @@ export const MyPage = () => {
                 {bookmarkCourses &&
                   bookmarkCourses.map((value, index, array) => (
                     <div className="card" key={index}>
-                      <MyPageCourse
+                      <MyPageCourse type={"bookmark"}
                         course={value}
                         nav={() => {
                           navigate(`/courseDetail/${value.courseId}`);
