@@ -156,7 +156,7 @@ const TextForm = styled.div`
   color: ${(props) => props.color || "black"};
   font-size: ${(props) => props.size || "14px"};
   font-weight: ${(props) => props.weight || "normal"};
-  align-items: center;
+  align-items: end;
   display: flex;
 `;
 
@@ -256,7 +256,7 @@ export function Footer() {
 
 export const StarBox = ({ score, starView }) => {
   return (
-    <Box direction="row" align="center" gap="small" justify="start" width="65%">
+    <Box direction="row" align="center" gap="small" justify="start" width="55%">
       {score >= 0 && <StyledText text={score} weight="bold" size="19px" />}
       <Box style={{ position: "relative" }} justify="center">
         <div

@@ -88,6 +88,7 @@ export const CourseBox = ({
                 textOverflow: "ellipsis",
                 whiteSpace: "nowrap",
                 display: "block",
+                fontFamily: "gwtt",
               }}
             />
             <Box direction="row" align="center">
@@ -122,13 +123,28 @@ export const CourseBox = ({
                 direction="row"
                 gap="4px"
                 style={{
+                  backgroundColor: "#F8F38F",
+                  borderRadius: "10px",
+                  // margin: "3px",
+                  padding: "1px 5px",
+                }}
+              >
+                <img src={Clock} width="13px" height="13px" />
+                <TimeBox time={expectedTime} />
+              </Box>
+              <Box
+                justify="center"
+                align="center"
+                direction="row"
+                gap="4px"
+                style={{
                   backgroundColor: "#BDE0EF",
                   borderRadius: "10px",
                   padding: "1px 5px",
                   // margin: "3px",
                 }}
               >
-                <Avatar src={Flag} size="13px" />
+                <img src={Flag} width="13px" height="13px" style={{}} />
                 <Box align="end" direction="row">
                   <StyledText text={distance} weight="bold" size="17px" />
                   <StyledText size="13px" text={"km"} weight="bold" />
@@ -141,28 +157,13 @@ export const CourseBox = ({
                 direction="row"
                 gap="4px"
                 style={{
-                  backgroundColor: "#F8F38F",
-                  borderRadius: "10px",
-                  // margin: "3px",
-                  padding: "1px 5px",
-                }}
-              >
-                <Avatar src={Clock} size="13px" />
-                <TimeBox time={expectedTime} />
-              </Box>
-              <Box
-                justify="center"
-                align="center"
-                direction="row"
-                gap="4px"
-                style={{
                   backgroundColor: "#F4D4D4",
                   borderRadius: "10px",
                   // margin: "3px",
                   padding: "2px 5px",
                 }}
               >
-                <Avatar src={Mark} size="13px" />
+                <img src={Mark} width="13px" height="13px" />
                 <StyledText
                   size="13px"
                   text={start.split(" ")[0]}

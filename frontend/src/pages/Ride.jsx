@@ -1,31 +1,42 @@
-import React, {useCallback, useContext} from "react";
-import {useEffect, useState} from "react";
-import {Avatar, Box} from "grommet";
-import {StyledText} from "../components/Common";
+import React, { useCallback, useContext } from "react";
+import { useEffect, useState } from "react";
+import { Avatar, Box } from "grommet";
+import { StyledText } from "../components/Common";
 import Button from "../components/Button";
-import {useGeolocated} from "react-geolocated";
+import { useGeolocated } from "react-geolocated";
 import PlayBtn from "../assets/images/play.png";
 import PauseBtn from "../assets/images/pause.png";
 import LinkBtn from "../assets/images/link.png";
 import TotalBike from "../assets/images/totalRideBike.png";
 import GroupBike from "../assets/images/groupBike.png";
-import {CustomOverlayMap, Map, MapMarker, Polyline} from "react-kakao-maps-sdk";
-import {AlertDialog, MapDialog} from "../components/AlertDialog";
+import Stop from "../assets/icons/stop.svg";
 import {
-    useLocation,
-    useNavigate,
-    UNSAFE_NavigationContext as NavigationContext,
+  CustomOverlayMap,
+  Map,
+  MapMarker,
+  Polyline,
+} from "react-kakao-maps-sdk";
+import { AlertDialog, MapDialog } from "../components/AlertDialog";
+import {
+  useLocation,
+  useNavigate,
+  UNSAFE_NavigationContext as NavigationContext,
 } from "react-router-dom";
 import history from "../utils/history.js";
-import {latlng} from "../utils/data";
+import { latlng } from "../utils/data";
 import useWatchLocation from "../hooks/watchLocationHook";
-import {convertStringToColor, distanceHandle, speedHandle, timeHandle} from "../utils/util";
-import {ExitButton, PauseButton} from "../components/Buttons";
+import {
+  convertStringToColor,
+  distanceHandle,
+  speedHandle,
+  timeHandle,
+} from "../utils/util";
+import { ExitButton, PauseButton } from "../components/Buttons";
 import SockJS from "sockjs-client";
 import * as StompJs from "@stomp/stompjs";
-import {finishRidding, saveCoordinatesDuringRide} from "../utils/api/rideApi";
-import {TextField, ThemeProvider} from "@mui/material";
-import {theme} from "./CourseList";
+import { finishRidding, saveCoordinatesDuringRide } from "../utils/api/rideApi";
+import { TextField, ThemeProvider } from "@mui/material";
+import { theme } from "./CourseList";
 import useInterval from "../hooks/UseInterval";
 
 // const geolocationOptions = {
@@ -538,6 +549,9 @@ export const Ride = () => {
             color="white"
             weight="bold"
             size="24px"
+            style={{
+              fontFamily: "gwtt",
+            }}
           />
         </Box>
         <Box width="50px">
@@ -610,34 +624,40 @@ export const Ride = () => {
                 return <MapMarker position={m} key={idx}></MapMarker>;
               })}
             {rideMembers &&
-                rideMembers.members.map((member, idx) => {
-                  console.log(member);
-                  return (
-                      // <MapMarker
-                      //     position={{lat: member.lat, lng: member.lng}}
-                      //     key={idx}
-                      //     image={{
-                      //         src: "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png",
-                      //         size: {width: 45, height: 45},
-                      //         options:{shape:"circle"}
-                      //     }}
-                      // >
-                      //     {" "}
-                      //     <div style={{color: "#000"}}>{member.nickname}</div>
-                      // </MapMarker>
-                      <CustomOverlayMap // 커스텀 오버레이를 표시할 Container
-                          // 커스텀 오버레이가 표시될 위치입니다
-                          position={{lat: member.lat, lng: member.lng}}
-                      >
-                        {/* 커스텀 오버레이에 표시할 내용입니다 */}
-                        <Avatar src={member.profileImageUrl} style={{
-                          width: "35px",
-                          height: "35px",
-                          border: `3px inset ${convertStringToColor(member.color)}`
-                        }}/>
-                      </CustomOverlayMap>
-                  );
-                })}
+              rideMembers.members.map((member, idx) => {
+                console.log(member);
+                return (
+                  // <MapMarker
+                  //     position={{lat: member.lat, lng: member.lng}}
+                  //     key={idx}
+                  //     image={{
+                  //         src: "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png",
+                  //         size: {width: 45, height: 45},
+                  //         options:{shape:"circle"}
+                  //     }}
+                  // >
+                  //     {" "}
+                  //     <div style={{color: "#000"}}>{member.nickname}</div>
+                  // </MapMarker>
+                  <CustomOverlayMap // 커스텀 오버레이를 표시할 Container
+                    // 커스텀 오버레이가 표시될 위치입니다
+                    position={{ lat: member.lat, lng: member.lng }}
+                    key={idx}
+                  >
+                    {/* 커스텀 오버레이에 표시할 내용입니다 */}
+                    <Avatar
+                      src={member.profileImageUrl}
+                      style={{
+                        width: "35px",
+                        height: "35px",
+                        border: `3px inset ${convertStringToColor(
+                          member.color
+                        )}`,
+                      }}
+                    />
+                  </CustomOverlayMap>
+                );
+              })}
           </Map>
         </Box>
         {/* 데이터 부분 시작 */}
@@ -708,8 +728,8 @@ export const Ride = () => {
               border: "2px solid #64CCBE",
               fontWeight: "bold",
               position: "relative",
-              flexDirection:"row",
-              justifyContent:"space-evenly"
+              flexDirection: "row",
+              justifyContent: "space-evenly",
             }}
           >
             <StyledText
@@ -723,11 +743,15 @@ export const Ride = () => {
                 padding: "0 5px",
               }}
             />
-            {rideMembers.members
-                .map((m) => {
-                  return <StyledText text={m.nickname} color={convertStringToColor(m.color)}/>;
-                })
-            }
+            {rideMembers.members.map((m, idx) => {
+              return (
+                <StyledText
+                  key={idx}
+                  text={m.nickname}
+                  color={convertStringToColor(m.color)}
+                />
+              );
+            })}
           </Box>
         )}
         {/* 일시정지, 체크포인트 버튼 */}
@@ -748,6 +772,7 @@ export const Ride = () => {
                 style={{
                   color: "white",
                 }}
+                gap="small"
               >
                 <img
                   src={riding ? PauseBtn : PlayBtn}
@@ -765,7 +790,18 @@ export const Ride = () => {
               }}
               whileTap={{ scale: 1.2 }}
             >
-              주행 종료
+              <Box
+                direction="row"
+                align="center"
+                justify="center"
+                style={{
+                  color: "white",
+                }}
+                gap="small"
+              >
+                <img src={Stop} width="25px" height="25px" />
+                {"주행 종료"}
+              </Box>
             </ExitButton>
           </Box>
           {/* 주행 종료 버튼 */}
@@ -811,34 +847,40 @@ export const Ride = () => {
                 return <MapMarker position={m} key={idx}></MapMarker>;
               })}
             {rideMembers &&
-                rideMembers.members.map((member, idx) => {
-                  console.log(member);
-                  return (
-                      // <MapMarker
-                      //     position={{lat: member.lat, lng: member.lng}}
-                      //     key={idx}
-                      //     image={{
-                      //         src: "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png",
-                      //         size: {width: 45, height: 45},
-                      //         options:{shape:"circle"}
-                      //     }}
-                      // >
-                      //     {" "}
-                      //     <div style={{color: "#000"}}>{member.nickname}</div>
-                      // </MapMarker>
-                      <CustomOverlayMap // 커스텀 오버레이를 표시할 Container
-                          // 커스텀 오버레이가 표시될 위치입니다
-                          position={{lat: member.lat, lng: member.lng}}
-                      >
-                        {/* 커스텀 오버레이에 표시할 내용입니다 */}
-                        <Avatar src={member.profileImageUrl} style={{
-                          width: "35px",
-                          height: "35px",
-                          border: `3px inset ${convertStringToColor(member.color)}`
-                        }}/>
-                      </CustomOverlayMap>
-                  );
-                })}
+              rideMembers.members.map((member, idx) => {
+                console.log(member);
+                return (
+                  // <MapMarker
+                  //     position={{lat: member.lat, lng: member.lng}}
+                  //     key={idx}
+                  //     image={{
+                  //         src: "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png",
+                  //         size: {width: 45, height: 45},
+                  //         options:{shape:"circle"}
+                  //     }}
+                  // >
+                  //     {" "}
+                  //     <div style={{color: "#000"}}>{member.nickname}</div>
+                  // </MapMarker>
+                  <CustomOverlayMap // 커스텀 오버레이를 표시할 Container
+                    // 커스텀 오버레이가 표시될 위치입니다
+                    position={{ lat: member.lat, lng: member.lng }}
+                    key={idx}
+                  >
+                    {/* 커스텀 오버레이에 표시할 내용입니다 */}
+                    <Avatar
+                      src={member.profileImageUrl}
+                      style={{
+                        width: "35px",
+                        height: "35px",
+                        border: `3px inset ${convertStringToColor(
+                          member.color
+                        )}`,
+                      }}
+                    />
+                  </CustomOverlayMap>
+                );
+              })}
           </Map>
         }
         cancel="뒤로가기"

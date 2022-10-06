@@ -540,7 +540,7 @@ export const WeatherDialog = ({ open, handleClose, weather }) => {
             />
             <Box direction="row" align="center" justify="center" gap="medium">
               <StyledText
-                text={`${weather.weatherListPerHour[0].temperature}ºC`}
+                text={`${weather.weatherListPerHour[0].temperature}℃`}
                 size="20px"
                 weight="bold"
               />
@@ -587,7 +587,7 @@ export const WeatherDialog = ({ open, handleClose, weather }) => {
                   tickSize: 5,
                   tickPadding: 5,
                   tickRotation: 0,
-                  legend: "온도 (ºC)",
+                  legend: "온도 (℃)",
                   legendOffset: -40,
                   legendPosition: "middle",
                 }}

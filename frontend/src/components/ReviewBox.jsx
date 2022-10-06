@@ -21,6 +21,10 @@ export const ReviewBox = ({ review, score, starView, courseName }) => {
           round="medium"
           margin={{ top: "10px" }}
           pad="small"
+          focusIndicator={false}
+          onClick={() => {
+            setOpen(true);
+          }}
         >
           <Box
             direction="row"
@@ -28,9 +32,6 @@ export const ReviewBox = ({ review, score, starView, courseName }) => {
             align="start"
             gap="small"
             focusIndicator={false}
-            onClick={() => {
-              setOpen(true);
-            }}
           >
             <Avatar src={review.memberProfileImage} size="30px" />
             <Box justify="center" align="start">

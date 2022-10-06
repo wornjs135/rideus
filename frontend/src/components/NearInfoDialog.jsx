@@ -39,7 +39,12 @@ export const NearInfoDialog = ({ open, info, handleClose }) => {
           <StyledText text={info.nearinfoName} />
 
           {/* <StyledText text={info.nearinfoCategory} /> */}
-          <StyledText text={info.nearinfoTel} />
+          {info.nearinfoTel ? (
+            <StyledText text={info.nearinfoTel} />
+          ) : (
+            <StyledText text="전화번호가 없습니다." />
+          )}
+
           <a href={info.nearinfoURL} target="_blank">
             <img src={KakaoMap} width="100px" />
           </a>

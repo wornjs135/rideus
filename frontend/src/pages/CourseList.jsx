@@ -11,6 +11,15 @@ import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import Recommend from "../assets/images/recommend.png";
+import All from "../assets/images/all.png";
+import Meal from "../assets/images/meal.png";
+import Tour from "../assets/images/tour.png";
+import Cafe from "../assets/images/cafe.png";
+import Repair from "../assets/images/repair.png";
+import Toilets from "../assets/images/toilets.png";
+import Art from "../assets/images/art.png";
+import Cvs from "../assets/images/cvs.png";
+import Rec from "../assets/images/rec.png";
 import { useNavigate } from "react-router-dom";
 import { getAllCourse, getRecommendationCourses } from "../utils/api/courseApi";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -89,6 +98,134 @@ export const theme = createTheme({
 //   ]
 // }
 
+export const RecommendMentBox = ({ selected }) => {
+  const imgSize = "24px";
+  switch (selected) {
+    case 0:
+      return (
+        <Box
+          direction="row"
+          margin={{ top: "15px", left: "10px" }}
+          width="90%"
+          gap="small"
+        >
+          <img src={All} width={imgSize} height={imgSize} />
+          <StyledText
+            text="RideUs가 준비한 알찬 코스"
+            size="16px"
+            style={{
+              fontFamily: "gwtt",
+            }}
+          />
+        </Box>
+      );
+    case 1:
+      return (
+        <Box direction="row" margin={{ top: "15px" }} width="90%" gap="small">
+          <img src={Recommend} width={imgSize} height={imgSize} />
+          <StyledText
+            text="오직, 당신만을 위한"
+            size="16px"
+            style={{
+              fontFamily: "gwtt",
+            }}
+          />
+        </Box>
+      );
+    case 2:
+      return (
+        <Box direction="row" margin={{ top: "15px" }} width="90%" gap="small">
+          <img src={Tour} width={imgSize} height={imgSize} />
+          <StyledText
+            text="관광명소가 얼마나 가까울까?"
+            size="16px"
+            style={{
+              fontFamily: "gwtt",
+            }}
+          />
+        </Box>
+      );
+    case 3:
+      return (
+        <Box direction="row" margin={{ top: "15px" }} width="90%" gap="small">
+          <img src={Meal} width={imgSize} height={imgSize} />
+          <StyledText
+            text="라이딩도 식후경"
+            size="16px"
+            style={{
+              fontFamily: "gwtt",
+            }}
+          />
+        </Box>
+      );
+    case 4:
+      return (
+        <Box direction="row" margin={{ top: "15px" }} width="90%" gap="small">
+          <img src={Cafe} width={imgSize} height={imgSize} />
+          <StyledText
+            text="커피 한 잔 할래용~♬"
+            size="16px"
+            style={{
+              fontFamily: "gwtt",
+            }}
+          />
+        </Box>
+      );
+    case 5:
+      return (
+        <Box direction="row" margin={{ top: "15px" }} width="90%" gap="small">
+          <img src={Cvs} width={imgSize} height={imgSize} />
+          <StyledText
+            text="아, 생수! 아, 휴지!"
+            size="16px"
+            style={{
+              fontFamily: "gwtt",
+            }}
+          />
+        </Box>
+      );
+    case 6:
+      return (
+        <Box direction="row" margin={{ top: "15px" }} width="90%" gap="small">
+          <img src={Repair} width={imgSize} height={imgSize} />
+          <StyledText
+            text="장비를 정지..합니...다.."
+            size="16px"
+            style={{
+              fontFamily: "gwtt",
+            }}
+          />
+        </Box>
+      );
+    case 7:
+      return (
+        <Box direction="row" margin={{ top: "15px" }} width="90%" gap="small">
+          <img src={Art} width={imgSize} height={imgSize} />
+          <StyledText
+            text="고고한 당신을 초대합니다"
+            size="16px"
+            style={{
+              fontFamily: "gwtt",
+            }}
+          />
+        </Box>
+      );
+    case 8:
+      return (
+        <Box direction="row" margin={{ top: "15px" }} width="90%" gap="small">
+          <img src={Toilets} width={imgSize} height={imgSize} />
+          <StyledText
+            text="한 순간도 방심해선 안된다"
+            size="16px"
+            style={{
+              fontFamily: "gwtt",
+            }}
+          />
+        </Box>
+      );
+  }
+};
+
 export const CourseList = () => {
   const [courses, setCourses] = useState([]);
   const [recCourses, setRecCourses] = useState([]);
@@ -140,12 +277,22 @@ export const CourseList = () => {
           width="100%"
           align="center"
           margin={{
-            top: "10px",
+            top: "25px",
             bottom: "10px",
           }}
           gap="25px"
         >
-          <StyledText text="추천 코스" weight="bold" size="24px" />
+          <Box direction="row" gap="medium">
+            <img src={Rec} width="30px" height="30px" />
+            <StyledText
+              text="추천 코스"
+              weight="bold"
+              size="24px"
+              style={{
+                fontFamily: "gwtt",
+              }}
+            />
+          </Box>
           <Box direction="row" width="100%" align="center" justify="center">
             <Paper
               component="form"
@@ -190,7 +337,7 @@ export const CourseList = () => {
                     style={{
                       boxShadow: "none",
                       textTransform: "none",
-                      fontSize: 14,
+                      fontSize: 13,
                       padding: "6px 12px",
                       color: selected === idx ? "white" : "black",
                       border: "none",
@@ -221,10 +368,7 @@ export const CourseList = () => {
           height={{ min: "80vh" }}
           width="100%"
         >
-          <Box direction="row" margin={{ top: "15px" }} width="90%" gap="small">
-            <img src={Recommend} width="20px" height="20px" />
-            <StyledText text="당신을 위한 추천 코스" size="16px" />
-          </Box>
+          <RecommendMentBox selected={selected} />
           {selected === 1 ? (
             recCourses ? (
               recCourses.filter((course) => {

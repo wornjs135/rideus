@@ -7,16 +7,20 @@ import {
   distanceHandleM,
   expectTimeHandle,
   expectTimeHandle2,
+  timeHandle2,
 } from "../utils/util";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import Clock from "../assets/icons/clock.svg";
+import Flag from "../assets/icons/flag.svg";
+import Mark from "../assets/icons/mark.svg";
 
 const CourseBox = styled(motion.div)`
   flex-direction: column;
   display: flex;
   justify-content: space-between;
   width: 130px;
-  height: 130px;
+  height: 140px;
   margin-right: 15px;
   margin-bottom: 10px;
   margin-top: 5px;
@@ -58,8 +62,63 @@ export const MyPageCourse = ({ course, nav }) => {
           <Notes />
         </Box>
       </div>
-      <div align="end" gap="small" margin={{ top: "25px" }}>
-        <Box align={"end"}>
+      <Box align="end" gap="small" margin={{ top: "10px" }}>
+        <Box
+          gap="3px"
+          direction="row"
+          align="center"
+          style={{
+            fontSize: "12px",
+            backgroundColor: "#F8F38F",
+            borderRadius: "10px",
+            // margin: "3px",
+            padding: "0px 4px",
+            fontWeight: "bold",
+          }}
+        >
+          <img src={Clock} width="12px" height="12px" />
+          {timeHandle2(course?.expectedTime)}
+        </Box>
+        <Box
+          gap="3px"
+          align="center"
+          direction="row"
+          style={{
+            fontSize: "12px",
+            backgroundColor: "#BDE0EF",
+            borderRadius: "10px",
+            // margin: "3px",
+            padding: "0px 4px",
+            fontWeight: "bold",
+          }}
+        >
+          <img src={Flag} width="12px" height="12px" />
+          {distanceHandleM(course?.distance) + "km"}
+        </Box>
+        {course.startedLocation && (
+          <Box
+            gap="3px"
+            direction="row"
+            align="center"
+            style={{
+              fontSize: "12px",
+              backgroundColor: "#F4D4D4",
+              borderRadius: "10px",
+              // margin: "3px",
+              padding: "0px 4px",
+              fontWeight: "bold",
+            }}
+          >
+            <img src={Mark} width="12px" height="12px" />
+            {course.startedLocation &&
+              course?.startedLocation.split(" ")[0] +
+                " " +
+                course?.startedLocation.split(" ")[1]}
+          </Box>
+        )}
+      </Box>
+
+      {/* <Box align={"end"}>
           <StyledText
             text={distanceHandleM(course?.distance) + " 주행"}
             style={{
@@ -99,14 +158,7 @@ export const MyPageCourse = ({ course, nav }) => {
             }}
             weight="bold"
           />
-          {/*<StyledText text={`${course?.distance}km`} />*/}
-          {/*<StyledText*/}
-          {/*  text={`${parseInt(course?.expectedTime / 60)}h ${*/}
-          {/*    course?.expectedTime % 60*/}
-          {/*  }m`}*/}
-          {/*/>*/}
-        </Box>
-      </div>
+        </Box> */}
     </CourseBox>
   );
 };

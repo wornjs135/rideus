@@ -24,6 +24,7 @@ import {
 } from "../utils/util";
 import { motion } from "framer-motion";
 import { container } from "./Main";
+
 export const MyPage = () => {
   const navigate = useNavigate();
   const [recentRides, setRecentRides] = useState([]);
