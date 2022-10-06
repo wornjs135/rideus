@@ -14,12 +14,13 @@ import { Login } from "./pages/login/Login";
 import { OAuth2RedirectHandler } from "./pages/login/OAuth2RedirectHandler";
 import MapTest from "./pages/test/MapTest";
 import { MoreInfo } from "./pages/login/MoreInfo";
-import { RecentRide } from "./pages/RecentRide";
+import { RecentGroupRide } from "./pages/RecentGroupRide";
 import { EditProfile } from "./pages/EditProfile";
 import "./App.css";
 import { CourseList } from "./pages/CourseList.jsx";
 import { CourseRegister } from "./pages/CourseRegister.jsx";
 import { GroupEnter } from "./pages/GroupEnter.jsx";
+import {RecentSingleRide} from "./pages/RecentSingleRide";
 const Layout = () => {
   return (
     <div className="rootRoute">
@@ -95,7 +96,8 @@ export const Router = () => {
         <Route path="/courseList" element={<CourseList />} />
         <Route path="/rank" element={<Rank />} />
         <Route path="/mypage" element={<MyPage />} />
-        <Route path="/recent/:recordId" element={<RecentRide />} />
+        <Route path="/recent-group/:recordId" element={<RecentGroupRide />} />
+        <Route path="/recent-single/:recordId" element={<RecentSingleRide />} />
         <Route path="/profile" element={<EditProfile />} />
       </Route>
     </Routes>

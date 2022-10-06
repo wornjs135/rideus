@@ -28,4 +28,8 @@ const getRecordWithGroup = async (data, success, fail) => {
     await authInstance.get(`/room/${data}`).then(success).catch(fail);
 }
 
-export {getRecordWithGroup}
+const getRecordSingle = async (data, success, fail) => {
+    await authInstance.get(`/${data}`).then(success).catch(fail);
+}
+
+export {getRecordWithGroup, getRecordSingle}
