@@ -42,11 +42,12 @@ public class RecordService {
         Double preDistance = Double.MAX_VALUE;
         for (Record record : recordByRideRoomId) {
             if (memberId.equals(record.getMember().getId())) {
-                if (preDistance > record.getRecordDistance()) {
-                    rank++;
-                    preDistance = record.getRecordDistance();
-                }
+
                 recordWithSameGroupRes.myRecord(record.getRecordTimeMinute(), record.getRecordSpeedBest(), record.getRecordSpeedAvg());
+            }
+            if (preDistance > record.getRecordDistance() ) {
+                rank++;
+                preDistance = record.getRecordDistance();
             }
             recordWithSameGroupRes.addRecords(record,rank);
         }
