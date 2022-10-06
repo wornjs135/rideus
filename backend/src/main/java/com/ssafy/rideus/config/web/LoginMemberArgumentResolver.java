@@ -38,5 +38,4 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
             throw new NotMatchException(TOKEN_NOT_MATCH);
         }
     }
-
 }

@@ -1,17 +1,18 @@
 package com.ssafy.rideus.domain;
 
 import com.ssafy.rideus.domain.base.BaseEntity;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.ssafy.rideus.dto.review.ReviewRequestDto;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
+import java.util.Optional;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
+@Builder
 public class Review extends BaseEntity {
 
     @Id
@@ -40,4 +41,34 @@ public class Review extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "record_id")
     private Record record;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ride_room_id")
+    private RideRoom rideRoom;
+
+    @OneToMany(mappedBy = "review")
+    private List<ReviewTag> reviewTags;
+
+    public void decreaseLike() {
+        this.likeCount--;
+    }
+
+    public void increaseLike() {
+        this.likeCount++;
+    }
+
+    public static Review createReview(ReviewRequestDto reviewRequestDto, Member member, String imageUrl, Record record) {
+        Review review = new Review();
+        review.score = reviewRequestDto.getScore();
+        review.content = reviewRequestDto.getContent();
+        review.likeCount = 0;
+        review.imageUrl = imageUrl;
+        review.member = member;
+        review.course = record.getCourse();
+        review.record = record;
+        review.rideRoom = record.getRideRoom();
+
+        return review;
+    }
+
 }
