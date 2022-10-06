@@ -61,7 +61,7 @@ export const CourseBox = ({
         style={{
           borderRadius: "10px",
           boxShadow: "4px 4px 4px -4px rgb(0 0 0 / 0.2)",
-          width: "90%",
+          width: "85%",
           height: "15%",
           padding: "10px 6px",
           background: "white",
@@ -70,7 +70,13 @@ export const CourseBox = ({
         {/* 코스 박스 */}
         <Box width="100%" align="center">
           {/* 제목, 북마크 버튼 */}
-          <Box direction="row" justify="around" width="100%">
+          <Box
+            direction="row"
+            justify="between"
+            width="100%"
+            align="center"
+            pad={{ left: "15px", right: "15px" }}
+          >
             <StyledText
               text={courseName}
               weight="bold"
@@ -94,7 +100,13 @@ export const CourseBox = ({
             </Box>
           </Box>
           {/* 코스 데이터, 사진 */}
-          <Box direction="row" width="100%" justify="around" align="center">
+          <Box
+            direction="row"
+            width="100%"
+            justify="between"
+            align="center"
+            pad={{ left: "15px", right: "15px" }}
+          >
             <Box style={{ marginRight: "25px" }}>
               <img
                 src={imageUrl ? imageUrl : NoImage}

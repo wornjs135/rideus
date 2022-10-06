@@ -25,7 +25,7 @@ export const BootstrapButton = styled(motion.button)({
 export const RegisterButton = styled(motion.button)({
   boxShadow: "none",
   textTransform: "none",
-  fontSize: 14,
+  fontSize: 18,
   fontWeight: "bold",
   padding: "6px 12px",
   color: "white",

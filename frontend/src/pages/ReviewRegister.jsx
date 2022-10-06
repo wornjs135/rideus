@@ -333,7 +333,7 @@ export const ReviewRegister = () => {
           }}
           whileTap={{ scale: 1.2 }}
         >
-          <StyledText text="등록" size="18px" color="white" weight="bold" />
+          등록
         </RegisterButton>
         <AlertDialog
           open={open}

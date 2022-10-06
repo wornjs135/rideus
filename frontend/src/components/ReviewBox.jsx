@@ -7,34 +7,36 @@ import Stars from "../assets/images/stars.png";
 import StarsBlank from "../assets/images/stars_blank.png";
 import { latlng } from "../utils/data";
 import { ReviewDialog } from "./AlertDialog";
+import { motion } from "framer-motion";
 export const ReviewBox = ({ review, score, starView, courseName }) => {
   const [open, setOpen] = useState(false);
   if (review)
     return (
-      <Box
-        direction="row"
-        justify="between"
-        align="center"
-        background="white"
-        round="medium"
-        margin={{ top: "10px" }}
-        pad="small"
-      >
+      <motion.div whileTap={{ scale: 1.2 }}>
         <Box
           direction="row"
-          justify="start"
-          align="start"
-          gap="small"
-          focusIndicator={false}
-          onClick={() => {
-            setOpen(true);
-          }}
+          justify="between"
+          align="center"
+          background="white"
+          round="medium"
+          margin={{ top: "10px" }}
+          pad="small"
         >
-          <Avatar src={Profile} size="30px" />
-          <Box justify="center" align="start">
-            <StyledText text={review.memberNickname} />
-            <StyledText text={review.content} />
-            {/* <Box direction="row" gap="3px">
+          <Box
+            direction="row"
+            justify="start"
+            align="start"
+            gap="small"
+            focusIndicator={false}
+            onClick={() => {
+              setOpen(true);
+            }}
+          >
+            <Avatar src={review.memberProfileImage} size="30px" />
+            <Box justify="center" align="start">
+              <StyledText text={review.memberNickname} />
+              <StyledText text={review.content} />
+              {/* <Box direction="row" gap="3px">
               {review.tags.map((tag) => {
                 return (
                   <StyledText
@@ -45,27 +47,28 @@ export const ReviewBox = ({ review, score, starView, courseName }) => {
                 );
               })}
             </Box> */}
-            <StarBox
-              score={score}
-              starView={parseFloat(score).toFixed(2) * 16}
-            />
+              <StarBox
+                score={score}
+                starView={parseFloat(score).toFixed(2) * 16}
+              />
+            </Box>
           </Box>
+          <img src={MoreBtn} style={{ marginRight: "9px" }} />
+          <ReviewDialog
+            open={open}
+            handleClose={() => {
+              setOpen(false);
+            }}
+            title={courseName}
+            desc={review.content}
+            img={review.imageUrl}
+            course={latlng}
+            cancel={"닫기"}
+            score={score}
+            starView={starView}
+            tags={review.tags}
+          />
         </Box>
-        <img src={MoreBtn} style={{ marginRight: "9px" }} />
-        <ReviewDialog
-          open={open}
-          handleClose={() => {
-            setOpen(false);
-          }}
-          title={courseName}
-          desc={review.content}
-          img={review.imageUrl}
-          course={latlng}
-          cancel={"닫기"}
-          score={score}
-          starView={starView}
-          tags={review.tags}
-        />
-      </Box>
+      </motion.div>
     );
 };

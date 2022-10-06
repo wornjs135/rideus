@@ -47,7 +47,7 @@ export const categorys = [
 ];
 
 export const markerCategorys = [
-  { name: "전체", icon: <DensitySmallIcon />, main: "#D6FFAD" },
+  { name: "전체", icon: <DensitySmallIcon />, main: "#64CCBE" },
   { name: "관광명소", icon: <TourIcon />, main: "#D6FFAD" },
   { name: "음식점", icon: <RestaurantIcon />, main: "#C0E7EC" },
   { name: "카페", icon: <LocalCafeIcon />, main: "#FFC95F" },
@@ -126,7 +126,6 @@ export const renameObjectKey = (objs, from, to) => {
 };
 
 export const convertDistanceToImg = (dis) => {
-  dis /= 1000.0;
   if (dis >= 11059) return plant5;
   if (dis >= 8852) return plant4;
   if (dis >= 952) return plant3;
@@ -135,7 +134,6 @@ export const convertDistanceToImg = (dis) => {
 };
 
 export const convertDistanceToText = (dis) => {
-  dis /= 1000.0;
   if (dis >= 11059) return "서울부터 뉴욕까지의 거리를";
   if (dis >= 9580) return "서울부터 LA까지의 거리를";
   if (dis >= 8852) return "서울부터 런던까지의 거리를";
@@ -152,13 +150,12 @@ export const convertDistanceToText = (dis) => {
 export const convertStringToColor = (color) => {
   if (color === "RED") return "#FF0000";
   if (color === "YELLOW") return "#FFFF00";
-  if (color ==="BLUE") return "#0000FF";
-  if (color ==="GREEN") return "#008000";
-  if (color ==="PURPLE") return "#800080";
-  if (color ==="ORANGE") return "#FFA500";
-  if (color ==="PINK") return "#FFC0CB";
-  if (color ==="BROWN") return "#A52A2A";
-  if (color ==="AQUAMARINE") return "#7FFFD4";
-  if (color ==="GRAY") return "#808080";
-}
-
+  if (color === "BLUE") return "#0000FF";
+  if (color === "GREEN") return "#008000";
+  if (color === "PURPLE") return "#800080";
+  if (color === "ORANGE") return "#FFA500";
+  if (color === "PINK") return "#FFC0CB";
+  if (color === "BROWN") return "#A52A2A";
+  if (color === "AQUAMARINE") return "#7FFFD4";
+  if (color === "GRAY") return "#808080";
+};

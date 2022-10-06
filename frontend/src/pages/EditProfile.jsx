@@ -85,7 +85,7 @@ export const EditProfile = () => {
     <Box>
       <Box
         pad={{ left: "20px" }}
-        style={{ marginTop: "5vw" }}
+        style={{ paddingTop: "5vw" }}
         alignContent={"start"}
       >
         <div onClick={() => navigate(-1)}>
@@ -93,13 +93,7 @@ export const EditProfile = () => {
         </div>
       </Box>
 
-      <Box
-        width="100vw"
-        margin="0 auto"
-        gap="small"
-        height={"100vh"}
-        align={"center"}
-      >
+      <Box width="100vw" margin="0 auto" gap="small" align={"center"}>
         <Box align="center">
           <Box
             style={{

@@ -283,12 +283,7 @@ export const Main = () => {
             </Box>
           </Box>
           {/* 인기코스 */}
-          <Box
-            align="start"
-            width="100%"
-            margin={{ top: "large" }}
-            gap="medium"
-          >
+          <Box align="start" width="100%" margin={{ top: "large" }}>
             <Box
               width="100%"
               pad={{ left: "30px", right: "20px" }}
@@ -321,12 +316,7 @@ export const Main = () => {
             </Box>
           </Box>
           {/*  추천 코스 */}
-          <Box
-            align="start"
-            width="100%"
-            margin={{ top: "large" }}
-            gap="medium"
-          >
+          <Box align="start" width="100%" margin={{ top: "large" }}>
             <Box
               width="100%"
               pad={{ left: "30px", right: "20px" }}
@@ -359,12 +349,7 @@ export const Main = () => {
             </Box>
           </Box>
           {/* 월간자전거 */}
-          <Box
-            align="start"
-            width="100%"
-            margin={{ top: "large" }}
-            gap="medium"
-          >
+          <Box align="start" width="100%" margin={{ top: "large" }}>
             <Box
               width="100%"
               pad={{ left: "30px", right: "20px" }}
