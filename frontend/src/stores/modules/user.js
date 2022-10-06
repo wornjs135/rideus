@@ -10,11 +10,13 @@ export const setUser = createAction(SET_USER, (user) => ({ user }));
 
 const initialState = {
   user: {
-    userName: "",
-    userNickname: "",
-    userId: "",
-    token: "",
-    userEmail: "",
+    email: "",
+    id: 0,
+    name: "",
+    nickname: "",
+    phone: "",
+    profileImageUrl: "",
+    role: "",
   },
 };
 
