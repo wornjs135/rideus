@@ -7,10 +7,10 @@ import { ResponsiveRadar } from '@nivo/radar'
 // website examples showcase many properties,
 // you'll often use just a few of them.
 export const RadarGraph = ({ data /* see data tab */ }) => {
-    console.log();
+    console.log(data);
     return <ResponsiveRadar
         data={data}
-        keys={['recordTimeMinute', 'recordSpeedBest', 'recordSpeedAvg', 'recordDistance']}
+        keys={['시간', '최고속력', '평균속력', '총거리']}
         indexBy="nickname"
         // valueFormat=">-.2f"
         margin={{ top: 70, right: 80, bottom: 40, left: 80 }}

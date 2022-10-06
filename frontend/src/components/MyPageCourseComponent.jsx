@@ -3,11 +3,11 @@ import { StyledText } from "./Common";
 import { Box } from "grommet";
 import { Notes } from "grommet-icons";
 import {
-  distanceHandle,
-  distanceHandleM,
-  expectTimeHandle,
-  expectTimeHandle2,
-  timeHandle2,
+    distanceHandle,
+    distanceHandleM,
+    expectTimeHandle,
+    expectTimeHandle2, timeHandle,
+    timeHandle2,
 } from "../utils/util";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -43,7 +43,7 @@ export const Wrap = styled.div`
   -webkit-box-orient: vertical;
 `;
 
-export const MyPageCourse = ({ course, nav }) => {
+export const MyPageCourse = ({ course, nav, type }) => {
   const navigate = useNavigate();
   return (
     <CourseBox onClick={nav} whileTap={{ scale: 1.2 }}>
@@ -71,7 +71,7 @@ export const MyPageCourse = ({ course, nav }) => {
           }}
         >
           <img src={Clock} width="12px" height="12px" />
-          {timeHandle2(course?.expectedTime)}
+          {type !== "bookmark" ? timeHandle(course?.expectedTime) : timeHandle2(course?.expectedTime)}
         </Box>
         <Box
           gap="3px"
@@ -87,7 +87,7 @@ export const MyPageCourse = ({ course, nav }) => {
           }}
         >
           <img src={Flag} width="12px" height="12px" />
-          {distanceHandleM(course?.distance)}
+          {course?.distance.toFixed(2)+"km"}
         </Box>
         {course.startedLocation && (
           <Box
