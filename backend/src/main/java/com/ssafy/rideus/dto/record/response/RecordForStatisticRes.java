@@ -19,5 +19,7 @@ public class RecordForStatisticRes {
 
     private Double recordSpeedAvg;
 
-    private Double recordDistance;
+    private Double totalDistance;
+
+    private int rank;
 }
