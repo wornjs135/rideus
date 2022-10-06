@@ -398,6 +398,19 @@ export const ReviewRegister = () => {
           </FlexBox>
         </Box>
         {/* 태그 끝 */}
+        <StyledText
+          text="별점, 사진, 태그는 필수입니다!"
+          style={{
+            fontFamily: "gwtt",
+          }}
+        />
+        {/* <Box direction="row" gap="small">
+          <StyledText
+            text={`별점 : ${clicked.filter(Boolean).length > 0 ? "O" : "X"}`}
+          />
+          <StyledText text={`사진 : ${image !== undefined ? "O" : "X"}`} />
+          <StyledText text={`태그 : ${select.length !== 0 ? "O" : "X"}`} />
+        </Box> */}
         {/* 등록 버튼 시작 */}
         <RegisterButton
           onClick={() => {
