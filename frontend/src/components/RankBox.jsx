@@ -6,6 +6,7 @@ import {
   distanceHandle,
   expectTimeHandle,
   expectTimeHandle2,
+  httpToHttps,
 } from "../utils/util";
 import { useSelector } from "react-redux";
 
@@ -37,7 +38,9 @@ export const RankBox = ({ record, type }) => {
           <Avatar
             size="35px"
             src={
-              record.profileImageUrl === null ? Profile : record.profileImageUrl
+              record.profileImageUrl === null
+                ? Profile
+                : httpToHttps(record.profileImageUrl)
             }
           />
         </Box>

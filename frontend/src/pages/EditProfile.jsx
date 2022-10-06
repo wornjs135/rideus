@@ -10,6 +10,7 @@ import {
 import { StyledText } from "../components/Common";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../stores/modules/user";
+import { httpToHttps } from "../utils/util";
 
 export const EditProfile = () => {
   let [inputs, setInputs] = useState({
@@ -117,7 +118,7 @@ export const EditProfile = () => {
           >
             <Avatar
               name="profileImageUrl"
-              src={profileImageUrl}
+              src={httpToHttps(profileImageUrl)}
               size={"xlarge"}
             />
           </Box>
