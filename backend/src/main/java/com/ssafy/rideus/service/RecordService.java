@@ -43,7 +43,7 @@ public class RecordService {
         for (Record record : recordByRideRoomId) {
             if (memberId.equals(record.getMember().getId())) {
 
-                recordWithSameGroupRes.myRecord(record.getRecordTimeMinute(), record.getRecordSpeedBest(), record.getRecordSpeedAvg());
+                recordWithSameGroupRes.myRecord(record.getRecordTimeMinute(), record.getRecordSpeedBest(), record.getRecordSpeedAvg(), record.getCourse().getCourseName());
             }
             if (preDistance > record.getRecordDistance() ) {
                 rank++;
