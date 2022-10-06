@@ -30,8 +30,8 @@ import SportsScoreIcon from "@mui/icons-material/SportsScore";
 import { motion } from "framer-motion";
 import Clock from "../assets/icons/clock.svg";
 import Flag from "../assets/icons/flag.svg";
-import Mark from "../assets/icons/mark.svg";
-
+import Play from "../assets/icons/play.svg";
+import DirectionsBikeIcon from "@mui/icons-material/DirectionsBike";
 // 코스 구조
 // [
 //   {
@@ -233,7 +233,10 @@ export const Main = () => {
               // }
             }}
           >
-            RIDE!
+            <Box direction="row" align="end" justify="center" gap="small">
+              <DirectionsBikeIcon />
+              RIDE!
+            </Box>
           </motion.button>
           {/* <Button
           variant="contained"
@@ -252,6 +255,7 @@ export const Main = () => {
           round={{ corner: "top", size: "large" }}
           background="#E0F7F4"
           border={{ color: "#E0F7F4", size: "small", side: "all" }}
+          pad={{ bottom: "70px" }}
         >
           <Box
             direction="row"
@@ -448,7 +452,7 @@ export const Main = () => {
                         color: "white",
                         backgroundColor: "#64ccbe",
                         padding: "8px",
-                        fontSize: "11px",
+                        fontSize: "12px",
                         margin: "0px 8px 12px 0px",
                         border: "none",
                         borderRadius: "16px",

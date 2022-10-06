@@ -35,7 +35,7 @@ import { motion } from "framer-motion";
 import Clock from "../assets/icons/clock.svg";
 import Flag from "../assets/icons/flag.svg";
 import Mark from "../assets/icons/mark.svg";
-
+import Play from "../assets/icons/play.svg";
 export const BackButton = styled.button`
   background: none;
   font-size: 12px;
@@ -284,9 +284,10 @@ export const CourseDetail = () => {
             <Map
               center={
                 course.coordinates
-                  ? course.coordinates[0]
+                  ? course.coordinates[parseInt(course.coordinates.length / 2)]
                   : { lng: 127.002158, lat: 37.512847 }
               }
+              level={4}
               isPanto={true}
               style={{ borderRadius: "25px", width: "100%", height: "100%" }}
             >
@@ -457,14 +458,30 @@ export const CourseDetail = () => {
               /> */}
           </Box>
         </Box>
-
+        <Box direction="row" gap="small" justify="start" width="80%">
+          {course.tags &&
+            course.tags.map((t, idx) => {
+              return (
+                <StyledText
+                  text={`#${t.tagName} `}
+                  key={t.tagId}
+                  size="11px"
+                  color="black"
+                  weight="bold"
+                />
+              );
+            })}
+        </Box>
         <BootstrapButton
           onClick={() => {
             setStart(true);
           }}
           whileTap={{ scale: 1.2 }}
         >
-          주행 시작
+          <Box direction="row" align="center" justify="center" gap="small">
+            <img src={Play} />
+            주행시작
+          </Box>
         </BootstrapButton>
 
         {

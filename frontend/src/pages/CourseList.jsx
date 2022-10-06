@@ -310,6 +310,9 @@ export const CourseList = () => {
                 onChange={(event) => {
                   setSearchTerm(event.target.value);
                 }}
+                style={{
+                  fontFamily: "gwmd",
+                }}
               />
               <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
                 <SearchIcon />
@@ -349,7 +352,12 @@ export const CourseList = () => {
                       marginRight: "10px",
                     }}
                   >
-                    <Box align="center">
+                    <Box
+                      align="center"
+                      style={{
+                        fontFamily: "gwmd",
+                      }}
+                    >
                       {cat.icon}
                       {cat.name}
                     </Box>
