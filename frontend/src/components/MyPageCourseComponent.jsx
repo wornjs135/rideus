@@ -18,13 +18,12 @@ import Mark from "../assets/icons/mark.svg";
 const CourseBox = styled(motion.div)`
   flex-direction: column;
   display: flex;
-  justify-content: space-between;
   width: 130px;
-  height: 140px;
+  height: 120px;
   margin-right: 15px;
   margin-bottom: 10px;
   margin-top: 5px;
-
+  justify-content: space-between;
   padding: 10px;
   background-color: white;
   border-radius: 15px;
@@ -52,7 +51,7 @@ export const MyPageCourse = ({ course, nav, type }) => {
           <Wrap>{course?.courseName}</Wrap>
         </div>
 
-        <Box align="end" gap="small" margin={{ top: "2vw" }}>
+        <Box align="start" gap="small" margin={{ top: "2vw" }}>
           <Notes />
         </Box>
       </div>
