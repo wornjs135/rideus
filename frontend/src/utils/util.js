@@ -137,9 +137,8 @@ export const expectTimeHandle2 = (time) => {
 };
 
 export const httpToHttps = (url) => {
-  let split = url.split("://");
-  // console.log(split[0]);
-  return split[0] + "s://" + split[1];
+  // console.log(url.split("://")[0], url.split("://")[1]);
+  return url.split("://")[0] + "s://" + url.split("://")[1];
 };
 
 export const distanceHandle = (dis) => {
