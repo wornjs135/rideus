@@ -13,6 +13,8 @@ public class RecordForStatisticRes {
 
     private String nickname;
 
+    private String profileImageUrl;
+
     private Long recordTimeMinute;
 
     private Double recordSpeedBest;

@@ -32,12 +32,14 @@ public class RecordWithSameGroupRes {
     public void addRecords(Record record, int rank) {
         RecordForStatisticRes recordForStatisticRes = RecordForStatisticRes.builder()
                 .nickname(record.getMember().getNickname())
+                .profileImageUrl(record.getMember().getProfileImageUrl())
                 .totalDistance(record.getRecordDistance())
                 .recordSpeedAvg(record.getRecordSpeedAvg())
                 .recordSpeedBest(record.getRecordSpeedBest())
                 .recordTimeMinute(record.getRecordTimeMinute())
                 .rank(rank)
                 .build();
+
         this.records.add(recordForStatisticRes);
     }
 
