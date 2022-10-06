@@ -10,21 +10,23 @@ export const RankProfile = ({ record }) => {
   return (
     <Box margin="small" style={{ position: "relative" }}>
       <img
-        src={record.rank === 1 ? First : record.rank === 2 ? Second : Third}
+        src={
+          record.ranking === 1 ? First : record.ranking === 2 ? Second : Third
+        }
         style={{
           position: "absolute",
-          marginLeft: record.rank === 1 ? "45px" : "30px",
+          marginLeft: record.ranking === 1 ? "45px" : "30px",
           display: "flex",
           flexDirection: "column",
         }}
       />
       <Avatar
-        size={record.rank === 1 ? "large" : "medium"}
-        src={record.profile !== undefined ? record.profile : Profile}
+        size={record.ranking === 1 ? "large" : "medium"}
+        src={record.profileImageUrl !== null ? record.profileImageUrl : Profile}
       />
       <Box justify="center" align="center">
-        <StyledText text={record.name} weight="bold" />
-        <StyledText text={record.time} />
+        <StyledText text={record.nickname} weight="bold" />
+        <StyledText text={record.timeMinute} />
       </Box>
     </Box>
   );

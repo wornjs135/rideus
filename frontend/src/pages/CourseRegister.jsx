@@ -1,23 +1,28 @@
 import { Box } from "grommet";
 import React, { useEffect, useState } from "react";
-import { Map } from "react-kakao-maps-sdk";
+import { Map, Polyline } from "react-kakao-maps-sdk";
 import styled from "styled-components";
 import CloseButton from "../assets/images/close.png";
 import { StyledText } from "../components/Common";
 import Star from "../assets/images/star_review.png";
 import StarBlank from "../assets/images/star_review_blank.png";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import ImInput from "../assets/icons/imageInput.svg";
 import { FlexBox, STextArea } from "../components/UserStyled";
 import Button from "../components/Button";
-import { tags as initTags } from "../utils/util";
+import { expectTimeHandle, tags as initTags } from "../utils/util";
 import { TextField } from "@mui/material";
+import { BootstrapButton, RegisterButton } from "../components/Buttons";
+import { AlertDialog } from "../components/AlertDialog";
+import { addCourse } from "../utils/api/courseApi";
 const HeaderDiv = styled.div`
   margin: 5px;
   display: flex;
   justify-content: space-between;
   border-bottom: 1px solid black;
   padding: 5px;
+  width: 100%;
+  padding-bottom: 10px;
 `;
 
 const BackButton = styled.button`
@@ -46,9 +51,22 @@ const HeaderBox = ({ goBack }) => {
   return (
     <HeaderDiv>
       <div style={{ width: "10vw" }}></div>
-      <StyledText size="20px" weight="bold" text="코스 등록" />
+      <StyledText
+        size="20px"
+        weight="bold"
+        text="코스 등록"
+        style={{
+          alignItems: "center",
+        }}
+      />
       <BackButton onClick={goBack}>
-        <img src={CloseButton} />
+        <img
+          src={CloseButton}
+          style={{
+            alignItems: "center",
+            display: "flex",
+          }}
+        />
       </BackButton>
     </HeaderDiv>
   );
@@ -56,43 +74,105 @@ const HeaderBox = ({ goBack }) => {
 
 export const CourseRegister = () => {
   const navigate = useNavigate();
-  const [productDesc, setProductDesc] = useState("");
+  const location = useLocation();
+  const [courseTitle, setCourseTitle] = useState("");
   const [tags, setTags] = useState([]);
   const [select, setSelect] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [notValid, setNotValid] = useState(false);
+  const [image, setImage] = useState();
+  const { courseData } = location.state;
+  const [exit, setExit] = useState(false);
+  const isValied = () => {
+    if (courseTitle === "" || image === undefined) return false;
+    else return true;
+  };
+
+  const handleText = (text) => {
+    //  console.log(text);
+    const MAX_LENGTH = 20;
+    if (text.length <= MAX_LENGTH) setCourseTitle(text);
+  };
+  const handleImageUpload = (e) => {
+    const fileArr = e.target.files;
+    // console.log(fileArr[0]);
+    setImage(fileArr[0]);
+  };
+  const handleRegister = () => {
+    // let score = clicked.filter(Boolean).length;
+    const request = {
+      recordId: courseData.recordId,
+      courseName: courseTitle,
+    };
+    const formData = new FormData();
+    formData.append("image", image);
+    const blob = new Blob([JSON.stringify(request)], {
+      type: "application/json",
+    });
+    formData.append("inputMap", blob);
+    addCourse(
+      formData,
+      (response) => {
+        console.log(response);
+        navigate(`/mypage`);
+      },
+      (fail) => {
+        console.log(fail);
+      }
+    );
+  };
 
   useEffect(() => {
     setTags(initTags);
+    console.log(courseData);
   }, []);
   return (
-    <Box>
+    <Box width="100%" align="center">
       {/* 헤더 박스 */}
       <HeaderBox
         goBack={() => {
-          navigate("/");
+          setExit(true);
         }}
       />
       {/* 바디 */}
-      <Box align="center" margin={{ top: "20px" }}>
+      <Box width="90%" align="center" margin={{ top: "20px" }}>
         {/* 지도, 코스 이름, 데이터 */}
-        <Box direction="row" gap="small">
-          <Box justify="around">
+        <Box width="80%" direction="row" gap="small">
+          <Box width="100%" justify="around">
             {/* 기록 날짜 시작*/}
             <Box align="center" margin={{ bottom: "20px" }}>
-              <StyledText text="2022.09.28 18:00" size="18px" />
+              <StyledText
+                text="나만의 코스"
+                size="18px"
+                style={{
+                  fontFamily: "gwtt",
+                }}
+              />
             </Box>
             {/* 기록 날짜 끝*/}
 
             {/* 카카오맵 */}
             <Map
-              center={{ lng: 127.002158, lat: 37.512847 }}
+              center={courseData.latlng[parseInt(courseData.latlng.length / 2)]}
               isPanto={true}
               level={9}
-              style={{ borderRadius: "10px", width: "240px", height: "380px" }}
-            />
+              style={{ borderRadius: "10px", width: "100%", height: "380px" }}
+            >
+              <Polyline
+                path={[courseData.latlng]}
+                strokeWeight={3} // 선의 두께 입니다
+                strokeColor={"#030ff1"} // 선의 색깔입니다
+                strokeOpacity={0.7} // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+                strokeStyle={"solid"} // 선의 스타일입니다
+              />
+            </Map>
+
             <Box margin={{ top: "20px", bottom: "20px" }}>
-              <StyledText text="주행 거리: 75.4km" />
-              <StyledText text="주행 시간:2시간 15분" />
-              <StyledText text="평균 속도: 25km/h" />
+              <StyledText text={`주행 거리: ${courseData.totalDistance}km`} />
+              <StyledText
+                text={`주행 시간: ${expectTimeHandle(courseData.nowTime)}`}
+              />
+              <StyledText text={`평균 속도: ${courseData.avgSpeed}km/h`} />
             </Box>
           </Box>
         </Box>
@@ -109,8 +189,8 @@ export const CourseRegister = () => {
             <ImageBtn src={ImInput} />
             <StyledText
               size="10px"
-              color="lightgray"
-              text="최대 1장"
+              color={image ? "black" : "lightgray"}
+              text={image ? "첨부 완료" : "최대 1장"}
               alignSelf="end"
             />
           </label>
@@ -118,37 +198,72 @@ export const CourseRegister = () => {
             id="image"
             type="file"
             accept="image/jpg,image/png,image/jpeg,image/gif"
-            onChange={() => {}}
             style={{
               display: "none",
             }}
+            onChange={handleImageUpload}
           />
         </Box>
         {/* 사진 첨부 버튼 끝 */}
         {/* 텍스트아리아 시작 */}
-        <Box margin="small">
+        <Box margin="small" width="80%">
           <TextField
             placeholder="코스 제목을 입력해주세요."
             label="코스 제목"
             size="small"
-            onChange={(e) => setProductDesc(e.target.value)}
-            value={productDesc}
+            onChange={(e) => handleText(e.target.value)}
+            value={courseTitle}
           />
           <Box justify="end" direction="row">
-            <div>{productDesc.length} / 300</div>
+            <div>{courseTitle.length} / 20</div>
           </Box>
         </Box>
         {/* 텍스트 아리아 끝 */}
         {/* 등록 버튼 시작 */}
-        <Box
-          width="100%"
-          background="#439652"
-          style={{ position: "fixed", bottom: 0 }}
-          align="center"
-          height="32px"
+        <RegisterButton
+          onClick={() => {
+            if (isValied()) setOpen(true);
+            else setNotValid(true);
+          }}
+          whileTap={{ scale: 1.2 }}
         >
-          <StyledText text="등록" color="white" size="20px" />
-        </Box>
+          등록
+        </RegisterButton>
+        <AlertDialog
+          open={open}
+          handleClose={() => {
+            setOpen(false);
+          }}
+          handleAction={handleRegister}
+          title="코스 등록"
+          desc="코스를 등록하시겠습니까?"
+          cancel="취소"
+          accept="등록"
+          register
+        />
+
+        <AlertDialog
+          open={notValid}
+          handleClose={() => {
+            setNotValid(false);
+          }}
+          title="코스 등록"
+          desc="모든 정보를 입력하세요!"
+          cancel="닫기"
+        />
+        <AlertDialog
+          open={exit}
+          handleClose={() => {
+            setExit(false);
+          }}
+          handleAction={() => {
+            navigate("/");
+          }}
+          title="등록 취소"
+          desc="코스 등록을 취소하시겠습니까?"
+          accept="나가기"
+          cancel="닫기"
+        />
       </Box>
     </Box>
   );

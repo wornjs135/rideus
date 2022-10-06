@@ -9,8 +9,8 @@ const instance = axios.create({
   },
 });
 
-const getWeather = async ({ lat, lon }, success, fail) => {
-  await instance.get(`/today?lat=${lat}&lon=${lon}`).then(success).catch(fail);
+const getWeather = async (params, success, fail) => {
+  await instance.get(`/gps`, { params: params }).then(success).catch(fail);
 };
 
 export { getWeather };
