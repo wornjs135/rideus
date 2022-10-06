@@ -75,8 +75,8 @@ public class ReviewService {
 
     @Transactional
     public ReviewDetailResponseDto showReviewDetail(Long rid) {
-//        Review review = reviewRepository.findById(rid).orElseThrow(() -> new BadRequestException("유효하지 않은 리뷰입니다."));
-        Review review = reviewRepository.findReviewWithMemberAndRecordById(rid).orElseThrow(() -> new NotFoundException(REVIEW_NOT_FOUND));
+        Review review = reviewRepository.findById(rid).orElseThrow(() -> new BadRequestException("유효하지 않은 리뷰입니다."));
+//        Review review = reviewRepository.findReviewWithMemberAndRecordById(rid).orElseThrow(() -> new NotFoundException(REVIEW_NOT_FOUND));
         MongoRecord mongoRecord = mongoRecordRepository.findById(review.getRecord().getId())
                 .orElseThrow(() -> new NotFoundException(RECORD_NOT_FOUND));
 
