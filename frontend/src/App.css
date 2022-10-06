@@ -1,0 +1,10 @@
+.App {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.rootRoute {
+  max-width: 500px;
+  margin: 0 auto;
+  align-items: center;
+}
