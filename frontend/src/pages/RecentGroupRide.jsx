@@ -8,7 +8,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import {getRecordWithGroup} from "../utils/api/recordApi";
 import {expectTimeHandle, speedHandle} from "../utils/util";
 
-export const RecentRide = () => {
+export const RecentGroupRide = () => {
     const navigate = useNavigate();
     const [groupRide, setGroupRide] = useState([]);
     const [loading, setLoading] = useState(true);

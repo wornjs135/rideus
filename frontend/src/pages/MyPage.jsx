@@ -177,7 +177,8 @@ export const MyPage = () => {
                         nav={
                           course.shared
                             ? () => {
-                                navigate(`/recent/${course.roomId}`);
+                                course.single ?
+                                    navigate(`/recent-single/${course.recordId}`) : navigate(`/recent-group/${course.roomId}`);
                               }
                             : () => {
                                 navigate("/registerCourse");
@@ -205,7 +206,7 @@ export const MyPage = () => {
                         nav={
                           course.shared
                             ? () => {
-                                navigate(`/recent/${course.roomId}`);
+                                navigate(`/courseDetail/${course.roomId}`);
                               }
                             : () => {
                                 renameObjectKey(
