@@ -38,11 +38,17 @@ public class RecordService {
     public RecordWithSameGroupRes getRecordSameGroup(Long groupId, Long memberId) {
         List<Record> recordByRideRoomId = recordRepository.findRecordByRideRoomIdOrderByRecordDistanceDesc(groupId);
         RecordWithSameGroupRes recordWithSameGroupRes = new RecordWithSameGroupRes();
+        int rank = 0;
+        Double preDistance = -1D;
         for (Record record : recordByRideRoomId) {
             if (memberId.equals(record.getMember().getId())) {
+                if (preDistance < record.getRecordDistance()) {
+                    rank++;
+                    preDistance = record.getRecordDistance();
+                }
                 recordWithSameGroupRes.myRecord(record.getRecordTimeMinute(), record.getRecordSpeedBest(), record.getRecordSpeedAvg());
             }
-            recordWithSameGroupRes.addRecords(record);
+            recordWithSameGroupRes.addRecords(record,rank);
         }
 
         return recordWithSameGroupRes;

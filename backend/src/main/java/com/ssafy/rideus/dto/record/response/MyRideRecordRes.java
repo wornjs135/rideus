@@ -48,7 +48,7 @@ public class MyRideRecordRes {
                 .recordId(record.getId())
                 .courseName(record.getCourse().getCourseName())
                 .roomId(record.getRideRoom().getId())
-                .distance(record.getCourse().getDistance())
+                .distance(record.getRecordDistance())
                 .startedLocation(record.getCourse().getStart())
                 .finishedLocation(record.getCourse().getFinish())
                 .expectedTime(record.getRecordTime())
