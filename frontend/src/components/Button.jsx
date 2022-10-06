@@ -1,28 +1,28 @@
 import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
-
-const StyledButton = styled.button`
+import { motion } from "framer-motion";
+const StyledButton = styled(motion.button)`
   height: 42px;
   border-radius: 8px;
 
   font-size: 12px;
-  font-family: "Noto Sans KR", sans-serif;
+  font-family: "gwmd";
   font-weight: 500;
   margin: 10px 5px;
 
   ${(props) =>
-    props.BigGreen &&
+    props.biggreen &&
     css`
       height: 59px;
       border: 0px;
       font-size: 18px;
       color: white;
-      background: #439652;
+      background: #64ccbe;
       width: 80vw;
     `}
 
   ${(props) =>
-    props.BigPink &&
+    props.bigpink &&
     css`
       border: 0px;
       color: white;
@@ -31,7 +31,7 @@ const StyledButton = styled.button`
     `}
 
     ${(props) =>
-    props.SmallPink &&
+    props.smallpink &&
     css`
       border: 0px;
       color: white;
@@ -40,7 +40,7 @@ const StyledButton = styled.button`
     `}
 
     ${(props) =>
-    props.MediumPink &&
+    props.mediumpink &&
     css`
       border: 0px;
       color: white;
@@ -49,54 +49,54 @@ const StyledButton = styled.button`
     `}
 
   ${(props) =>
-    props.MediumGreen &&
+    props.mediumgreen &&
     css`
       border: 0px;
       color: white;
-      background: #439652;
+      background: #64ccbe;
       width: 40vw;
     `}
 
     ${(props) =>
-    props.SmallGreen &&
+    props.smallgreen &&
     css`
       border: 0px;
       color: white;
-      background: #439652;
+      background: #64ccbe;
       width: 20vw;
     `}
 
     ${(props) =>
-    props.BigWhite &&
+    props.bigwhite &&
     css`
       height: 59px;
       font-size: 18px;
-      border: 1px solid #439652;
+      border: 1px solid #64ccbe;
       background: white;
-      color: #439652;
+      color: #64ccbe;
       width: 80vw;
     `}
 
     ${(props) =>
-    props.MediumWhite &&
+    props.mediumwhite &&
     css`
-      border: 1px solid #439652;
+      border: 1px solid #64ccbe;
       background: white;
-      color: #439652;
+      color: #64ccbe;
       width: 40vw;
     `}
 
     ${(props) =>
-    props.SmallWhite &&
+    props.smallwhite &&
     css`
-      border: 1px solid #439652;
+      border: 1px solid #64ccbe;
       background: white;
-      color: #439652;
+      color: #64ccbe;
       width: 20vw;
     `}
 
     ${(props) =>
-    props.Info &&
+    props.info &&
     css`
       height: 29px;
       border: 0px;
@@ -107,7 +107,7 @@ const StyledButton = styled.button`
     `}
 
     ${(props) =>
-    props.InfoSelect &&
+    props.infoselect &&
     css`
       height: 29px;
       border: 0px;
@@ -118,7 +118,7 @@ const StyledButton = styled.button`
     `}
 
     ${(props) =>
-    props.Custom &&
+    props.custom &&
     css`
       border: 0px;
       color: ${props.textColor};
@@ -130,10 +130,10 @@ const StyledButton = styled.button`
     `}
 
     ${(props) =>
-    props.TagGreen &&
+    props.taggreen &&
     css`
       color: white;
-      background-color: #439652;
+      background-color: #64ccbe;
       padding: 8px;
       font-size: 12px;
       margin: 0px 8px 12px 0px;
@@ -141,7 +141,7 @@ const StyledButton = styled.button`
       border-radius: 16px;
     `}
     ${(props) =>
-    props.TagGray &&
+    props.taggray &&
     css`
       color: #565656;
       background-color: #f4f4f4;
@@ -154,5 +154,9 @@ const StyledButton = styled.button`
 `;
 
 export default function Button({ children, ...props }) {
-  return <StyledButton {...props}>{children}</StyledButton>;
+  return (
+    <StyledButton {...props} whileTap={{ scale: 1.2 }}>
+      {children}
+    </StyledButton>
+  );
 }

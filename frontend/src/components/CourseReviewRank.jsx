@@ -6,10 +6,17 @@ import { RankProfile } from "./RankProfile";
 import Profile from "../assets/images/profile.png";
 import { RankBox } from "./RankBox";
 import { ReviewBox } from "./ReviewBox";
-export const CourseReviewRank = ({ open, onDismiss, reviews }) => {
+import { motion } from "framer-motion";
+export const CourseReviewRank = ({
+  open,
+  onDismiss,
+  ranks,
+  reviews,
+  courseName,
+}) => {
   const [value, setValue] = useState(0);
   const [data, setData] = useState([]);
-
+  const [openD, setOpenD] = useState(false);
   useEffect(() => {
     setData([
       { rank: 1, name: "김싸피", time: "2h 5m" },
@@ -37,37 +44,52 @@ export const CourseReviewRank = ({ open, onDismiss, reviews }) => {
           direction="row"
           justify="center"
           width="100%"
+          maxWidth="500px"
           border={false}
           background="rgba(250, 250, 250, 0.93)"
         >
-          <Box
-            border={false}
-            justify="center"
-            align="center"
-            background={value === 0 ? "#439652" : "white"}
-            width="50%"
-            height="4vh"
-            focusIndicator={false}
+          <motion.div
+            style={{
+              border: "none",
+              justifyContent: "center",
+              textAlign: "center",
+              background: value === 0 ? "#64CCBE" : "white",
+              width: "50%",
+              height: "4vh",
+              fontSize: "16px",
+              fontWeight: "bold",
+              color: value === 0 ? "white" : "black",
+              display: "flex",
+              alignItems: "center",
+            }}
             onClick={() => {
               setValue(0);
             }}
+            whileTap={{ scale: 1.2 }}
           >
-            <StyledText text="랭킹" color={value === 0 ? "white" : "black"} />
-          </Box>
-          <Box
-            border={false}
-            justify="center"
-            align="center"
-            background={value === 1 ? "#439652" : "white"}
-            width="50%"
-            height="4vh"
-            focusIndicator={false}
+            랭킹
+          </motion.div>
+          <motion.div
+            style={{
+              border: "none",
+              justifyContent: "center",
+              textAlign: "center",
+              background: value === 1 ? "#64CCBE" : "white",
+              width: "50%",
+              height: "4vh",
+              fontSize: "16px",
+              fontWeight: "bold",
+              color: value === 1 ? "white" : "black",
+              display: "flex",
+              alignItems: "center",
+            }}
             onClick={() => {
               setValue(1);
             }}
+            whileTap={{ scale: 1.2 }}
           >
-            <StyledText text="리뷰" color={value === 1 ? "white" : "black"} />
-          </Box>
+            리뷰
+          </motion.div>
         </Box>
       }
       snapPoints={({ maxHeight }) => [maxHeight / 8, maxHeight * 0.6]}
@@ -88,23 +110,34 @@ export const CourseReviewRank = ({ open, onDismiss, reviews }) => {
           style={{ display: value === 0 ? "block" : "none" }}
           height="95%"
         >
-          <StyledText text="시간별 순위" weight="bold" size="16px" />
-          <Box direction="row" justify="center" align="end">
-            <RankProfile record={data[1]} />
-            <RankProfile record={data[0]} />
-            <RankProfile record={data[2]} />
-          </Box>
-          <div
-            style={{
-              height: "35vh",
-              overflow: "scroll",
-            }}
-          >
-            {data.map((d, idx) => {
-              return <RankBox record={d} key={idx} />;
-            })}
-          </div>
+          {ranks.length > 0 ? (
+            <>
+              <StyledText text="시간별 순위" weight="bold" size="16px" />
+              <Box direction="row" justify="center" align="end">
+                {ranks.length > 1 && <RankProfile record={ranks[1]} />}
+                {ranks.length > 0 && <RankProfile record={ranks[0]} />}
+                {ranks.length > 2 && <RankProfile record={ranks[2]} />}
+              </Box>
+              <div
+                style={{
+                  height: "35vh",
+                  overflow: "scroll",
+                }}
+              >
+                {ranks &&
+                  ranks.map((d, idx) => {
+                    return <RankBox record={d} key={idx} />;
+                  })}
+              </div>
+            </>
+          ) : (
+            <StyledText
+              text="랭킹이 없습니다."
+              style={{ textAlign: "center", marginTop: "15px" }}
+            />
+          )}
         </Box>
+
         <Box
           style={{ display: value === 1 ? "block" : "none" }}
           width="90%"
@@ -113,15 +146,24 @@ export const CourseReviewRank = ({ open, onDismiss, reviews }) => {
           overflow="scroll"
           height="95%"
         >
-          {reviews.map((r, idx) => {
-            return (
-              <ReviewBox
-                key={idx}
-                score={r.score}
-                starView={parseFloat(r.score * 22.8)}
-              />
-            );
-          })}
+          {reviews.length > 0 ? (
+            reviews.map((r, idx) => {
+              return (
+                <ReviewBox
+                  key={idx}
+                  score={r.score}
+                  starView={parseFloat(r.score * 22.8)}
+                  review={r}
+                  courseName={courseName}
+                />
+              );
+            })
+          ) : (
+            <StyledText
+              text="리뷰가 없습니다."
+              style={{ textAlign: "center", marginTop: "15px" }}
+            />
+          )}
         </Box>
       </Box>
     </BottomSheet>

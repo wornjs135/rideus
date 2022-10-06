@@ -10,13 +10,13 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Logo from "../assets/images/logo.png";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import CourseIcon from "../assets/images/course.png";
-import ActiveCourseIcon from "../assets/images/course_active.png";
-import HomeIcon from "../assets/images/home.png";
+import { ReactComponent as CourseIcon } from "../assets/icons/course.svg";
+// import ActiveCourseIcon from "../assets/icons/course_active.svg";
+import { ReactComponent as HomeIcon } from "../assets/icons/home.svg";
 import ActiveHomeIcon from "../assets/images/home_active.png";
-import RankIcon from "../assets/images/rank.png";
+import { ReactComponent as RankIcon } from "../assets/icons/rank.svg";
 import ActiveRankIcon from "../assets/images/rank_active.png";
-import MypageIcon from "../assets/images/mypage.png";
+import { ReactComponent as MypageIcon } from "../assets/icons/mypage.svg";
 import ActiveMypageIcon from "../assets/images/mypage_active.png";
 import { PrivateTerms } from "./PrivateTerms";
 import { ServiceTerms } from "./ServiceTerms";
@@ -24,21 +24,31 @@ import Stars from "../assets/images/stars.png";
 import StarsBlank from "../assets/images/stars_blank.png";
 import { Box } from "grommet";
 import { Map, Polyline } from "react-kakao-maps-sdk";
+import { motion } from "framer-motion";
 // 공통 컴포넌트들을 정의하는 클래스
 // ex) 버튼, 레이아웃, 틀
 
 // Header
-const Header = styled.img`
-  /* background-color: #1f1d1d; */
-  max-width: 32vw;
-  min-width: 32vw;
-  padding: 0vw 34vw;
+const Header = styled.div`
+  background-color: white;
+  width: 100%;
   max-height: 10vh;
-  margin-top: 10px;
+  text-align: center;
+  margin: 15px 0px;
 `;
+
 export function LogoHeader() {
   const navigate = useNavigate();
-  return <Header alt="logo" src={Logo} onClick={() => navigate("/")}></Header>;
+  return (
+    <Header>
+      <motion.img
+        whileTap={{ scale: 1.2 }}
+        alt="logo"
+        src={Logo}
+        onClick={() => navigate("/")}
+      />
+    </Header>
+  );
 }
 
 //NavBar
@@ -50,20 +60,19 @@ const NavBarDiv = styled.div`
   justify-content: space-around;
   width: 100%;
   background-color: white;
+  max-width: 500px;
   padding: 5px 0px;
   opacity: ${(props) => props.opacity || "1"};
   transition: all 0.35s;
   visibility: ${(props) => props.isShow || "visible"};
 `;
 const IconButtonStyle = {
-  display: "flex",
-  flexDirection: "column",
   justifyContent: "center",
   alignItems: "center",
 };
 let lastScrollTop = 0;
 let nowScrollTop = 0;
-export function NavBar() {
+export const NavBar = () => {
   const [show, handleShow] = useState("visible");
   const [opacity, setOpacity] = useState("1");
   const { pathname } = useLocation();
@@ -95,47 +104,67 @@ export function NavBar() {
     };
   }, []);
   return (
-    <NavBarDiv isShow={show} opacity={opacity}>
-      <div style={IconButtonStyle}>
-        <Link to="/">
-          <img alt="홈" src={pathname === "/" ? ActiveHomeIcon : HomeIcon} />
-        </Link>
-      </div>
-      <div style={IconButtonStyle}>
-        <Link to="/courseList">
-          <img
-            alt="코스"
-            src={pathname === "/courseList" ? ActiveCourseIcon : CourseIcon}
-          />
-        </Link>
-      </div>
-      <div style={IconButtonStyle}>
-        <Link to="/rank">
-          <img
-            alt="랭킹"
-            src={pathname === "/rank" ? ActiveRankIcon : RankIcon}
-          />
-        </Link>
-      </div>
-      <div style={IconButtonStyle}>
-        <Link to="/mypage">
-          <img
-            alt="마이페이지"
-            src={pathname === "/mypage" ? ActiveMypageIcon : MypageIcon}
-          />
-        </Link>
-      </div>
-    </NavBarDiv>
+    // <NavBarDiv isShow={show} opacity={opacity}>
+    //   <div style={IconButtonStyle}>
+    //     <Link to="/">
+    //       <HomeIcon stroke={pathname === "/" ? "#64CCBE" : "#444444"} />
+    //     </Link>
+    //   </div>
+    //   <div style={IconButtonStyle}>
+    //     <Link to="/courseList">
+    //       <CourseIcon
+    //         fill={pathname === "/courseList" ? "#64CCBE" : "#444444"}
+    //       />
+    //     </Link>
+    //   </div>
+    //   <div style={IconButtonStyle}>
+    //     <Link to="/rank">
+    //       <RankIcon stroke={pathname === "/rank" ? "#64CCBE" : "#444444"} />
+    //     </Link>
+    //   </div>
+    //   <div style={IconButtonStyle}>
+    //     <Link to="/mypage">
+    //       <MypageIcon stroke={pathname === "/mypage" ? "#64CCBE" : "#444444"} />
+    //     </Link>
+    //   </div>
+    // </NavBarDiv>
+    <Box width="100%">
+      <NavBarDiv isShow={show} opacity={opacity}>
+        <motion.div style={IconButtonStyle} whileTap={{ scale: 1.2 }}>
+          <Link to="/">
+            <HomeIcon stroke={pathname === "/" ? "#64CCBE" : "#444444"} />
+          </Link>
+        </motion.div>
+        <motion.div style={IconButtonStyle} whileTap={{ scale: 1.2 }}>
+          <Link to="/courseList">
+            <CourseIcon
+              fill={pathname === "/courseList" ? "#64CCBE" : "#444444"}
+            />
+          </Link>
+        </motion.div>
+        <motion.div style={IconButtonStyle} whileTap={{ scale: 1.2 }}>
+          <Link to="/rank">
+            <RankIcon stroke={pathname === "/rank" ? "#64CCBE" : "#444444"} />
+          </Link>
+        </motion.div>
+        <motion.div style={IconButtonStyle} whileTap={{ scale: 1.2 }}>
+          <Link to="/mypage">
+            <MypageIcon
+              stroke={pathname === "/mypage" ? "#64CCBE" : "#444444"}
+            />
+          </Link>
+        </motion.div>
+      </NavBarDiv>
+    </Box>
   );
-}
+};
 
 //텍스트 폼
 const TextForm = styled.div`
   color: ${(props) => props.color || "black"};
   font-size: ${(props) => props.size || "14px"};
   font-weight: ${(props) => props.weight || "normal"};
-  font-family: "Noto Sans KR", sans-serif;
-  align-items: center;
+  align-items: end;
   display: flex;
 `;
 
@@ -235,15 +264,14 @@ export function Footer() {
 
 export const StarBox = ({ score, starView }) => {
   return (
-    <Box direction="row" align="center">
-      <StyledText text={score} weight="bold" size="19px" />
-      <Box style={{ position: "relative", marginTop: "10px" }}>
+    <Box direction="row" align="center" gap="small" width="60%">
+      {score >= 0 && <StyledText text={score} weight="bold" size="19px" />}
+      <Box style={{ position: "relative" }} justify="center">
         <div
           // align="center"
           style={{
             width: starView,
-            marginLeft: "15px",
-            height: "28px",
+            height: "16px",
             overflow: "hidden",
           }}
         >
@@ -252,8 +280,8 @@ export const StarBox = ({ score, starView }) => {
             alt="별"
             src={Stars}
             style={{
-              height: "28px",
-              width: "114px",
+              height: "16px",
+              width: "80px",
             }}
           />
         </div>
@@ -263,9 +291,8 @@ export const StarBox = ({ score, starView }) => {
           src={StarsBlank}
           style={{
             position: "absolute",
-            marginLeft: "15px",
-            width: "114px",
-            height: "28px",
+            width: "80px",
+            height: "16px",
           }}
         />
       </Box>
