@@ -6,8 +6,12 @@ import MainBike from "../../assets/images/main_bike.png"
 import Button from "../../components/Button";
 import {AUTH_URL, OAUTH2_REDIRECT_URI} from "../../utils/api/api";
 import {StyledText} from "../../components/Common";
+import {useLocation} from "react-router-dom";
 
 export const Login = () => {
+
+    const { state } = useLocation();
+    console.log(state);
     return <Box width="100vw" margin="0 auto" gap="small" height={"100vh"} align={"center"}>
         <Box style={{
             display: "flex",

@@ -69,82 +69,82 @@ export const RecentSingleRide = () => {
             <StyledText text="STATISTICS" weight="bold" size="18px"/>
         </Box>
         <Box height={"300px"}>
-            <motion.div
-                style={{
-                    width: "90%",
-                    height: "35%",
-                }}
-                whileTap={{ scale: 1.2 }}
-                onClick={() => {
-                    setOpenMap(true);
-                }}
-            >
-                {course && (
-                    <Map
-                        center={
-                            course.coordinates
-                                ? course.coordinates[0]
-                                : { lng: 127.002158, lat: 37.512847 }
-                        }
-                        isPanto={true}
-                        style={{ borderRadius: "25px", width: "100%", height: "100%" }}
-                    >
-                        <Polyline
-                            path={[course.coordinates ? course.coordinates : []]}
-                            strokeWeight={5} // 선의 두께 입니다
-                            strokeColor={"#030ff1"} // 선의 색깔입니다
-                            strokeOpacity={0.7} // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
-                            strokeStyle={"solid"} // 선의 스타일입니다
-                        />
+            {/*<motion.div*/}
+            {/*    style={{*/}
+            {/*        width: "90%",*/}
+            {/*        height: "35%",*/}
+            {/*    }}*/}
+            {/*    whileTap={{ scale: 1.2 }}*/}
+            {/*    onClick={() => {*/}
+            {/*        setOpenMap(true);*/}
+            {/*    }}*/}
+            {/*>*/}
+            {/*    {course && (*/}
+            {/*        <Map*/}
+            {/*            center={*/}
+            {/*                course.coordinates*/}
+            {/*                    ? course.coordinates[0]*/}
+            {/*                    : { lng: 127.002158, lat: 37.512847 }*/}
+            {/*            }*/}
+            {/*            isPanto={true}*/}
+            {/*            style={{ borderRadius: "25px", width: "100%", height: "100%" }}*/}
+            {/*        >*/}
+            {/*            <Polyline*/}
+            {/*                path={[course.coordinates ? course.coordinates : []]}*/}
+            {/*                strokeWeight={5} // 선의 두께 입니다*/}
+            {/*                strokeColor={"#030ff1"} // 선의 색깔입니다*/}
+            {/*                strokeOpacity={0.7} // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다*/}
+            {/*                strokeStyle={"solid"} // 선의 스타일입니다*/}
+            {/*            />*/}
 
-                        <MapMarker
-                            position={
-                                course.coordinates
-                                    ? course.coordinates[0]
-                                    : { lng: 127.002158, lat: 37.512847 }
-                            }
-                            image={{
-                                src: `/images/start.png`,
-                                size: {
-                                    width: 29,
-                                    height: 41,
-                                }, // 마커이미지의 크기입니다
-                            }}
-                        ></MapMarker>
-                        {course.coordinates &&
-                        course.coordinates[0].lat ===
-                        course.coordinates[course.coordinates.length - 1].lat &&
-                        course.coordinates[0].lng ===
-                        course.coordinates[course.coordinates.length - 1].lng ? (
-                            <MapMarker
-                                position={course.coordinates[0]}
-                                image={{
-                                    src: `/images/start.png`,
-                                    size: {
-                                        width: 29,
-                                        height: 41,
-                                    }, // 마커이미지의 크기입니다
-                                }}
-                            ></MapMarker>
-                        ) : (
-                            <MapMarker
-                                position={
-                                    course.coordinates
-                                        ? course.coordinates[course.coordinates.length - 1]
-                                        : []
-                                }
-                                image={{
-                                    src: `/images/end.png`,
-                                    size: {
-                                        width: 29,
-                                        height: 41,
-                                    }, // 마커이미지의 크기입니다
-                                }}
-                            ></MapMarker>
-                        )}
-                    </Map>
-                )}
-            </motion.div>
+            {/*            <MapMarker*/}
+            {/*                position={*/}
+            {/*                    course.coordinates*/}
+            {/*                        ? course.coordinates[0]*/}
+            {/*                        : { lng: 127.002158, lat: 37.512847 }*/}
+            {/*                }*/}
+            {/*                image={{*/}
+            {/*                    src: `/images/start.png`,*/}
+            {/*                    size: {*/}
+            {/*                        width: 29,*/}
+            {/*                        height: 41,*/}
+            {/*                    }, // 마커이미지의 크기입니다*/}
+            {/*                }}*/}
+            {/*            ></MapMarker>*/}
+            {/*            {course.coordinates &&*/}
+            {/*            course.coordinates[0].lat ===*/}
+            {/*            course.coordinates[course.coordinates.length - 1].lat &&*/}
+            {/*            course.coordinates[0].lng ===*/}
+            {/*            course.coordinates[course.coordinates.length - 1].lng ? (*/}
+            {/*                <MapMarker*/}
+            {/*                    position={course.coordinates[0]}*/}
+            {/*                    image={{*/}
+            {/*                        src: `/images/start.png`,*/}
+            {/*                        size: {*/}
+            {/*                            width: 29,*/}
+            {/*                            height: 41,*/}
+            {/*                        }, // 마커이미지의 크기입니다*/}
+            {/*                    }}*/}
+            {/*                ></MapMarker>*/}
+            {/*            ) : (*/}
+            {/*                <MapMarker*/}
+            {/*                    position={*/}
+            {/*                        course.coordinates*/}
+            {/*                            ? course.coordinates[course.coordinates.length - 1]*/}
+            {/*                            : []*/}
+            {/*                    }*/}
+            {/*                    image={{*/}
+            {/*                        src: `/images/end.png`,*/}
+            {/*                        size: {*/}
+            {/*                            width: 29,*/}
+            {/*                            height: 41,*/}
+            {/*                        }, // 마커이미지의 크기입니다*/}
+            {/*                    }}*/}
+            {/*                ></MapMarker>*/}
+            {/*            )}*/}
+            {/*        </Map>*/}
+            {/*    )}*/}
+            {/*</motion.div>*/}
         </Box>
         <hr width={"85%"} style={{border: "solid 1px black"}}/>
         <Box pad={{left: "20px"}}>

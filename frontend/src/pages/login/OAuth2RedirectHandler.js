@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import {useDispatch} from "react-redux";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {myInfo} from "../../utils/api/userApi";
 import {setUser} from "../../stores/modules/user";
 
@@ -32,7 +32,14 @@ export const OAuth2RedirectHandler = (props) => {
                 const {data} = res;
                 dispatch(setUser(data));
                 console.log(data);
-                navigate(-2);
+
+                const from = localStorage.getItem("from");
+                if (from) {
+                    localStorage.removeItem("from");
+                    navigate(from);
+                } else {
+                    navigate("/");
+                }
                 // navigate("/");
                 // window.location.href = '/';
             }, (err) => {

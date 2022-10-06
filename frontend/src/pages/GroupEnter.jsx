@@ -9,7 +9,7 @@ import BookmarkBlank from "../assets/images/bookmark_blank.png";
 import Button from "../components/Button";
 import { CourseReviewRank } from "../components/CourseReviewRank";
 import { MapDialog, RideDialog } from "../components/AlertDialog";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams} from "react-router-dom";
 import { latlng as courseData } from "../utils/data";
 import { checkNickname } from "../utils/api/testApi";
 import { BootstrapButton } from "../components/Buttons";
@@ -47,7 +47,8 @@ export const GroupEnter = () => {
   useEffect(() => {
     console.log(courseId, rideRoomId);
     if (User === undefined) {
-      navigate("/login");
+        localStorage.setItem("from", `/groupRide?courseId=${courseId}&rideRoomId=${rideRoomId}&nickname=${nickname}`);
+        navigate('/login');
     } else {
       if (loading) {
         getCourseDetail(
