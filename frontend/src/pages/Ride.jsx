@@ -622,10 +622,47 @@ export const Ride = () => {
                 strokeStyle={"solid"} // 선의 스타일입니다
               />
             )}
-            {checkPoints &&
-              checkPoints.map((m, idx) => {
-                return <MapMarker position={m} key={idx}></MapMarker>;
-              })}
+            <MapMarker
+              position={
+                coordinates
+                  ? coordinates[0]
+                  : { lng: 127.002158, lat: 37.512847 }
+              }
+              image={{
+                src: `/images/start.png`,
+                size: {
+                  width: 29,
+                  height: 41,
+                }, // 마커이미지의 크기입니다
+              }}
+            ></MapMarker>
+            {coordinates &&
+            coordinates[0].lat === coordinates[coordinates.length - 1].lat &&
+            coordinates[0].lng === coordinates[coordinates.length - 1].lng ? (
+              <MapMarker
+                position={coordinates[0]}
+                image={{
+                  src: `/images/start.png`,
+                  size: {
+                    width: 29,
+                    height: 41,
+                  }, // 마커이미지의 크기입니다
+                }}
+              ></MapMarker>
+            ) : (
+              <MapMarker
+                position={
+                  coordinates ? coordinates[coordinates.length - 1] : []
+                }
+                image={{
+                  src: `/images/end.png`,
+                  size: {
+                    width: 29,
+                    height: 41,
+                  }, // 마커이미지의 크기입니다
+                }}
+              ></MapMarker>
+            )}
             {rideMembers &&
               rideMembers.members.map((member, idx) => {
                 console.log(member);
@@ -845,10 +882,47 @@ export const Ride = () => {
                 strokeStyle={"solid"} // 선의 스타일입니다
               />
             )}
-            {checkPoints &&
-              checkPoints.map((m, idx) => {
-                return <MapMarker position={m} key={idx}></MapMarker>;
-              })}
+            <MapMarker
+              position={
+                coordinates
+                  ? coordinates[0]
+                  : { lng: 127.002158, lat: 37.512847 }
+              }
+              image={{
+                src: `/images/start.png`,
+                size: {
+                  width: 29,
+                  height: 41,
+                }, // 마커이미지의 크기입니다
+              }}
+            ></MapMarker>
+            {coordinates &&
+            coordinates[0].lat === coordinates[coordinates.length - 1].lat &&
+            coordinates[0].lng === coordinates[coordinates.length - 1].lng ? (
+              <MapMarker
+                position={coordinates[0]}
+                image={{
+                  src: `/images/start.png`,
+                  size: {
+                    width: 29,
+                    height: 41,
+                  }, // 마커이미지의 크기입니다
+                }}
+              ></MapMarker>
+            ) : (
+              <MapMarker
+                position={
+                  coordinates ? coordinates[coordinates.length - 1] : []
+                }
+                image={{
+                  src: `/images/end.png`,
+                  size: {
+                    width: 29,
+                    height: 41,
+                  }, // 마커이미지의 크기입니다
+                }}
+              ></MapMarker>
+            )}
             {rideMembers &&
               rideMembers.members.map((member, idx) => {
                 console.log(member);
