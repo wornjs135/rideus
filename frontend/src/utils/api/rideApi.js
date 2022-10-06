@@ -10,9 +10,31 @@ const authInstance = axios.create({
   },
 });
 
+authInstance.interceptors.request.use(
+  function (config) {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      config.headers["Authorization"] = "Bearer " + token;
+    } else {
+      window.location.href = "/login";
+    }
+    return config;
+  },
+  function (error) {
+    return Promise.reject(error);
+  }
+);
+
 // 그룹라이딩 방 생성
-const createGroupRoom = async (success, fail) => {
-  await authInstance.post("/room").then(success).catch(fail);
+const createGroupRoom = async (courseId, success, fail) => {
+  await authInstance.post(`/room/${courseId}`).then(success).catch(fail);
+};
+
+const getGroupRoomInfo = async (rideRoomId, success, fail) => {
+  await authInstance
+    .get(`/room/participants/${rideRoomId}`)
+    .then(success)
+    .catch(fail);
 };
 
 // 주행 시작
@@ -21,8 +43,8 @@ const startRidding = async (success, fail) => {
 };
 
 // 주행 중간중간에 좌표 리스트들 저장
-const saveCoordinatesDuringRide = async (recordId, data, success, fail) => {
-  await authInstance.post(`/save/${recordId}`, data).then(success).catch(fail);
+const saveCoordinatesDuringRide = async (data, success, fail) => {
+  await authInstance.post(`/save`, data).then(success).catch(fail);
 };
 
 // 주행 종료
@@ -38,4 +60,5 @@ export {
   startRidding,
   saveCoordinatesDuringRide,
   finishRidding,
+  getGroupRoomInfo,
 };

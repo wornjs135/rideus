@@ -2,11 +2,11 @@ import axios from "axios";
 
 export const API_SERVER = "https://j7a603.p.ssafy.io/api";
 
-export const SERVER_URL = "http://localhost:8080/api";
+// export const API_SERVER = "http://localhost:8080/api";
 
-// export const CLIENT_URL = "https://j7a603.p.ssafy.io";
+export const CLIENT_URL = "https://j7a603.p.ssafy.io";
 
-export const CLIENT_URL = "http://localhost:3000";
+// export const CLIENT_URL = "http://localhost:3000";
 
 export const AUTH_URL = API_SERVER + "/oauth2/authorize/kakao";
 
