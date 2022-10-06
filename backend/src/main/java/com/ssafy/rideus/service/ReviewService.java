@@ -66,7 +66,7 @@ public class ReviewService {
     @Transactional
     public List<ReviewResponseDto> showAllReview(String cid) {
         List<ReviewResponseDto> result = new ArrayList<>();
-        List<Review> reviews = reviewRepository.findAllByCourseId(cid);
+        List<Review> reviews = reviewRepository.findAllByCourseIdOrderByCreatedDateDesc(cid);
         for (Review review : reviews) {
             result.add(ReviewResponseDto.reviewRes(review));
         }

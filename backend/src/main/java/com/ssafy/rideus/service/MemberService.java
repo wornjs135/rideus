@@ -122,15 +122,20 @@ public class MemberService {
 
         List<MyRideRecordRes> myRideRecordResList = new ArrayList<>();
         recordRepository.findMyRideRecentRecord(memberId).forEach(record -> {
+            MongoRecord mongoRecord = mongoRecordRepository.findById(record.getId())
+                    .orElseThrow(() -> new NotFoundException(RECORD_NOT_FOUND));
+
             // 공유된 나만의 주행
             if (record.getCourse() != null) {
-                myRideRecordResList.add(MyRideRecordRes.sharedMyRide(record));
+                MyRideRecordRes myRideRecordRes = MyRideRecordRes.sharedMyRide(record);
+                myRideRecordRes.computeIsSingle(mongoRecord.getParticipants().size());
+                myRideRecordResList.add(myRideRecordRes);
+
             } else {
-                MongoRecord mongoRecord = mongoRecordRepository.findById(record.getId())
-                        .orElseThrow(() -> new NotFoundException(RECORD_NOT_FOUND));
 
                 MyRideRecordRes myRideRecordRes = MyRideRecordRes.unSharedMyRide(record);
                 myRideRecordRes.setLatLng(mongoRecord);
+                myRideRecordRes.computeIsSingle(mongoRecord.getParticipants().size());
                 // 공유되지 않은 나만의 주행
                 myRideRecordResList.add(myRideRecordRes);
             }

@@ -47,7 +47,7 @@ public class RankController {
 
     // 코스별 랭킹 시간순(빨리 주행한 순)
     @GetMapping("/course/{courseId}")
-    @Cacheable(value = RANK_COURSE_TIME, key = "#courseId", unless = "#result == null", cacheManager = "cacheManager")
+//    @Cacheable(value = RANK_COURSE_TIME, key = "#courseId", unless = "#result == null", cacheManager = "cacheManager")
     public List<RankCourseTimeResponseDto> getRankCourseTime(@PathVariable String courseId) {
         return rankService.getRankCourseTime(courseId);
     }
