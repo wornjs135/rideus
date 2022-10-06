@@ -86,7 +86,8 @@ export const Main = () => {
   // console.log(User);
   useEffect(() => {
     if (User === undefined) {
-      navigate("/login");
+      localStorage.setItem("from", "/");
+      navigate('/login');
     } else {
       if (loading) {
         getNews(
