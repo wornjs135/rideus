@@ -6,7 +6,7 @@ const StyledButton = styled(motion.button)`
   border-radius: 8px;
 
   font-size: 12px;
-  font-family: "Noto Sans KR", sans-serif;
+  font-family: "gwmd";
   font-weight: 500;
   margin: 10px 5px;
 

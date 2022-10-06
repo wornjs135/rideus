@@ -26,20 +26,20 @@ const CourseBox = styled(motion.div)`
   margin-top: 5px;
 
   padding: 10px;
-  padding-top: 14px;
   background-color: white;
   border-radius: 15px;
   box-shadow: 4px 4px 4px -4px rgb(0 0 0 / 0.2);
 `;
 
-const Wrap = styled.div`
+export const Wrap = styled.div`
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: normal;
   word-break: break-word;
-
+  font-weight: bold;
+  color: #000000;
   display: -webkit-box;
-  -webkit-line-clamp: 2; // 원하는 라인수
+  -webkit-line-clamp: 1; // 원하는 라인수
   -webkit-box-orient: vertical;
 `;
 
@@ -49,13 +49,7 @@ export const MyPageCourse = ({ course, nav }) => {
     <CourseBox onClick={nav} whileTap={{ scale: 1.2 }}>
       <div style={{ display: "flex", flexDirection: "column" }}>
         <div style={{ display: "flex", justifyContent: "flex-start" }}>
-          <Wrap>
-            <StyledText
-              text={course?.courseName}
-              weight="bold"
-              color="#000000"
-            />
-          </Wrap>
+          <Wrap>{course?.courseName}</Wrap>
         </div>
 
         <Box align="end" gap="small" margin={{ top: "2vw" }}>
@@ -93,7 +87,7 @@ export const MyPageCourse = ({ course, nav }) => {
           }}
         >
           <img src={Flag} width="12px" height="12px" />
-          {distanceHandleM(course?.distance) + "km"}
+          {distanceHandleM(course?.distance)}
         </Box>
         {course.startedLocation && (
           <Box

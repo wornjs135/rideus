@@ -61,12 +61,6 @@ export const ChooseRideTypeBar = ({ open, onDismiss }) => {
         onDismiss();
       }}
     >
-      <HeaderBox
-        title="RIDE!"
-        goBack={() => {
-          onDismiss();
-        }}
-      />
       <Box
         direction="row"
         justify="around"
@@ -184,12 +178,6 @@ export const ChooseSoloGroupBar = ({
         onDismiss();
       }}
     >
-      <HeaderBox
-        title="RIDE!"
-        goBack={() => {
-          onDismiss();
-        }}
-      />
       <Box
         direction="row"
         justify="center"
