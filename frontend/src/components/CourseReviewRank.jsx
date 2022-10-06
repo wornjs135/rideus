@@ -16,7 +16,7 @@ export const CourseReviewRank = ({
 }) => {
   const [value, setValue] = useState(0);
   const [data, setData] = useState([]);
-
+  const [openD, setOpenD] = useState(false);
   useEffect(() => {
     setData([
       { rank: 1, name: "김싸피", time: "2h 5m" },

@@ -62,6 +62,7 @@ export const ReviewBox = ({ review, score, starView, courseName }) => {
             handleClose={() => {
               setOpen(false);
             }}
+            reviewId={review.reviewId}
             title={courseName}
             desc={review.content}
             img={review.imageUrl}

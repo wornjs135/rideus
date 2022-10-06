@@ -17,18 +17,19 @@ const authInstance = axios.create({
   },
 });
 
-authInstance.interceptors.request.use(function (config) {
-      const token = localStorage.getItem("accessToken");
-      if (token) {
-        config.headers["Authorization"] = 'Bearer ' + token;
-      } else {
-          window.location.href = "/login";
-      }
-      return config;
-    },
-    function (error) {
-      return Promise.reject(error);
+authInstance.interceptors.request.use(
+  function (config) {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      config.headers["Authorization"] = "Bearer " + token;
+    } else {
+      window.location.href = "/login";
     }
+    return config;
+  },
+  function (error) {
+    return Promise.reject(error);
+  }
 );
 
 const authFormDataInstance = axios.create({
@@ -39,16 +40,17 @@ const authFormDataInstance = axios.create({
   },
 });
 
-authFormDataInstance.interceptors.request.use(function (config) {
-      const token = localStorage.getItem("accessToken");
-      if (token) {
-        config.headers["Authorization"] = 'Bearer ' + token;
-      }
-      return config;
-    },
-    function (error) {
-      return Promise.reject(error);
+authFormDataInstance.interceptors.request.use(
+  function (config) {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      config.headers["Authorization"] = "Bearer " + token;
     }
+    return config;
+  },
+  function (error) {
+    return Promise.reject(error);
+  }
 );
 
 // 리뷰 작성(이미지 1정 포함)
@@ -58,12 +60,12 @@ const writeReview = async (formData, success, fail) => {
 
 // 코스별 리뷰 목록
 const getCourseAllReview = async (courseId, success, fail) => {
-  await instance.get(`/all/${courseId}`).then(success).catch(fail);
+  await authInstance.get(`/all/${courseId}`).then(success).catch(fail);
 };
 
 // 리뷰 상세(courseId는 없어도 될거같긴함. 백엔드에서 수정해야함.)
 const getReivewDetail = async (reviewId, success, fail) => {
-  await instance.get(`/${reviewId}`).then(success).catch(fail);
+  await authInstance.get(`/detail/${reviewId}`).then(success).catch(fail);
 };
 
 // 리뷰 좋아요

@@ -256,7 +256,7 @@ export function Footer() {
 
 export const StarBox = ({ score, starView }) => {
   return (
-    <Box direction="row" align="center" gap="small" justify="start" width="55%">
+    <Box direction="row" align="center" gap="small" width="60%">
       {score >= 0 && <StyledText text={score} weight="bold" size="19px" />}
       <Box style={{ position: "relative" }} justify="center">
         <div
