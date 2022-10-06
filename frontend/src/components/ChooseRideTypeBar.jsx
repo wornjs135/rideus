@@ -6,33 +6,47 @@ import CloseButton from "../assets/images/close.png";
 import CourseButton from "../assets/images/recCourse.png";
 import RideButton from "../assets/images/myride.png";
 import { useNavigate } from "react-router-dom";
-import { Box, Button } from "grommet";
+import { Box } from "grommet";
 import { Button as GBtn } from "grommet";
-import SoloBtn from "../assets/images/solo.png";
+import SoloBtn from "../assets/images/single.png";
 import GroupBtn from "../assets/images/group.png";
-import { Dialog } from "@mui/material";
+import { Dialog, Divider } from "@mui/material";
 import { MdDirectionsBike, MdOutlineMap } from "react-icons/md";
 import { GrMapLocation } from "react-icons/gr";
+import { createGroupRoom, startRidding } from "../utils/api/rideApi";
+import { motion } from "framer-motion";
+
 const HeaderDiv = styled.div`
   margin: 5px;
   display: flex;
+  width: 100%;
   justify-content: space-between;
 `;
 
-const BackButton = styled.button`
+const BackButton = styled(motion.button)`
   background: none;
   font-size: 12px;
   font-family: Noto Sans KR, sans-serif;
   border: 0px;
   width: 10vw;
+  display: flex;
+  align-items: center;
 `;
 
 export const HeaderBox = ({ goBack, title }) => {
   return (
     <HeaderDiv>
       <div style={{ width: "10vw" }}></div>
-      <StyledText size="20px" weight="bold" text={title} />
-      <BackButton onClick={goBack}>
+      <StyledText
+        size="20px"
+        weight="bold"
+        text={title}
+        style={{
+          display: "flex",
+          alignItems: "center",
+        }}
+      />
+      <BackButton whileTap={{ scale: 1.2 }} onClick={goBack}>
         <img src={CloseButton} />
       </BackButton>
     </HeaderDiv>
@@ -47,12 +61,6 @@ export const ChooseRideTypeBar = ({ open, onDismiss }) => {
         onDismiss();
       }}
     >
-      <HeaderBox
-        title="RIDE!"
-        goBack={() => {
-          onDismiss();
-        }}
-      />
       <Box
         direction="row"
         justify="around"
@@ -60,49 +68,88 @@ export const ChooseRideTypeBar = ({ open, onDismiss }) => {
         pad="15px"
         margin={{ top: "20px", bottom: "50px" }}
       >
-        <Button
-          color="#439652"
+        <motion.button
           onClick={() => {
             navigate("/courseList");
           }}
+          whileTap={{ scale: 1.2 }}
           children={
             <Box
               width="145px"
               align="center"
-              background="#439652"
               style={{ borderRadius: "8px" }}
+              gap="medium"
             >
-              <img src={CourseButton} width="100px" />
+              <img src={CourseButton} />
               <StyledText
                 text="추천 코스"
-                color="white"
+                color="black"
                 weight="bold"
                 size="18px"
               />
             </Box>
           }
+          style={{
+            background: "none",
+            border: "none",
+            fontFamily: "gwtt",
+          }}
         />
-        <Button
+        <Divider orientation="vertical" variant="middle" flexItem />
+        <motion.button
+          style={{
+            background: "none",
+            border: "none",
+            fontFamily: "gwtt",
+          }}
           onClick={() => {
+            // 탑승
+            // navigate("/ride", {
+            //   state: {
+            //     courseName: "나만의 길",
+            //     rideType: "single",
+            //     courseType: "my",
+            //     // recordId: response.data.recordId,
+            //     coordinates: undefined,
+            //     checkPoints: undefined,
+            //     courseId: undefined,
+            //     roomInfo: undefined,
+            //   },
+            // });
+            // startRidding(
+            //   (response) => {
+            //     console.log(response);
+
+            //   },
+            //   (fail) => {
+            //     console.log(fail);
+            //   }
+            // );
             navigate("/ride", {
               state: {
                 courseName: "나만의 길",
-                rideType: "solo",
+                rideType: "single",
                 courseType: "my",
+                recordId: undefined,
+                coordinates: undefined,
+                checkPoints: undefined,
+                courseId: undefined,
+                roomInfo: undefined,
               },
             });
           }}
+          whileTap={{ scale: 1.2 }}
           children={
             <Box
               width="145px"
               align="center"
-              background="#439652"
               style={{ borderRadius: "8px" }}
+              gap="medium"
             >
-              <img src={RideButton} width="100px" />
+              <img src={RideButton} />
               <StyledText
                 text="나만의 코스"
-                color="white"
+                color="black"
                 weight="bold"
                 size="18px"
               />
@@ -120,6 +167,8 @@ export const ChooseSoloGroupBar = ({
   title,
   coordinates,
   checkPoints,
+  courseId,
+  course,
 }) => {
   const navigate = useNavigate();
   return (
@@ -129,72 +178,158 @@ export const ChooseSoloGroupBar = ({
         onDismiss();
       }}
     >
-      <HeaderBox
-        title="RIDE!"
-        goBack={() => {
-          onDismiss();
-        }}
-      />
-      <Box direction="row" justify="center" width="100%" pad="15px" gap="small">
-        <GBtn
-          color="#439652"
+      <Box
+        direction="row"
+        justify="center"
+        width="100%"
+        pad="15px"
+        margin={{ bottom: "20px" }}
+        gap="small"
+      >
+        <motion.button
+          style={{
+            background: "none",
+            border: "none",
+            fontFamily: "gwtt",
+          }}
+          whileTap={{ scale: 1.2 }}
           onClick={() => {
+            // startRidding(
+            //   (response) => {
+            //     console.log(response);
+
+            //   },
+            //   (fail) => {
+            //     console.log(fail);
+            //   }
+            // );
             navigate("/ride", {
               state: {
                 courseName: title,
-                rideType: "solo",
+                rideType: "single",
                 courseType: "course",
+                recordId: undefined,
                 coordinates: coordinates,
                 checkPoints: checkPoints,
+                courseId: courseId,
+                roomInfo: undefined,
               },
             });
+            // navigate("/ride", {
+            //   state: {
+            //     courseName: title,
+            //     rideType: "single",
+            //     courseType: "course",
+            //     coordinates: coordinates,
+            //     checkPoints: checkPoints,
+            //     courseId: courseId,
+            //   },
+            // });
           }}
           children={
             <Box
-              width="145px"
-              height="140px"
               align="center"
               justify="between"
-              background="#439652"
               style={{ borderRadius: "8px" }}
               pad="small"
+              gap="medium"
             >
-              <img src={SoloBtn} width="100px" />
+              <img src={SoloBtn} />
               <StyledText
                 text="혼자 타기"
-                color="white"
+                color="black"
                 weight="bold"
                 size="18px"
               />
             </Box>
           }
         />
-        <GBtn
+        <Divider orientation="vertical" variant="middle" flexItem />
+        <motion.button
+          style={{
+            background: "none",
+            border: "none",
+            fontFamily: "gwtt",
+          }}
+          whileTap={{ scale: 1.2 }}
           onClick={() => {
-            navigate("/ride", {
-              state: {
-                courseName: title,
-                rideType: "group",
-                courseType: "course",
-                coordinates: coordinates,
-                checkPoints: checkPoints,
+            createGroupRoom(
+              courseId,
+              (response) => {
+                console.log(response);
+                const roomInfo = {
+                  courseId: response.data.courseId,
+                  nickname: response.data.nickname,
+                  rideRoomId: response.data.rideRoomId,
+                };
+                navigate("/ride", {
+                  state: {
+                    courseName: title,
+                    rideType: "group",
+                    courseType: "course",
+                    recordId: undefined,
+                    coordinates: coordinates,
+                    checkPoints: checkPoints,
+                    courseId: courseId,
+                    roomInfo: roomInfo,
+                  },
+                });
+                // startRidding(
+                //   (response2) => {
+                //     console.log(response2);
+
+                //   },
+                //   (fail) => {
+                //     console.log(fail);
+                //   }
+                // );
               },
-            });
+              (fail) => {
+                console.log(fail);
+              }
+            );
+            // startRidding(
+            //   (response) => {
+            //     console.log(response);
+            //     navigate("/ride", {
+            //       state: {
+            //         courseName: title,
+            //         rideType: "group",
+            //         courseType: "course",
+            //         coordinates: coordinates,
+            //         checkPoints: checkPoints,
+            //         courseId: courseId,
+            //       },
+            //     });
+            //   },
+            //   (fail) => {
+            //     console.log(fail);
+            //   }
+            // );
+
+            // navigate("/ride", {
+            //   state: {
+            //     courseName: title,
+            //     rideType: "group",
+            //     courseType: "course",
+            //     coordinates: coordinates,
+            //     checkPoints: checkPoints,
+            //     courseId: courseId,
+            //   },
+            // });
           }}
           children={
             <Box
-              width="145px"
               align="center"
-              height="140px"
               justify="between"
-              background="#439652"
               style={{ borderRadius: "8px" }}
               pad="small"
+              gap="medium"
             >
-              <img src={GroupBtn} width="100px" />
+              <img src={GroupBtn} />
               <StyledText
                 text="같이 타기"
-                color="white"
+                color="black"
                 weight="bold"
                 size="18px"
               />

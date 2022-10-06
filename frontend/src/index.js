@@ -11,19 +11,20 @@ import { persistStore } from "redux-persist"; // load
 import { PersistGate } from "redux-persist/integration/react"; // load
 import reportWebVitals from "./reportWebVitals";
 import ScrollToTop from "./components/ScrollToTop";
+import GlobalStyle from "./utils/GlobalStyle";
 const store = createStore(rootReducer, applyMiddleware(thunk));
 const persistor = persistStore(store); // 정의
 ReactDOM.render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <ScrollToTop />
-      <Provider store={store}>
-        <PersistGate persistor={persistor}>
-          <App />
-        </PersistGate>
-      </Provider>
-    </BrowserRouter>
-  </React.StrictMode>,
+  // <React.StrictMode>
+  <BrowserRouter>
+    <ScrollToTop />
+    <Provider store={store}>
+      <PersistGate persistor={persistor}>
+        <App />
+      </PersistGate>
+    </Provider>
+  </BrowserRouter>,
+  // </React.StrictMode >
   document.getElementById("root")
 );
 reportWebVitals();
