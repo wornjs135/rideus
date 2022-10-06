@@ -1,49 +1,49 @@
 package com.ssafy.rideus.config.security.filter;
 
-import com.ssafy.rideus.config.security.service.AuthService;
-import com.ssafy.rideus.config.security.service.LoginUserDetails;
-import com.ssafy.rideus.config.security.util.JwtUtil;
+import com.ssafy.rideus.config.security.util.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
+@Slf4j
 @RequiredArgsConstructor
-public class JwtAuthenticationFilter extends GenericFilter {
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtUtil jwtUtil;
-    private final AuthService authService;
+
+    private final JwtTokenProvider tokenProvider;
+
 
     @Override
-    public void doFilter(ServletRequest request,
-                         ServletResponse response,
-                         FilterChain chain) throws IOException, ServletException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        String token = parseBearerToken(request);
 
-        String jwtToken = extractToken((HttpServletRequest) request);
-
-        if (StringUtils.hasText(jwtToken) && jwtUtil.isValidToken(jwtToken)) {
-            UserDetails userDetails = authService.loadUserByUsername(jwtUtil.getSubject(jwtToken));
-            LoginUserDetails loginUserDetails = (LoginUserDetails) userDetails;
-
-            Authentication authentication =
-                    new UsernamePasswordAuthenticationToken(loginUserDetails.getMember(), null, userDetails.getAuthorities());
+        // Validation Access Token
+        if (StringUtils.hasText(token) && tokenProvider.validateToken(token)) {
+            Authentication authentication = tokenProvider.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
+            log.info(authentication.getName() + "의 인증정보 저장");
+        } else {
+            log.info("유효한 JWT 토큰이 없습니다.");
         }
-        chain.doFilter(request, response);
+
+        filterChain.doFilter(request, response);
     }
 
-    private String extractToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader(HttpHeaders.AUTHORIZATION);
+    private String parseBearerToken(HttpServletRequest request) {
 
+        String bearerToken = request.getHeader("Authorization");
+
+//        log.info("parse Bearer = {}", bearerToken);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }

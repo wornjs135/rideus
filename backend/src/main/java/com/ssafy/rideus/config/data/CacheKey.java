@@ -13,5 +13,17 @@ public class CacheKey {
 //    public static final String SPECIAL_AUCTION_BOARD = "special_auction_board";
 //    public static final int SPECIAL_AUCTION_BOARD_EXPIRE_SEC = 300;
 
+    public static final int RANK_TOTAL_EXPIRE_SEC = 60 * 60 * 24 * 7;   // 일주일
+    public static final int POPULARITY_TAG_EXPIRE_SEC = 60 * 60 * 24 * 1; // 하루
+
+    public static final String RANK_TOTAL_TIME = "rank_total_time";
+    public static final String RANK_TOTAL_DISTANCE = "rank_total_distance";
+    public static final String RANK_TOTAL_BEST_SPEED = "rank_total_max_speed";
+    public static final String RANK_COURSE_TIME = "rank_course_time";
+    public static final String RANK_MEMBER_TIME = "rank_member_time";
+    public static final String RANK_MEMBER_DISTANCE = "rank_member_distance";
+    public static final String RANK_MEMBER_BEST_SPEED = "rank_member_max_speed";
+
+    public static final String POPULARITY_TAG = "popularity_tag";
 
 }

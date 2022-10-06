@@ -1,10 +1,8 @@
 package com.ssafy.rideus.domain;
 
 import com.ssafy.rideus.domain.base.BaseEntity;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.ssafy.rideus.dto.review.ReviewLikeResDto;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -26,4 +24,11 @@ public class ReviewLike extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "review_id")
     private Review review;
+
+    @Builder
+    public ReviewLike(Member member, Review review) {
+        this.member = member;
+        this.review = review;
+    }
+
 }
