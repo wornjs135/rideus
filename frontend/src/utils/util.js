@@ -136,6 +136,11 @@ export const expectTimeHandle2 = (time) => {
     )}분`;
 };
 
+export const httpToHttps = (url) => {
+  // console.log(url.split("://")[0], url.split("://")[1]);
+  return url.split("://")[0] + "s://" + url.split("://")[1];
+};
+
 export const distanceHandle = (dis) => {
   if (dis < 1000) return dis;
   else return parseFloat(dis / 1000.0).toFixed(2);

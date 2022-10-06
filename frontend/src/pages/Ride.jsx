@@ -28,6 +28,7 @@ import useWatchLocation from "../hooks/watchLocationHook";
 import {
   convertStringToColor,
   distanceHandle,
+  httpToHttps,
   speedHandle,
   timeHandle,
 } from "../utils/util";
@@ -646,7 +647,7 @@ export const Ride = () => {
                   >
                     {/* 커스텀 오버레이에 표시할 내용입니다 */}
                     <Avatar
-                      src={member.profileImageUrl}
+                      src={httpToHttps(member.profileImageUrl)}
                       style={{
                         width: "35px",
                         height: "35px",
@@ -869,7 +870,7 @@ export const Ride = () => {
                   >
                     {/* 커스텀 오버레이에 표시할 내용입니다 */}
                     <Avatar
-                      src={member.profileImageUrl}
+                      src={httpToHttps(member.profileImageUrl)}
                       style={{
                         width: "35px",
                         height: "35px",

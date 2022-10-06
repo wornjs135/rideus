@@ -8,9 +8,11 @@ import StarsBlank from "../assets/images/stars_blank.png";
 import { latlng } from "../utils/data";
 import { ReviewDialog } from "./AlertDialog";
 import { motion } from "framer-motion";
+import { httpToHttps } from "../utils/util";
 export const ReviewBox = ({ review, score, starView, courseName }) => {
   const [open, setOpen] = useState(false);
-  if (review)
+  if (review) {
+    // httpToHttps(review.memberProfileImage);
     return (
       <motion.div whileTap={{ scale: 1.2 }}>
         <Box
@@ -33,7 +35,7 @@ export const ReviewBox = ({ review, score, starView, courseName }) => {
             gap="small"
             focusIndicator={false}
           >
-            <Avatar src={review.memberProfileImage} size="30px" />
+            <Avatar src={httpToHttps(review.memberProfileImage)} size="30px" />
             <Box justify="center" align="start">
               <StyledText text={review.memberNickname} />
               <StyledText text={review.content} />
@@ -72,4 +74,5 @@ export const ReviewBox = ({ review, score, starView, courseName }) => {
         </Box>
       </motion.div>
     );
+  }
 };
