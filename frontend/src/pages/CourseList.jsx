@@ -217,11 +217,11 @@ export const CourseList = () => {
           align="center"
           round={{ corner: "top", size: "large" }}
           background="#E0F7F4"
-          gap="15px"
+          gap="25px"
           height={{ min: "80vh" }}
           width="100%"
         >
-          <Box direction="row" margin={{ top: "15px" }} width="90%">
+          <Box direction="row" margin={{ top: "15px" }} width="90%" gap="small">
             <img src={Recommend} width="20px" height="20px" />
             <StyledText text="당신을 위한 추천 코스" size="16px" />
           </Box>

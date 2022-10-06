@@ -16,8 +16,10 @@ import { useNavigate } from "react-router-dom";
 import { getBookmarkedCourses } from "../utils/api/bookmarkApi";
 import {
   convertDistanceToImg,
-  convertDistanceToText, distanceHandleM,
-  expectTimeHandle, expectTimeHandle2,
+  convertDistanceToText,
+  distanceHandleM,
+  expectTimeHandle,
+  expectTimeHandle2,
   renameObjectKey,
 } from "../utils/util";
 import { motion } from "framer-motion";
@@ -85,12 +87,13 @@ export const MyPage = () => {
       >
         {/* 자전거사진, 멘트, 버튼 */}
 
-        <Box align="center" justify="between">
+        <Box align="center" justify="between" width="100%">
           <Box
+            width="100%"
             direction="row"
             align="center"
             justify="around"
-            style={{ marginTop: "5vw" }}
+            style={{ marginTop: "5vw", marginBottom: "5vw" }}
           >
             <Box direction={"column"} align={"left"} justify={"start"}>
               <UserSettings
@@ -113,7 +116,9 @@ export const MyPage = () => {
                   />
                   <StyledText
                     color="#4B4B4B"
-                    text={distanceHandleM(totalRecord?.total_distance)}
+                    text={`${parseFloat(totalRecord?.total_distance).toFixed(
+                      2
+                    )}km`}
                     weight="bold"
                     size="15px"
                     style={{ textAlign: "right", display: "inline" }}
@@ -156,7 +161,7 @@ export const MyPage = () => {
           border={{ color: "#F3F3F3", size: "small", side: "all" }}
         >
           {/* 인기코스 */}
-          <Box align="start" width="100%" gap="large" margin="large">
+          <Box align="start" width="100%" margin="large">
             <Box pad={{ left: "20px" }}>
               <StyledText text="최근 주행" weight="bold" size="18px" />
             </Box>
@@ -184,7 +189,7 @@ export const MyPage = () => {
             </Box>
           </Box>
           {/* 나만의 코스 */}
-          <Box align="start" width="100%" gap="large" margin="large">
+          <Box align="start" width="100%" margin="large">
             <Box pad={{ left: "20px" }}>
               <StyledText text="나만의 주행" weight="bold" size="18px" />
             </Box>
@@ -219,7 +224,7 @@ export const MyPage = () => {
             </Box>
           </Box>
           {/* 인기태그 */}
-          <Box align="start" width="100%" gap="large" margin="large">
+          <Box align="start" width="100%" margin="large">
             <Box pad={{ left: "20px" }}>
               <StyledText text="코스 북마크" weight="bold" size="18px" />
             </Box>
@@ -242,7 +247,7 @@ export const MyPage = () => {
             </Box>
           </Box>
           {/* 인기태그 */}
-          <Box align="start" width="100%" gap="large" margin="large">
+          <Box align="start" width="100%" margin="large">
             <Box pad={{ left: "20px" }}>
               <StyledText text="MY RIDE" weight="bold" size="18px" />
             </Box>
@@ -261,7 +266,15 @@ export const MyPage = () => {
                       key={idx}
                       color="#64CCBE"
                       weight="bold"
-                      style={{ marginRight: "10px" }}
+                      style={{
+                        color: "white",
+                        backgroundColor: "#64ccbe",
+                        padding: "8px",
+                        fontSize: "11px",
+                        margin: "0px 8px 12px 0px",
+                        border: "none",
+                        borderRadius: "16px",
+                      }}
                     />
                   );
                 })}

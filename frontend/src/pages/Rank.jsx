@@ -96,12 +96,18 @@ export const Rank = () => {
           textAlign: "center",
         }}
       >
-        <StyledText
-          text="명예의 전당"
-          size="20px"
-          weight="bold"
-          style={{ marginTop: "15px", marginBottom: "15px" }}
-        />
+        <Box
+          style={{
+            marginTop: "15px",
+            marginBottom: "15px",
+            alignItems: "center",
+            textAlign: "center",
+            fontSize: "20px",
+            fontWeight: "bold",
+          }}
+        >
+          명예의 전당
+        </Box>
 
         <Box
           width="100%"

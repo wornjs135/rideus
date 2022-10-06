@@ -44,20 +44,22 @@ export const RideEnd = () => {
         justify: "around",
         align: "center",
         textAlign: "center",
-        margin: "0 auto",
         background: "#64CCBE",
       }}
       initial="hidden"
       animate="visible"
       variants={container}
     >
-      <StyledText
-        text={courseData.courseName}
-        color="white"
-        size="20px"
-        weight="bold"
-        style={{ marginTop: "20px", marginBottom: "20px" }}
-      />
+      <Box
+        style={{
+          paddingTop: "20px",
+          marginBottom: "20px",
+          fontSize: "20px",
+          color: "white",
+        }}
+      >
+        {courseData.courseName}
+      </Box>
       <Box
         align="center"
         justify="between"
