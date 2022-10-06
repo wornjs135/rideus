@@ -1,6 +1,6 @@
 package com.ssafy.rideus.controller;
 
-import com.ssafy.rideus.domain.base.Point;
+import com.ssafy.rideus.domain.base.Coordinate;
 import com.ssafy.rideus.domain.collection.TestCollection;
 import com.ssafy.rideus.repository.jpa.MemberRepository;
 import com.ssafy.rideus.repository.mongo.TestCollectionRepository;
@@ -37,13 +37,13 @@ public class TestMongoController {
         favorite.add("ccc");
         favorite.add("eee");
 
-        List<Point> points = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            Point point = new Point(i, i);
-            points.add(point);
-        }
+//        List<Coordinate> coordinates = new ArrayList<>();
+//        for (int i = 0; i < 5; i++) {
+//            Coordinate coordinate = new Coordinate(i, i);
+//            coordinates.add(coordinate);
+//        }
 
-        System.out.println(testCollectionRepository.save(TestCollection.create(10, "박재권", favorite, points)));
+//        System.out.println(testCollectionRepository.save(TestCollection.create(10, "박재권", favorite, coordinates)));
 
         return ResponseEntity.ok().build();
     }
@@ -52,6 +52,6 @@ public class TestMongoController {
     public ResponseEntity testJenkins() {
         System.out.println("젠킨스 빌드 됐나요");
 
-        return ResponseEntity.ok("젠킨스 빌드 완료?");
+        return ResponseEntity.ok("젠킨스 back 브랜치에서 빌드 완료?");
     }
 }

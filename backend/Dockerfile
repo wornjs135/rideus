@@ -31,4 +31,5 @@ FROM openjdk:8
 COPY --from=builder build/libs/rideus-0.0.1-SNAPSHOT.jar rideus.jar
 
 EXPOSE 8080
-CMD ["java","-jar","/rideus.jar"]
+
+CMD ["java","-jar","rideus.jar"]
