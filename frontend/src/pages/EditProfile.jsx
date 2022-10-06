@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Avatar, Box } from "grommet";
+import {Avatar, Box, Spinner} from "grommet";
 import { Button, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import {
@@ -18,6 +18,7 @@ export const EditProfile = () => {
     email: "",
     phone: "",
   });
+  const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user.user);
   useEffect(() => {
@@ -25,6 +26,7 @@ export const EditProfile = () => {
       const { data: value } = data;
       console.log(value);
       setInputs(value);
+      setLoading(false);
     });
   }, []);
 
@@ -81,8 +83,8 @@ export const EditProfile = () => {
   };
 
   const onBlur = (e) => {};
-
-  return (
+  if (loading) return <Spinner/>;
+  else return (
     <Box>
       <Box
         pad={{ left: "20px" }}
