@@ -77,7 +77,7 @@ export const RideEnd = () => {
           margin={{ top: "20px", bottom: "20px" }}
         >
           <Map
-            center={courseData.latlng[0]}
+            center={courseData.latlng[parseInt(courseData.latlng.length / 2)]}
             isPanto={true}
             style={{ borderRadius: "25px", width: "100%", height: "100%" }}
           >

@@ -41,7 +41,6 @@ const NewsDiv = styled(motion.div)`
   padding-top: 14px;
   background-color: white;
   border-radius: 15px;
-  justify-content: space-between;
   box-shadow: 4px 4px 4px -4px rgb(0 0 0 / 0.2);
 `;
 
@@ -49,6 +48,7 @@ const Wrap = styled.div`
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: normal;
+  font-weight: bold;
   word-break: break-word;
   display: -webkit-box;
   -webkit-line-clamp: 2; // 원하는 라인수
@@ -98,7 +98,7 @@ export const BestCourse = ({ course }) => {
                 textOverflow: "ellipsis",
                 whiteSpace: "nowrap",
                 display: "block",
-                fontFamily: "gwtt",
+                weight: "bold",
               }}
             />
           </Box>
@@ -196,24 +196,25 @@ export const NewsBox = ({ news }) => {
         <img
           src={news.image ? news.image : NoNews}
           alt=""
-          width="140px"
-          height="85px"
+          width="100%"
+          height="100%"
           style={{ borderRadius: "10px", objectFit: "cover" }}
         />
       </Box>
-      <Box align="center">
-        <StyledText
-          text={news.title}
-          weight="bold"
-          color="black"
-          style={{
-            fontFamily: "gwmd",
-            width: "90%",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "normal",
-          }}
-        />
+      <Box align="center" margin={{ top: "10px" }}>
+        <Wrap
+        // weight="bold"
+        // color="black"
+        // style={{
+        //   fontFamily: "gwmd",
+        //   width: "90%",
+        //   overflow: "hidden",
+        //   textOverflow: "ellipsis",
+        //   whiteSpace: "normal",
+        // }}
+        >
+          {news.title}
+        </Wrap>
       </Box>
     </NewsDiv>
   );

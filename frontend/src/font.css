@@ -14,8 +14,8 @@
   font-display: fallback;
   src: url("../src/assets/fonts/강원교육모두\ Bold.ttf") format("truetype"),
     url("../src/assets/fonts/강원교육모두\ Bold.woff") format("woff");
-  font-weight: 400;
-  font-style: normal;
+  font-weight: 700;
+  font-style: bold;
 }
 
 @font-face {

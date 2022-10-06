@@ -22,6 +22,7 @@ const HeaderDiv = styled.div`
   border-bottom: 1px solid black;
   padding: 5px;
   width: 100%;
+  padding-bottom: 10px;
 `;
 
 const BackButton = styled.button`
@@ -50,9 +51,22 @@ const HeaderBox = ({ goBack }) => {
   return (
     <HeaderDiv>
       <div style={{ width: "10vw" }}></div>
-      <StyledText size="20px" weight="bold" text="코스 등록" />
+      <StyledText
+        size="20px"
+        weight="bold"
+        text="코스 등록"
+        style={{
+          alignItems: "center",
+        }}
+      />
       <BackButton onClick={goBack}>
-        <img src={CloseButton} />
+        <img
+          src={CloseButton}
+          style={{
+            alignItems: "center",
+            display: "flex",
+          }}
+        />
       </BackButton>
     </HeaderDiv>
   );
@@ -110,7 +124,7 @@ export const CourseRegister = () => {
 
   useEffect(() => {
     setTags(initTags);
-    console.log(courseData)
+    console.log(courseData);
   }, []);
   return (
     <Box width="100%" align="center">
@@ -127,7 +141,13 @@ export const CourseRegister = () => {
           <Box width="100%" justify="around">
             {/* 기록 날짜 시작*/}
             <Box align="center" margin={{ bottom: "20px" }}>
-              <StyledText text="나만의 코스" size="18px" />
+              <StyledText
+                text="나만의 코스"
+                size="18px"
+                style={{
+                  fontFamily: "gwtt",
+                }}
+              />
             </Box>
             {/* 기록 날짜 끝*/}
 
@@ -150,9 +170,7 @@ export const CourseRegister = () => {
             <Box margin={{ top: "20px", bottom: "20px" }}>
               <StyledText text={`주행 거리: ${courseData.totalDistance}km`} />
               <StyledText
-                text={`주행 시간: ${expectTimeHandle(
-                  courseData.nowTime
-                )}`}
+                text={`주행 시간: ${expectTimeHandle(courseData.nowTime)}`}
               />
               <StyledText text={`평균 속도: ${courseData.avgSpeed}km/h`} />
             </Box>
@@ -207,8 +225,9 @@ export const CourseRegister = () => {
             if (isValied()) setOpen(true);
             else setNotValid(true);
           }}
+          whileTap={{ scale: 1.2 }}
         >
-          <StyledText text="등록" size="18px" color="white" weight="bold" />
+          등록
         </RegisterButton>
         <AlertDialog
           open={open}

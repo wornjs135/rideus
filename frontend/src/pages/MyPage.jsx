@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Spinner } from "grommet";
+import { Avatar, Box, Spinner } from "grommet";
 import bike1 from "../assets/images/bicycle.png";
 import { StyledText } from "../components/Common";
 import { StyledHorizonTable } from "../components/HorizontalScrollBox";
@@ -24,6 +24,10 @@ import {
 } from "../utils/util";
 import { motion } from "framer-motion";
 import { container } from "./Main";
+import RecentRide from "../assets/images/recentRide.png";
+import MyRide from "../assets/images/myRide2.png";
+import BmkCourse from "../assets/images/bmkCourse.png";
+import MyTag from "../assets/images/myTag.png";
 
 export const MyPage = () => {
   const navigate = useNavigate();
@@ -39,21 +43,21 @@ export const MyPage = () => {
     recentRide((data) => {
       console.log(data);
       const { data: recent } = data;
-      console.log(recent);
+      console.log("recent : ", recent);
       setRecentRides(recent);
     });
 
     myRides((data) => {
       console.log(data);
       const { data: rides } = data;
-      console.log(rides);
+      console.log("my : ", rides);
       setMyRideCourses(rides);
     });
     getBookmarkedCourses(
       (data) => {
         console.log(data);
         const { data: rides } = data;
-        console.log(rides);
+        console.log("bmk : ", rides);
         setbookmarkCourses(rides);
       },
       () => {}
@@ -64,7 +68,7 @@ export const MyPage = () => {
       setMyTag(tags);
     });
     getTotalRecord((data) => {
-      console.log(data);
+      console.log("totalRecord : ", data);
       const { data: record } = data;
       setTotalRecord(record);
     });
@@ -96,19 +100,19 @@ export const MyPage = () => {
             justify="around"
             style={{ marginTop: "5vw", marginBottom: "5vw" }}
           >
-            <Box direction={"column"} align={"left"} justify={"start"}>
+            <Box direction={"column"} align={"left"} justify={"around"}>
               <UserSettings
-                style={{ marginBottom: "5vw" }}
+                style={{ marginBottom: "8vw" }}
                 onClick={() => navigate("/profile")}
               />
-              <img src={bike1} />
+              <Avatar src={user.profileImageUrl} />
             </Box>
             <Box>
               <Box
                 direction="row"
                 style={{ marginBottom: "5vw", marginLeft: "auto" }}
               >
-                <Box style={{ marginRight: "5vw" }}>
+                <Box style={{ marginRight: "5vw" }} justify="end">
                   <StyledText
                     text={expectTimeHandle2(totalRecord?.total_time)}
                     weight="bold"
@@ -130,7 +134,7 @@ export const MyPage = () => {
                   width={50}
                 />
               </Box>
-              <Box justify={"end"}>
+              <Box justify="end">
                 <StyledText
                   text={`${user?.nickname}님은 현재`}
                   weight="bold"
@@ -162,9 +166,28 @@ export const MyPage = () => {
           border={{ color: "#F3F3F3", size: "small", side: "all" }}
         >
           {/* 인기코스 */}
-          <Box align="start" width="100%" margin="large">
-            <Box pad={{ left: "20px" }}>
-              <StyledText text="최근 주행" weight="bold" size="18px" />
+          <Box align="start" width="100%" margin={{ top: "large" }}>
+            <Box
+              width="100%"
+              pad={{ left: "30px", right: "20px" }}
+              direction="row"
+              align="end"
+              gap="small"
+            >
+              <img
+                src={RecentRide}
+                height="24px"
+                style={{
+                  objectFit: "cover",
+                }}
+              />
+              <StyledText
+                text="최근 주행"
+                size="18px"
+                style={{
+                  fontFamily: "gwtt",
+                }}
+              />
             </Box>
             {/* 인기코스 리스트 */}
             <Box direction="row" overflow="scroll">
@@ -191,9 +214,28 @@ export const MyPage = () => {
             </Box>
           </Box>
           {/* 나만의 코스 */}
-          <Box align="start" width="100%" margin="large">
-            <Box pad={{ left: "20px" }}>
-              <StyledText text="나만의 주행" weight="bold" size="18px" />
+          <Box align="start" width="100%" margin={{ top: "large" }}>
+            <Box
+              width="100%"
+              pad={{ left: "30px", right: "20px" }}
+              direction="row"
+              align="end"
+              gap="small"
+            >
+              <img
+                src={MyRide}
+                height="24px"
+                style={{
+                  objectFit: "cover",
+                }}
+              />
+              <StyledText
+                text="나만의 주행"
+                size="18px"
+                style={{
+                  fontFamily: "gwtt",
+                }}
+              />
             </Box>
             {/* 나만의 코스 리스트 */}
             <Box direction="row" overflow="scroll">
@@ -226,9 +268,28 @@ export const MyPage = () => {
             </Box>
           </Box>
           {/* 인기태그 */}
-          <Box align="start" width="100%" margin="large">
-            <Box pad={{ left: "20px" }}>
-              <StyledText text="코스 북마크" weight="bold" size="18px" />
+          <Box align="start" width="100%" margin={{ top: "large" }}>
+            <Box
+              width="100%"
+              pad={{ left: "30px", right: "20px" }}
+              direction="row"
+              align="end"
+              gap="small"
+            >
+              <img
+                src={BmkCourse}
+                height="24px"
+                style={{
+                  objectFit: "cover",
+                }}
+              />
+              <StyledText
+                text="북마크 코스"
+                size="18px"
+                style={{
+                  fontFamily: "gwtt",
+                }}
+              />
             </Box>
             {/* 인기태그 리스트 */}
             {/* 코스 북마크 리스트 */}
@@ -249,16 +310,35 @@ export const MyPage = () => {
             </Box>
           </Box>
           {/* 인기태그 */}
-          <Box align="start" width="100%" margin="large">
-            <Box pad={{ left: "20px" }}>
-              <StyledText text="MY RIDE" weight="bold" size="18px" />
+          <Box align="start" width="100%" margin={{ top: "large" }}>
+            <Box
+              width="100%"
+              pad={{ left: "30px", right: "20px" }}
+              direction="row"
+              align="end"
+              gap="small"
+            >
+              <img
+                src={MyTag}
+                height="24px"
+                style={{
+                  objectFit: "cover",
+                }}
+              />
+              <StyledText
+                text="마이 태그"
+                size="18px"
+                style={{
+                  fontFamily: "gwtt",
+                }}
+              />
             </Box>
             {/* 인기태그 리스트 */}
             <Box
               direction="row"
               overflow="scroll"
               margin="medium"
-              pad={{ left: "20px" }}
+              pad={{ left: "20px", bottom: "70px" }}
             >
               {myTag &&
                 myTag.map((tag, idx) => {
